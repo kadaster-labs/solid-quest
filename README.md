@@ -1,2 +1,4 @@
-# solid-quest
-Our journey on SOLID
+# SOLID Quest
+
+Our journey on [SOLID pods](https://solidproject.org/) ...
+
