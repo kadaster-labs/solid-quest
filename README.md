@@ -12,4 +12,4 @@ Our journey on [SOLID pods](https://solidproject.org/) ...
   - [2021/2022 assignment: Decentralized Delivery (DeDe)](https://arquisoft.github.io/course2122/labAssignmentDescription.html) with [winning teams](https://arquisoft.github.io/course2122.html#SolidChallenge) (with [nice diagrams](https://arquisoft.github.io/dede_en2a/) explaining architecture and usage of SOLID)
 - Commercial Vendors
   - [Inrupt](https://inrupt.com/) - SOLID core developer company
-  - [Digita](https://www.digita.ai/) (check the URL :laughing:
+  - [Digita](https://www.digita.ai/) (check the URL :laughing:) providing [use.id](https://get.use.id/), a free WebID (across orgs and platforms) 🤔
