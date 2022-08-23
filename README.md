@@ -1,6 +1,8 @@
 # SOLID Quest
 
-Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of creating a [Demonstrator Koopovereenkomst Solid App](https://marcvanandel.github.io/solid-quest/) ([source code](demonstrator-koopovereenkomst-solid-app/)).
+Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of creating a [Demonstrator Koopovereenkomst Solid App](demonstrator-koopovereenkomst-solid-app/).
+
+[Demo](https://marcvanandel.github.io/solid-quest/)
 
 ## Collected Info
 
