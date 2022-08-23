@@ -2,6 +2,8 @@
 
 Deze folder bevat (een eerste opzet voor) de **Demonstrator Koopovereenkomst Solid App**. Deze is bedoeld om kennis op te doen van hoe Solid PODs werken en hoe deze te gebruiken. In deze demonstator wordt een vereenvoudigde koopovereenkomst gesloten tussen Verkoper Vera en Koper Koos. Makelaar Mike faciliteert het proces en heeft de verantwoordelijkheid om het proces te initiëren, info toe te voegen die telefonisch of mondeling tussen verkoper en koper tot stand komt.
 
+[Live Demo](https://marcvanandel.github.io/solid-quest/)
+
 ## Architectuur
 
 ![SoftwareArchitectuur](Architectuurschets.jpg)
