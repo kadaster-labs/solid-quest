@@ -1,15 +1,10 @@
 import { Link } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
 import * as React from "react"
+import { Footer } from "../components/footer"
 import { Header } from "../components/header"
+import { Layout } from "../components/layout"
 import { SEO } from "../components/seo"
-
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-  "text-align": "center",
-}
 
 const listStyles = {
   maxWidth: "none",
@@ -43,10 +38,6 @@ const tiles = {
 }
 
 const tile = {}
-
-const footer = {
-  marginTop: "2em",
-}
 
 const dashboardLink = { text: "Dashboard", url: "login", color: "#000", }
 
@@ -89,10 +80,10 @@ const imageTag = (text: string) => {
 
 const IndexPage = () => {
   return (
-    <main style={pageStyles}>
+    <Layout>
 
       <Header title="Landing Page"></Header>
-      
+
       <div style={tiles}>
         {roles.map(role => (
           <div style={tile}>
@@ -109,14 +100,9 @@ const IndexPage = () => {
           </div>
         ))}
       </div>
-      <div id="footer" style={footer}>
-        <img
-          alt="Kadaster Logo"
-          src="data:image/svg+xml,%3Csvg%20height%3D%222500%22%20viewBox%3D%22-.02%20.26%20458.79%20599.74%22%20width%3D%221913%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22m124.78%20369.94%20107.36-369.68h-83.79l-148.37%20508.54z%22%20fill%3D%22%2300889e%22%2F%3E%3Cpath%20d%3D%22m249.86%20232.42-56.42%2062.43%20167.49%20305.15h97.84z%22%20fill%3D%22%2300387d%22%2F%3E%3C%2Fsvg%3E"
-          width={24}
-        />
-      </div>
-    </main>
+
+      <Footer />
+    </Layout>
   )
 }
 

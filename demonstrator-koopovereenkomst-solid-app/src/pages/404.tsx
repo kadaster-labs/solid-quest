@@ -1,5 +1,8 @@
+import { HeadFC, Link } from "gatsby"
 import * as React from "react"
-import { Link, HeadFC } from "gatsby"
+import { Footer } from "../components/footer"
+import { Header } from "../components/header"
+import { Layout } from "../components/layout"
 
 const pageStyles = {
   color: "#232129",
@@ -7,9 +10,7 @@ const pageStyles = {
   fontFamily: "-apple-system, Roboto, sans-serif, serif",
 }
 const headingStyles = {
-  marginTop: 0,
   marginBottom: 64,
-  maxWidth: 320,
 }
 
 const paragraphStyles = {
@@ -25,7 +26,8 @@ const codeStyles = {
 
 const NotFoundPage = () => {
   return (
-    <main style={pageStyles}>
+    <Layout>
+      <Header title="Log in"></Header>
       <h1 style={headingStyles}>Page not found</h1>
       <p style={paragraphStyles}>
         Sorry 😔, we couldn’t find what you were looking for.
@@ -40,7 +42,8 @@ const NotFoundPage = () => {
         <br />
         <Link to="/">Go home</Link>.
       </p>
-    </main>
+      <Footer />
+    </Layout>
   )
 }
 
