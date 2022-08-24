@@ -14,9 +14,11 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit",
-    "deploy": "gatsby build --prefix-paths && gh-pages -d public"
+    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
+    "testld": "tsc && node dist/src/test-ldflex.js"
   },
   "dependencies": {
+    "@ldflex/comunica": "^5.0.1",
     "formik": "^2.2.9",
     "gatsby": "^4.21.1",
     "gatsby-plugin-image": "^2.21.0",

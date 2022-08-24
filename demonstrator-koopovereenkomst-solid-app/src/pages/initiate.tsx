@@ -1,5 +1,6 @@
-import { ErrorMessage, Field, Form, Formik, FormikErrors, FormikProps, withFormik } from "formik"
+import { Field, Form, FormikErrors, FormikProps, withFormik } from "formik"
 import * as React from "react"
+import { BrkContext } from "../components/brk.context"
 import { Footer } from "../components/footer"
 import { Header } from "../components/header"
 import { Layout } from "../components/layout"
@@ -9,6 +10,7 @@ const title = "Nieuwe Koopovereenkomst"
 
 
 // TODO task#1 insert Zorgeloos Vastgoed of BRK context based on LDflex
+const brkContext = new BrkContext();
 
 // TODO task#2b new methode: call Kadaster KnowledgeGraph with provided kadObjectId and retrieve info
 
@@ -21,6 +23,8 @@ interface OtherProps {
     message: string;
 }
 
+var isKadastraalObjectLoaded = false;
+
 // Aside: You may see InjectedFormikProps<OtherProps, FormValues> instead of what comes below in older code.. InjectedFormikProps was artifact of when Formik only exported a HoC. It is also less flexible as it MUST wrap all props (it passes them through).
 const InnerForm = (props: OtherProps & FormikProps<FormValues>) => {
     const { touched, errors, isSubmitting, message } = props;
@@ -32,6 +36,11 @@ const InnerForm = (props: OtherProps & FormikProps<FormValues>) => {
 
             <button type="submit" disabled={isSubmitting}>
                 Submit
+            </button>
+
+            <br />
+            <button type="submit" disabled={!isKadastraalObjectLoaded}>
+                Aanmaken nieuwe koopovereenkomst
             </button>
         </Form>
     );
@@ -67,8 +76,25 @@ const MyForm = withFormik<MyFormProps, FormValues>({
         // do submitting things
         console.log({ values });
         alert(JSON.stringify(values, null, 2));
-
+        
+        isKadastraalObjectLoaded = true;
+        
         // TODO task#2a await calling Kadaster Knowledge Graph method (see task#2b)
+
+        // call Kadaster KnowledgeGraph
+        // map output to ZV Koopovereenkomst context
+        // visualize the ZV Koopovereenkomst
+
+        // let perceel = brkContext.retrieveLDKadastraalObject(values.kadObjectId) as Promise<any>;
+        
+        // let perceelnummer = perceel.perceelNummer // call kkg
+
+        // koopovereenkomst = koopovereenkomstContext.initiate(); // call of path naar verkoper pod
+        // koopovereenkomst.teverkopenperceelnummer.add(perceelnummer); // call naar verkoper pod met zv ontologie voor opslaan perceelnummer
+
+        // console.log(`- Perceelnummer: ${await perceel.perceelnummer}`);
+        // console.log(JSON.stringify(kadastraalObject, null, 2));
+        // (<div>JSON.stringify(kadastraalObject, null, 2)</div>)
     },
 })(InnerForm);
 
