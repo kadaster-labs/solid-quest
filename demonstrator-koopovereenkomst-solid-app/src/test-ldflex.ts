@@ -1,11 +1,13 @@
 // @ts-ignore
-import { PathFactory } from 'ldflex';
+import { PathFactory } from "ldflex";
 // @ts-ignore
-import ComunicaEngine from '@ldflex/comunica'
-import { namedNode } from '@rdfjs/data-model'
+import ComunicaEngine from "@ldflex/comunica";
+// @ts-ignore
+import { namedNode } from "@rdfjs/data-model";
 
 export function pathFactory(sources: any, options?: any) {
-  const queryEngine = options?.queryEngine ?? new ComunicaEngine(sources, options);
+  const queryEngine =
+    options?.queryEngine ?? new ComunicaEngine(sources, options);
   const context = options?.context ?? {};
   return new PathFactory({ queryEngine, context });
 }
@@ -14,22 +16,25 @@ const NAMESPACE = /^[^]*[#/]/;
 
 export function createPathUsingFactory(factory: any) {
   return function createPath(node: any, sources?: any, options?: any) {
-    const _options = options ?? {}
-    const subject = typeof node === 'string' ? namedNode(node) : node;
-    
-    const namespace = NAMESPACE.exec(subject.value)?.[0] ?? ''
-    
+    const _options = options ?? {};
+    const subject = typeof node === "string" ? namedNode(node) : node;
+
+    const namespace = NAMESPACE.exec(subject.value)?.[0] ?? "";
+
     // Try and use the original nodes namespace for the vocab if no context is provided
-    const context = _options.context ?? { '@context': { '@vocab': namespace } }
-  
-    return factory(sources ?? namespace, { ..._options, context }).create({ subject });
-  }
+    const context = _options.context ?? { "@context": { "@vocab": namespace } };
+
+    return factory(sources ?? namespace, { ..._options, context }).create({
+      subject,
+    });
+  };
 }
 
-export const createPath = createPathUsingFactory(pathFactory)
+export const createPath = createPathUsingFactory(pathFactory);
 
 const prefix = {
   gebouw: "https://data.kkg.kadaster.nl/id/gebouw/",
+  perceel: "https://data.kkg.kadaster.nl/id/perceel/",
   nen3610: "https://data.kkg.kadaster.nl/nen3610/model/def/",
   rdfs: "http://www.w3.org/2000/01/rdf-schema#",
   skos: "http://www.w3.org/2004/02/skos/core#",
@@ -71,6 +76,10 @@ const context = {
       "@id": "sor:oorspronkelijkBouwjaar",
       "@type": "xsd:gYear",
     },
+    perceelnummer: {
+      "@id": "sor:perceelnummer",
+      "@type": "xsd:integer",
+    },
     oppervlakte: {
       "@id": "sor:oppervlakte",
       "@type": "xsd:postiveInteger",
@@ -82,8 +91,6 @@ const context = {
   },
 };
 
-
-
 const queryEngine = new ComunicaEngine(
   "https://api.labs.kadaster.nl/datasets/dst/kkg/services/default/sparql"
 );
@@ -94,6 +101,15 @@ async function run() {
     subject: namedNode(`${prefix.gebouw}0200100000085932`),
   });
   await toon_gebouw(gebouw);
+
+  const perceel = path.create({
+    subject: namedNode(`${prefix.perceel}10020263270000`),
+  });
+  await toon_perceel(perceel);
+
+  async function toon_perceel(perceel: any) {
+    console.log(`- Perceelnummer: ${await perceel.perceelnummer}`);
+  }
 
   async function toon_gebouw(gebouw: any) {
     console.log(`- Bouwjaar: ${await gebouw.oorspronkelijkBouwjaar}`);
