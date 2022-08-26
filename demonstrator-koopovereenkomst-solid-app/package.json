@@ -18,6 +18,7 @@
     "testld": "tsc && node dist/src/test-ldflex.js"
   },
   "dependencies": {
+    "@comunica/query-sparql-solid": "^2.3.0",
     "@ldflex/comunica": "^5.0.1",
     "formik": "^2.2.9",
     "gatsby": "^4.21.1",

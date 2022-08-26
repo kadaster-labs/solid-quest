@@ -1,8 +1,4 @@
-const { PathFactory } = require('ldflex')
-import ComunicaEngine from '@ldflex/comunica'
-import { namedNode } from '@rdfjs/data-model'
-
-const prefix = {
+export const prefix = {
     gebouw: 'https://data.kkg.kadaster.nl/id/gebouw/',
     perceel: 'https://data.kkg.kadaster.nl/id/perceel/',
     nen3610: 'https://data.kkg.kadaster.nl/nen3610/model/def/',
@@ -12,7 +8,7 @@ const prefix = {
     xsd: 'http://www.w3.org/2001/XMLSchema#',
 }
 
-const context = {
+export const brkContext = {
     '@context': {
         ...prefix,
         afkorting: {
@@ -59,18 +55,4 @@ const context = {
             '@type': '@id',
         },
     },
-}
-const queryEngine: ComunicaEngine = new ComunicaEngine('https://api.labs.kadaster.nl/datasets/dst/kkg/services/default/sparql');
-
-export class BrkContext {
-    private path = new PathFactory({ context: context, queryEngine })
-
-    constructor() { }
-
-    public async retrieveLDKadastraalObject(kadObjectId: string) {
-        let perceel = this.path.create({
-            subject: namedNode(`${prefix.perceel}10020263270000`)
-        });
-        return perceel;
-    }
 }
