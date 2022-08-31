@@ -4,8 +4,12 @@
   "private": true,
   "description": "demonstrator-koopovereenkomst-solid-app",
   "author": "marcvanandel",
+  "repository": {
+    "url": "https://github.com/marcvanandel/solid-quest"
+  },
   "keywords": [
-    "gatsby"
+    "gatsby",
+    "solid"
   ],
   "scripts": {
     "develop": "gatsby develop",
