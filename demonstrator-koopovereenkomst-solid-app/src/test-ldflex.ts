@@ -49,6 +49,10 @@ const context = {
       "@id": "skos:altLabel",
       "@language": "nl",
     },
+    naam: {
+      "@id": "perceel:naam",
+      "@type": "xsd:string",
+    },
     basisregistratie: {
       "@id": "rdfs:isDefinedBy",
       "@type": "@id",
@@ -60,6 +64,10 @@ const context = {
     bevatVerblijfsobject: {
       "@reverse": "sor:maaktDeelUitVan",
     },
+    domain: {
+      "@id": "rdfs:domain",
+      // "@type": "@id",
+    },
     geregistreerdMet: {
       "@id": "sor:geregistreerdMet",
       "@type": "@id",
@@ -67,10 +75,6 @@ const context = {
     identificatie: {
       "@id": "nen3610:identificatie",
       "@type": "xsd:string",
-    },
-    naam: {
-      "@id": "skos:prefLabel",
-      "@language": "nl",
     },
     oorspronkelijkBouwjaar: {
       "@id": "sor:oorspronkelijkBouwjaar",
@@ -109,6 +113,17 @@ async function run() {
 
   async function toon_perceel(perceel: any) {
     console.log(`- Perceelnummer: ${await perceel.perceelnummer}`);
+    console.log(`- naam: ${await perceel.naam}`);
+    console.log(`- status: ${await perceel.status}`);
+    console.log(`- domain: ${await perceel.domain}`);
+    console.log(`- Bouwjaar: ${await perceel.oorspronkelijkBouwjaar}`);
+
+    if (true) {
+      console.log(`${await perceel} attributes are:`);
+      for await (const attr of perceel.properties) {
+        if (attr.startsWith("sor") || !attr.includes(":")) console.log(`- ${attr}`);
+      }
+    }
   }
 
   async function toon_gebouw(gebouw: any) {
