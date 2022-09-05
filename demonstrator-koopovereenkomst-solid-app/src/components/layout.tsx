@@ -5,7 +5,7 @@ const pageStyle = {
     color: "#232129",
     padding: 96,
     fontFamily: "-apple-system, Roboto, sans-serif, serif",
-    "text-align": "center",
+    textAlign: "center",
 }
 
 export const Layout = ({ children }: { children: any }) => {

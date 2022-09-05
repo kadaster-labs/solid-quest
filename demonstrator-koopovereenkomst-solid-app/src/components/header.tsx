@@ -6,7 +6,7 @@ const headerStyle = {
 
 const headingStyles = {
     marginTop: 0,
-    "text-align": "center",
+    textAlign: "center",
 }
 
 const headingAccentStyles = {
