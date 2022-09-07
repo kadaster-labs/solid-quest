@@ -7,7 +7,10 @@ import Link from 'next/link';
 const name = 'Kadaster';
 export const siteTitle = 'Koopovereenkomst Solid App';
 
-export default function Layout({ children, home }) {
+export default function Layout({ children, home }: {
+    children: React.ReactNode
+    home?: boolean
+}) {
     return (
         <div className={styles.container}>
             <Head>

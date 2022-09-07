@@ -6,7 +6,7 @@ import utilStyles from "../styles/utils.module.css";
 
 export default function Home() {
   return (
-    <Layout home className={styles.container}>
+    <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
@@ -17,9 +17,8 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
-          Start pagina van de Koopovereenkomst Solid App! Vanaf deze pagina kan
-          genavigeerd worden naar de verschillende 'ingangen' voor de
-          betreffende rollen.
+          Start pagina van de Koopovereenkomst Solid App!
+          Vanaf deze pagina kan genavigeerd worden naar de verschillende &apos;ingangen&apos; voor de betreffende rollen.
         </p>
 
         <div className={styles.grid}>
