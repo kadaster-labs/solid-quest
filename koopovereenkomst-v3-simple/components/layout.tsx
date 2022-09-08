@@ -3,17 +3,18 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import utilStyles from '../styles/utils.module.css';
-import styles from './layout.module.css';
+import styles from '../styles/layout.module.css';
 
 const name = 'Kadaster';
 export const siteTitle = 'Koopovereenkomst Solid App';
 
-export default function Layout({ children, home }: {
-    children: React.ReactNode
-    home?: boolean
+export default function Layout({ children, home, role }: {
+    children: React.ReactNode,
+    home?: boolean,
+    role?: string,
 }) {
     return (
-        <div className={styles.container}>
+        <div className={[styles.container, role].join(" ")}>
             <SessionProvider>
 
                 <Head>
@@ -70,7 +71,7 @@ export default function Layout({ children, home }: {
                 {!home && (
                     <div className={styles.backToHome}>
                         <Link href="/">
-                            <a>← Back to home</a>
+                            <a>← Main home</a>
                         </Link>
                     </div>
                 )}

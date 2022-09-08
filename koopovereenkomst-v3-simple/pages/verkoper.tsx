@@ -11,7 +11,7 @@ export default function Verkoper() {
     const { session } = useSession();
 
     return (
-        <Layout>
+        <Layout role="verkoper">
             <Head>
                 <title>{title}</title>
             </Head>

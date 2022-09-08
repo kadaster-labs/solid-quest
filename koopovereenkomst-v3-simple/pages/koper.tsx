@@ -6,7 +6,7 @@ export default function Koper() {
     const title = "Koper Homepage";
 
     return (
-        <Layout>
+        <Layout role="koper">
             <Head>
                 <title>{title}</title>
             </Head>
