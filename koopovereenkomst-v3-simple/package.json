@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "deploy": "next build && next export",
+    "deploy": "next build && next export && gh-pages-deploy",
     "start": "next start",
     "lint": "next lint"
   },
@@ -28,6 +28,7 @@
     "typescript": "^4.8.2"
   },
   "gh-pages-deploy": {
-    "staticpath": "out"
+    "staticpath": "out",
+    "noprompt": true
   }
 }
