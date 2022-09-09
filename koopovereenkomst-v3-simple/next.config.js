@@ -4,6 +4,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  basePath: '/solid-quest',
   images: {
     loader: "custom",
   },

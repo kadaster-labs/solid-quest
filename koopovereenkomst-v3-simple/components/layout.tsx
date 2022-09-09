@@ -38,12 +38,11 @@ export default function Layout({ children, home, role }: {
                         <>
                             <Image
                                 priority
-                                src="/images/kadaster.svg"
+                                src="/solid-quest/images/kadaster.svg"
                                 className={utilStyles.borderCircle}
                                 height={42}
                                 width={42}
                                 alt={name}
-                                unoptimized={true}
                             />
                             <h1 className={utilStyles.heading2Xl}>{name}</h1>
                         </>
@@ -53,12 +52,11 @@ export default function Layout({ children, home, role }: {
                                 <a>
                                     <Image
                                         priority
-                                        src="/images/kadaster.svg"
+                                        src="/solid-quest/images/kadaster.svg"
                                         className={utilStyles.borderCircle}
                                         height={42}
                                         width={42}
                                         alt={name}
-                                        unoptimized={true}
                                     />
                                 </a>
                             </Link>
@@ -87,7 +85,7 @@ export default function Layout({ children, home, role }: {
                         Powered by{" "}
                         <span className={styles.logo}>
                             <Image
-                                src="/images/kadaster.svg"
+                                src="/solid-quest/images/kadaster.svg"
                                 alt="Kadaster Logo"
                                 width={72}
                                 height={16}

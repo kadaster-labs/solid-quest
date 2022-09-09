@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "deploy": "next build && next export && gh-pages-deploy",
+    "predeploy": "next build && next export && cp .nojekyll out/.nojekyll",
+    "deploy": "node deploy.js",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,6 +15,7 @@
     "@inrupt/solid-ui-react": "^2.8.0",
     "@inrupt/vocab-common-rdf": "^1.0.5",
     "@ldflex/comunica": "^5.0.1",
+    "gh-pages": "^4.0.0",
     "ldflex": "^2.15.0",
     "next": "12.2.5",
     "react": "18.2.0",
@@ -24,11 +26,6 @@
     "@types/react": "^18.0.18",
     "eslint": "8.23.0",
     "eslint-config-next": "12.2.5",
-    "gh-pages-deploy": "^0.5.1",
     "typescript": "^4.8.2"
-  },
-  "gh-pages-deploy": {
-    "staticpath": "out",
-    "noprompt": true
   }
 }

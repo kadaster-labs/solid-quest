@@ -20,7 +20,7 @@ Secondly, run the development server:
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/solid-quest/](http://localhost:3000/solid-quest/) with your browser to see the result.
 
 ### Learn More about Next.js
 
