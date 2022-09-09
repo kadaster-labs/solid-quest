@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import utilStyles from '../styles/utils.module.css';
 import styles from '../styles/layout.module.css';
+import ConnectSolid from "./connect";
 
 const name = 'Kadaster';
 export const siteTitle = 'Koopovereenkomst Solid App';
@@ -39,8 +40,8 @@ export default function Layout({ children, home, role }: {
                                 priority
                                 src="/images/kadaster.svg"
                                 className={utilStyles.borderCircle}
-                                height={144}
-                                width={144}
+                                height={42}
+                                width={42}
                                 alt={name}
                             />
                             <h1 className={utilStyles.heading2Xl}>{name}</h1>
@@ -53,8 +54,8 @@ export default function Layout({ children, home, role }: {
                                         priority
                                         src="/images/kadaster.svg"
                                         className={utilStyles.borderCircle}
-                                        height={108}
-                                        width={108}
+                                        height={42}
+                                        width={42}
                                         alt={name}
                                     />
                                 </a>
@@ -66,6 +67,10 @@ export default function Layout({ children, home, role }: {
                             </h2>
                         </>
                     )}
+                    <div className={styles.middle} />
+                    <div className={styles.right}>
+                        <ConnectSolid />
+                    </div>
                 </header>
                 <main>{children}</main>
                 {!home && (

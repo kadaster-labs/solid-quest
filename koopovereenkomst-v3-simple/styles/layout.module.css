@@ -6,8 +6,17 @@
 
 .header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  min-width: max-content;
+}
+
+.middle {
+  flex-grow: 1;
+}
+
+.right {
+  flex-grow: 0;
 }
 
 .backToHome {

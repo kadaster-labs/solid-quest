@@ -1,6 +1,5 @@
 import { useSession } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
-import ConnectSolid from "../components/connect";
 import KadasterKnowledgeGraph from "../components/kkg";
 import Layout from '../components/layout';
 import Profile from "../components/profile";
@@ -9,7 +8,7 @@ export default function Verkoper() {
 
     const title = "Verkoper Homepage";
 
-    const { session, sessionRequestInProgress } = useSession();
+    const { session } = useSession();
 
     return (
         <Layout role="verkoper">
@@ -19,15 +18,13 @@ export default function Verkoper() {
             <h1>{title}</h1>
             <p>Content ...</p>
 
-            <ConnectSolid />
-
             {!session.info.isLoggedIn && <p>NOT logged in</p>}
 
             {session.info.isLoggedIn && <p>logged in</p>}
 
             {session.info.isLoggedIn && <Profile />}
-            
-            <KadasterKnowledgeGraph />
+
+            {session.info.isLoggedIn && <KadasterKnowledgeGraph />}
 
         </Layout>
     );

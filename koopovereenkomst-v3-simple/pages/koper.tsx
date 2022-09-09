@@ -13,7 +13,6 @@ export default function Koper() {
             </Head>
             <h1>{title}</h1>
             <p>Content ...</p>
-            <KadasterKnowledgeGraph></KadasterKnowledgeGraph>
         </Layout>
     );
 }
