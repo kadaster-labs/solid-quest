@@ -1,9 +1,9 @@
 import { SessionProvider } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
-import Image from 'next/image';
 import Link from 'next/link';
-import utilStyles from '../styles/utils.module.css';
+import Image from '../components/Image';
 import styles from '../styles/layout.module.css';
+import utilStyles from '../styles/utils.module.css';
 import ConnectSolid from "./connect";
 
 const name = 'Kadaster';
@@ -43,6 +43,7 @@ export default function Layout({ children, home, role }: {
                                 height={42}
                                 width={42}
                                 alt={name}
+                                unoptimized={true}
                             />
                             <h1 className={utilStyles.heading2Xl}>{name}</h1>
                         </>
@@ -57,6 +58,7 @@ export default function Layout({ children, home, role }: {
                                         height={42}
                                         width={42}
                                         alt={name}
+                                        unoptimized={true}
                                     />
                                 </a>
                             </Link>
