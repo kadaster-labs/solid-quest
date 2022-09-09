@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import KadasterKnowledgeGraph from '../components/kkg';
 import Layout from '../components/layout';
 
 export default function Koper() {
@@ -12,6 +13,7 @@ export default function Koper() {
             </Head>
             <h1>{title}</h1>
             <p>Content ...</p>
+            <KadasterKnowledgeGraph></KadasterKnowledgeGraph>
         </Layout>
     );
 }

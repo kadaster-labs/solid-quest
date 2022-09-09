@@ -1,7 +1,7 @@
 import {
     CombinedDataProvider, Text, useSession
 } from "@inrupt/solid-ui-react";
-import { FOAF } from "@inrupt/vocab-common-rdf";
+import { FOAF, VCARD } from "@inrupt/vocab-common-rdf";
 
 export default function Profile() {
 
@@ -15,10 +15,10 @@ export default function Profile() {
             <h2>Solid POD Profile</h2>
             <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
                 <ul>
-                    <li><Text property={FOAF.name} /></li>
-                    <li><Text property={FOAF.lastName} /></li>
-                    <li><Text property={FOAF.firstName} /></li>
-                    <li><Text property={FOAF.birthday} /></li>
+                    <li>name: <Text property={FOAF.name} /></li>
+                    <li>lastname: <Text property={FOAF.lastName} /></li>
+                    <li>firstname: <Text property={FOAF.firstName} /></li>
+                    <li>birthday: <Text property={VCARD.bday} /></li>
                 </ul>
             </CombinedDataProvider>
         </div>
