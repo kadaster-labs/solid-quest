@@ -1,8 +1,5 @@
 title Solid Koopovereenkomst Demonstrator #1
 
-actor Makelaar Mike
-materialdesignicons F00B IRMA van Mike
-
 actor Verkoper Vera
 materialdesignicons F00B IRMA van Vera
 
@@ -11,95 +8,56 @@ materialdesignicons F00B IRMA van Koos
 
 participant Koopovereenkomst App
 
-database POD Makelaarskantoor
 database POD Verkoper Vera
 database POD Koper Koos
 
-expandable− Makelaar Mike logt in
-  activate Makelaar Mike
-  Makelaar Mike->Koopovereenkomst App: Log in met IRMA
+expandable− Verkoper Vera logt in
+  activate Verkoper Vera
+  Verkoper Vera->Koopovereenkomst App: Log in met IRMA
   activate Koopovereenkomst App
-  Koopovereenkomst App-->IRMA van Mike: Request emailadres
-  activate IRMA van Mike
-  IRMA van Mike-->Koopovereenkomst App: Provide verified emailadres
-  deactivate IRMA van Mike
-  Koopovereenkomst App-->Makelaar Mike: User session
+  Koopovereenkomst App-->IRMA van Vera: Request emailadres
+  activate IRMA van Vera
+  IRMA van Vera-->Koopovereenkomst App: Provide verified emailadres
+  deactivate IRMA van Vera
+  Koopovereenkomst App-->Verkoper Vera: User session
   deactivate Koopovereenkomst App
-  deactivate Makelaar Mike
+  deactivate Verkoper Vera
 end 
 
-expandable− Koppelen Makelaarskantoor POD (one time only)
-  activate Makelaar Mike
-  Makelaar Mike->Koopovereenkomst App: Connect POD
-  activate Koopovereenkomst App
-  Koopovereenkomst App-->POD Makelaarskantoor: Request access
-  deactivate Koopovereenkomst App
-  Makelaar Mike->POD Makelaarskantoor: Accept access request for App
-  Makelaar Mike->Koopovereenkomst App: Show dashboard
-  activate Koopovereenkomst App
-  Koopovereenkomst App-->POD Makelaarskantoor: Check access
-  activate POD Makelaarskantoor
-  POD Makelaarskantoor-->Koopovereenkomst App: Authorized
-  deactivate POD Makelaarskantoor
-  Koopovereenkomst App->Makelaar Mike: POD Connected
-  deactivate Koopovereenkomst App
-  deactivate Makelaar Mike
+expandable− Koppelen POD Verkoper Vera
+  Verkoper Vera->Koopovereenkomst App: Connect POD
+  Koopovereenkomst App-->POD Verkoper Vera: Request access
+  note over POD Verkoper Vera: Aanvragen van toegang van Koopovereenkomst App\ntot POD. Later wordt specifieke koopovereenkomst\nfolder aangemaakt ...
+  Verkoper Vera->POD Verkoper Vera: Accept access request for App
+  Verkoper Vera->Koopovereenkomst App: Show dashboard
+  Koopovereenkomst App-->POD Verkoper Vera: Check access
+  activate POD Verkoper Vera
+  POD Verkoper Vera-->Koopovereenkomst App: Authorized
+  deactivate POD Verkoper Vera
+  Koopovereenkomst App->Verkoper Vera: POD Connected
 end
 
 expandable− Intiatie koopovereenkomst
-  Makelaar Mike->Koopovereenkomst App: Start nieuw koopovereenkomst obv template
+  Verkoper Vera->Koopovereenkomst App: Start nieuw koopovereenkomst obv template
   activate Koopovereenkomst App
-  Koopovereenkomst App-->POD Makelaarskantoor: Create new folder
   Koopovereenkomst App-->Koopovereenkomst App: Generate unique key [123] + URL
-  Koopovereenkomst App-->POD Makelaarskantoor: Store key [123] + URL
-  Koopovereenkomst App->Makelaar Mike: Return new unique URL
-  Koopovereenkomst App->Makelaar Mike: Return new unique Verkoper URL
-  Koopovereenkomst App->Makelaar Mike: Return new unique Koper URL
+  Koopovereenkomst App-->POD Verkoper Vera: Create new folder
+ note over POD Verkoper Vera: [folder: zorgeloosvastgoed/koopovereenkomst-123]
+  Koopovereenkomst App-->POD Verkoper Vera: Store key [123] + URL
+  Koopovereenkomst App->Verkoper Vera: Return new unique Verkoper URL
+  Koopovereenkomst App->Verkoper Vera: Return new unique Koper URL
   Koopovereenkomst App-->Koopovereenkomst App: Aanmaken taken volgens template
-  Koopovereenkomst App-->POD Makelaarskantoor: Opslaan taken
-  Koopovereenkomst App->Makelaar Mike: Taken aangemaakt
+  Koopovereenkomst App-->POD Verkoper Vera: Opslaan taken
+  Koopovereenkomst App->Verkoper Vera: Taken aangemaakt
 
-  Makelaar Mike->Koopovereenkomst App: Toevoegen handmatig ingevoerde info (koopsom, KadastraalObjectID, datum van passeren)
-  Koopovereenkomst App-->POD Makelaarskantoor: Opslaan handmatige ingevoerde info
-  Koopovereenkomst App-->Koopovereenkomst App: Ophalen van onroerende zaak info,\neigendomssituatie, belemmerende rechten,\netc bij Kadaster of invoeren door Makelaar?
-  Koopovereenkomst App-->POD Makelaarskantoor: Opslaan opgehaalde info
+  Verkoper Vera->Koopovereenkomst App: Toevoegen handmatig ingevoerde info (koopsom, KadastraalObjectID, datum van passeren)
+  Koopovereenkomst App-->POD Verkoper Vera: Opslaan handmatige ingevoerde info
+  Koopovereenkomst App-->Koopovereenkomst App: Ophalen van onroerende zaak info,\neigendomssituatie, belemmerende rechten,\netc bij Kadaster (en meer?)
+  Koopovereenkomst App-->POD Verkoper Vera: Opslaan opgehaalde info
   deactivate Koopovereenkomst App
 end 
 
 expandable− Verkoper Vera vult koopovereenkomst als verkoper
-  note over Verkoper Vera: Uitgewerkt voor verkoper maar is gelijk voor Koper Koos\n... maar dan in de rol van koper natuurlijk
-  Makelaar Mike->Verkoper Vera: Share Koopovereenkomst Verkoper URL
-  activate Verkoper Vera
-  Verkoper Vera->Koopovereenkomst App: Meld aan bij Koopovereenkomst
-  activate Koopovereenkomst App
-
-  expandable− Verkoper Vera logt in
-    Verkoper Vera ->Koopovereenkomst App: Log in met IRMA
-    Koopovereenkomst App-->IRMA van Vera: Request emailadres
-    activate IRMA van Vera
-    IRMA van Vera -->Koopovereenkomst App: Provide verified emailadres
-    deactivate IRMA van Vera
-    Koopovereenkomst App-->Verkoper Vera: User session
-  end
-
-  Koopovereenkomst App-->Koopovereenkomst App: URL ontsleutelen naar \n- Makelaarskantoor POD\n- key koopovereenkomst\n- rol 'verkoper'
-  Koopovereenkomst App-->POD Makelaarskantoor: Verkoper Vera toevoegen als 'verkoper'
-  Koopovereenkomst App->Verkoper Vera: Succesvol aangemeld als 'verkoper
-
-  expandable− Koppelen POD Verkoper Vera
-    Verkoper Vera->Koopovereenkomst App: Connect POD
-    Koopovereenkomst App-->POD Makelaarskantoor: Link opslaan naar POD Verkoper Vera
-    Koopovereenkomst App-->POD Verkoper Vera: Request access
-    note over POD Makelaarskantoor: Aanvragen van toegang tot specifieke persoonlijke\n informatie expliciet voor de rol van verkoper benodigd:\n[folder: zorgeloosvastgoed/koopovereenkomst-123]
-    Verkoper Vera->POD Verkoper Vera: Accept access request for App
-    Verkoper Vera->Koopovereenkomst App: Show dashboard
-    Koopovereenkomst App-->POD Verkoper Vera: Check access
-    activate POD Verkoper Vera
-    POD Verkoper Vera-->Koopovereenkomst App: Authorized
-    deactivate POD Verkoper Vera
-    Koopovereenkomst App->Verkoper Vera: POD Connected
-  end
-
   expandable− Verkoper Vera vult persoonlijke gegevens in eigen POD (mbv IRMA)
     Verkoper Vera->IRMA van Vera: Export kaartjes
     IRMA van Vera->Verkoper Vera: Kaartjes
@@ -110,16 +68,59 @@ expandable− Verkoper Vera vult koopovereenkomst als verkoper
   deactivate Verkoper Vera
 end // of Verkoper Vera vult koopovereenkomst als verkoper
 
-expandable− Show dashboard (same for all users)
-  Makelaar Mike->Koopovereenkomst App: Request dashboard
+expandable− Koper Koos vult koopovereenkomst als koper
+  Verkoper Vera->Koper Koos: Share Koopovereenkomst Koper URL
+  activate Koper Koos
+  Koper Koos->Koopovereenkomst App: Meld aan bij Koopovereenkomst
   activate Koopovereenkomst App
+
+  expandable− Koper Koos logt in
+    Koper Koos ->Koopovereenkomst App: Log in met IRMA
+    Koopovereenkomst App-->IRMA van Koos: Request emailadres
+    activate IRMA van Koos
+    IRMA van Koos -->Koopovereenkomst App: Provide verified emailadres
+    deactivate IRMA van Koos
+    Koopovereenkomst App-->Koper Koos: User session
+  end
+
+  Koopovereenkomst App-->Koopovereenkomst App: URL ontsleutelen naar \n- Verkoper Vera POD\n- key koopovereenkomst\n- rol 'koper'
+  Koopovereenkomst App-->POD Verkoper Vera: Koper Koos toevoegen als 'koper'
+  Koopovereenkomst App->Koper Koos: Succesvol aangemeld als 'koper
+
+  expandable− Koppelen POD Koper Koos
+    Koper Koos->Koopovereenkomst App: Connect POD
+    Koopovereenkomst App-->POD Verkoper Vera: Link opslaan naar POD Koper Koos
+    Koopovereenkomst App-->POD Koper Koos: Request access
+    note over POD Koper Koos: Aanvragen van toegang tot specifieke persoonlijke\n informatie expliciet voor de rol van koper benodigd:\n[folder: zorgeloosvastgoed/koopovereenkomst-123]
+    Koper Koos->POD Koper Koos: Accept access request for App
+    Koper Koos->Koopovereenkomst App: Show dashboard
+    Koopovereenkomst App-->POD Koper Koos: Check access
+    activate POD Koper Koos
+    POD Koper Koos-->Koopovereenkomst App: Authorized
+    deactivate POD Koper Koos
+    Koopovereenkomst App->Koper Koos: POD Connected
+  end
+
+  expandable− Koper Koos vult persoonlijke gegevens in eigen POD (mbv IRMA)
+    Koper Koos->IRMA van Koos: Export kaartjes
+    IRMA van Koos->Koper Koos: Kaartjes
+    Koper Koos->POD Koper Koos: Upload kaartjes uit IRMA in [folder: zorgeloosvastgoed/koopovereenkomst-123]
+  end 
+  
+  deactivate Koopovereenkomst App
+  deactivate Koper Koos
+end // of Koper Koos vult koopovereenkomst als koper
+
+
+expandable− Show dashboard (same for all users)
   Verkoper Vera->Koopovereenkomst App: Request dashboard
+  activate Koopovereenkomst App
   Koper Koos->Koopovereenkomst App: Request dashboard
-  Koopovereenkomst App->POD Makelaarskantoor: Read koopovereenkomst data
-  note over POD Makelaarskantoor: algemene data\nplus refs naar andere PODs
-  Koopovereenkomst App->POD Verkoper Vera: Read Verkoper data
-  Koopovereenkomst App->POD Koper Koos: Read Koper data
-  Koopovereenkomst App->Makelaar Mike: Dashboard huidige stand
+  Koopovereenkomst App-->POD Verkoper Vera: Read koopovereenkomst data
+  note over POD Verkoper Vera: algemene data\nplus refs naar andere PODs
+  Koopovereenkomst App-->POD Verkoper Vera: Read Verkoper data
+  Koopovereenkomst App-->POD Koper Koos: Read Koper data
+  Koopovereenkomst App-->Koopovereenkomst App: Ophalen van onroerende zaak info,\neigendomssituatie, belemmerende rechten,\netc bij Kadaster (en meer?)
   Koopovereenkomst App->Verkoper Vera: Dashboard huidige stand
   Koopovereenkomst App->Koper Koos: Dashboard huidige stand
   deactivate Koopovereenkomst App
@@ -128,12 +129,13 @@ end // of dashboard
 expandable− Ceremonie van het tekenen
 
   expandable− Bevriezen voor tekenen
-    Makelaar Mike->Koopovereenkomst App: Bevriezen van de Koopovereenkomst
+    Verkoper Vera->Koopovereenkomst App: Bevriezen van de Koopovereenkomst
     activate Koopovereenkomst App
     Koopovereenkomst App-->POD Verkoper Vera: Ophalen persoonlijke info als 'verkoper'
     Koopovereenkomst App-->POD Koper Koos: Ophalen persoonlijke info als 'koper'
+    Koopovereenkomst App-->Koopovereenkomst App: Ophalen van onroerende zaak info,\neigendomssituatie, belemmerende rechten,\netc bij Kadaster (en meer?)
     Koopovereenkomst App-->Koopovereenkomst App: Genereren vastgestelde koopovereenkomst
-    Koopovereenkomst App-->POD Makelaarskantoor: Opslaan vastgestelde koopovereenkomst voor tekenen
+    Koopovereenkomst App-->POD Verkoper Vera: Opslaan vastgestelde koopovereenkomst voor tekenen
     deactivate Koopovereenkomst App
   end
 
@@ -141,12 +143,12 @@ expandable− Ceremonie van het tekenen
     Verkoper Vera->Koopovereenkomst App: Opvragen koopovereenkomst om te tekenen
     activate Verkoper Vera
     activate Koopovereenkomst App
-    Koopovereenkomst App-->POD Makelaarskantoor: Opvragen vastgestelde koopovereenkomst
-    POD Makelaarskantoor-->Koopovereenkomst App: Vastgestelde koopovereenkomst
+    Koopovereenkomst App-->POD Verkoper Vera: Opvragen vastgestelde koopovereenkomst
+    POD Verkoper Vera-->Koopovereenkomst App: Vastgestelde koopovereenkomst
     Koopovereenkomst App->Verkoper Vera: 'Verkoper view' van de vastgestelde Koopovereenkomst
     Verkoper Vera->Koopovereenkomst App: Tekenen als 'Verkoper'
     deactivate Verkoper Vera
-    Koopovereenkomst App-->POD Makelaarskantoor: Opslaan 'Verkoper getekend'
+    Koopovereenkomst App-->POD Verkoper Vera: Opslaan 'Verkoper getekend'
     deactivate Koopovereenkomst App
   end 
 
@@ -154,39 +156,57 @@ expandable− Ceremonie van het tekenen
     Koper Koos->Koopovereenkomst App: Opvragen koopovereenkomst om te tekenen
     activate Koper Koos
     activate Koopovereenkomst App
-    Koopovereenkomst App-->POD Makelaarskantoor: Opvragen vastgestelde koopovereenkomst
-    POD Makelaarskantoor-->Koopovereenkomst App: Vastgestelde koopovereenkomst
+    Koopovereenkomst App-->POD Verkoper Vera: Opvragen vastgestelde koopovereenkomst
+    POD Verkoper Vera-->Koopovereenkomst App: Vastgestelde koopovereenkomst
+    Koopovereenkomst App-->POD Koper Koos: 'Koper view' van de vastgestelde Koopovereenkomst opslaan
     Koopovereenkomst App->Koper Koos: 'Koper view' van de vastgestelde Koopovereenkomst
     Koper Koos->Koopovereenkomst App: Tekenen als 'Koper'
     deactivate Koper Koos
-    Koopovereenkomst App-->POD Makelaarskantoor: Opslaan 'Koper getekend'
+    Koopovereenkomst App-->POD Koper Koos: Opslaan 'Koper getekend'
+    Koopovereenkomst App-->POD Verkoper Vera: Opslaan 'Koper getekend'
     deactivate Koopovereenkomst App
   end 
 
 end // of tekenen
 
 expandable− Afronden koopovereenkomst
-  Makelaar Mike->Koopovereenkomst App: Afronden koopovereenkomst
-  activate Makelaar Mike
+  Verkoper Vera->Koopovereenkomst App: Afronden koopovereenkomst
+  activate Verkoper Vera
   activate Koopovereenkomst App
-  Koopovereenkomst App-->POD Makelaarskantoor: Ophalen vastgestelde koopovereenkomst
+  Koopovereenkomst App-->POD Verkoper Vera: Ophalen vastgestelde koopovereenkomst
   Koopovereenkomst App-->Koopovereenkomst App: Genereren getekende koopovereenkomst
-  Koopovereenkomst App-->POD Makelaarskantoor: Opslaan getekende koopovereenkomst
+  Koopovereenkomst App-->POD Verkoper Vera: Opslaan getekende koopovereenkomst
   Koopovereenkomst App-->POD Verkoper Vera: Opslaan 'verkoper view' getekende koopovereenkomst
   Koopovereenkomst App-->POD Koper Koos: Opslaan 'koper view' getekende koopovereenkomst
   note over Koopovereenkomst App: Getekende koopovereenkomst (volledig) moet\nook gedeeld worden met de notaris tbv levering\n(en eventueel inschrijven)
   
   expandable− [optioneel] Inschrijven koopovereenkomst (door koper)
     Koper Koos->Koopovereenkomst App: Inschrijven koopovereenkomst
+    Koopovereenkomst App-->POD Verkoper Vera: Ophalen getekende koopovereenkomst
     note over Koopovereenkomst App: Inschrijven van koopovereenkomst door\naanbieden van getekende (en volledige)\nkoopovereenkomst aan Kadaster door een\nnotaris door koper geselecteerd
   end 
-  Makelaar Mike->Koopovereenkomst App: Archiveren koopovereenkomst
-  deactivate Makelaar Mike
-  Koopovereenkomst App-->POD Verkoper Vera: Intrekken toegang van App
-  Koopovereenkomst App-->POD Koper Koos: Intrekken toegang van App
-  Koopovereenkomst App-->POD Makelaarskantoor: Intrekken toegang van kopers en verkopers
-  activate POD Makelaarskantoor
-  Koopovereenkomst App-->POD Makelaarskantoor: [optioneel] Delete koopovereenkomst dossier
-  deactivate POD Makelaarskantoor
+  
   deactivate Koopovereenkomst App
+  deactivate Verkoper Vera
 end // of afronden
+
+
+expandable- Verkoper Vera archiveren koopovereenkomst
+  activate Verkoper Vera
+  Verkoper Vera->Koopovereenkomst App: [optioneel] Archiveren koopovereenkomst
+  activate Koopovereenkomst App
+  Koopovereenkomst App-->POD Verkoper Vera: Delete koopovereenkomst dossier
+  deactivate Koopovereenkomst App
+  Verkoper Vera->POD Verkoper Vera: [optioneel] Intrekken toegang van Koopovereenkomst App
+  deactivate Verkoper Vera
+end // verkoper vera archiveren
+
+expandable- Koper Koos archiveren koopovereenkomst
+  activate Koper Koos
+  Koper Koos->Koopovereenkomst App: [optioneel] Archiveren koopovereenkomst
+  activate Koopovereenkomst App
+  Koopovereenkomst App-->POD Koper Koos: Delete koopovereenkomst dossier
+  deactivate Koopovereenkomst App
+  Koper Koos->POD Koper Koos: [optioneel] Intrekken toegang van Koopovereenkomst App
+  deactivate Koper Koos
+end // koper koos archiveren

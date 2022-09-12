@@ -1,6 +1,6 @@
 # SOLID Quest
 
-Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of creating a [Demonstrator Koopovereenkomst Solid App](demonstrator-koopovereenkomst-solid-app/).
+Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of creating a [Demonstrator Koopovereenkomst Solid App](#demonstrator-koopovereenkomst-solid-app).
 
 [Demo](https://marcvanandel.github.io/solid-quest/)
 
@@ -20,7 +20,7 @@ Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of c
 
 ## Demonstrator Koopovereenkomst Solid App
 
-Deze repo bevat (een eerste opzet voor) de **Demonstrator Koopovereenkomst Solid App**. Deze is bedoeld om kennis op te doen van hoe Solid PODs werken en hoe deze te gebruiken. In deze demonstator wordt een vereenvoudigde koopovereenkomst gesloten tussen Verkoper Vera en Koper Koos. Makelaar Mike faciliteert het proces en heeft de verantwoordelijkheid om het proces te initiëren, info toe te voegen die telefonisch of mondeling tussen verkoper en koper tot stand komt.
+Deze repo bevat (een eerste opzet voor) de **Demonstrator Koopovereenkomst Solid App**. Deze is bedoeld om kennis op te doen van hoe Solid PODs werken en hoe deze te gebruiken. In deze demonstator wordt een vereenvoudigde koopovereenkomst gesloten tussen Verkoper Vera en Koper Koos. In een eerste iteratie hadden wij bedacht dat Makelaar Mike het proces faciliteert en de verantwoordelijkheid heeft om het proces te initiëren, info toe te voegen die telefonisch of mondeling tussen verkoper en koper tot stand komt. Al werkende zijn we gekomen tot het punt dat een Solid POD vooral alle eigen data zou moeten vasthouden ... en dus _niet_ in een externe POD. Aangezien Verkoper Vera haar huis verkoopt, is zij ook initiator en 'eigenaar' van de koopovereenkomst. De eerste en meeste data komt dan ook in haar POD terecht. Uiteraard zou de data van Koper Koos vooral in zijn POD terecht moeten komen en een links naar elkaars PODs behoort tot beider data.
 
 [Live Demo](https://marcvanandel.github.io/solid-quest/)
 
@@ -34,10 +34,9 @@ Voor de demonstrator is alleen een WebApp / UserInterface benodigd en geen backe
 
 Het proces dat doorlopen wordt, is basaal als volgt:
 
-1. Makelaar Mike initieert een nieuwe koopovereenkomst in de [Koopovereenkomst App]. Om dat te kunnen doen faciliteert hij (als makelaarskantoor) met een Solid POD tbv opslag en verzameling van deze koopovereenkomst: de POD Makelaarskantoor
-1. Verkoper Vera ontvangt een link waarmee zij haar gegevens kan invullen in de koopovereenkomst en haar eigen Solid POD kan koppelen. Door deze link krijgt zij automatisch de rol van 'verkoper'
-1. Koper Koos ontvangen een link waarmee hij zijn gegevens kan invullen in de koopovereenkomst en zijn eigen Solid POD kan koppelen. Door deze link krijgt hij automatisch de rol 'koper'
-1. Als alles compleet is, kan Makelaar Mike de koopovereenkomst 'bevriezen' en een 'vastgestelde koopovereenkomst' genereren. In deze stap worden de gebruikte gegevens opgehaald en opgeslagen in de Solid POD van het makelaarskantoor omdat niet kan worden gegarandeerd dan één van de partijen tussentijds nog wijzigingen in zijn/haar POD doet.
+1. Verkoper Vera initieert een nieuwe koopovereenkomst in de [Koopovereenkomst App]. Zij vult de koopovereenkomst met de gegevens van haar huis en dat wordt in haar eigen POD opgeslagen: POD Verkoper Vera
+1. Koper Koos ontvangt een link van Verkoper Vera waarmee hij zijn gegevens kan invullen in de koopovereenkomst en zijn eigen Solid POD kan koppelen. Door deze link krijgt hij automatisch de rol 'koper'
+1. Als alles compleet is, kan Verkoper Vera de koopovereenkomst 'bevriezen' en een 'vastgestelde koopovereenkomst' genereren. In deze stap worden de gebruikte gegevens opgehaald en opgeslagen in de Solid POD van Verkoper Vera zodat een expliciete versie ondertekend kan worden.
 1. Als elke partij getekend heeft, kan de koopovereenkomst afgerond worden. Dat betekent dat elke partij een specifieke 'afschrift' ontvangen, welke opgeslagen wordt in zijn/haar POD. De complete koopovereenkomst zou dan gedeeld moeten worden met de notaris tbv de uiteindelijke levering en kan optioneel ingeschreven worden in het Openbaar Register.
 
 Bovenstaande is in detail uitgewerkt in een [Sequence Diagram](https://raw.githubusercontent.com/marcvanandel/solid-quest/main/koopovereenkomst-sequencediagram.png) (gemaakt mbv [SequenceDiagram.org](https://sequencediagram.org/) en [koopovereenkomst-sequencediagram.txt](koopovereenkomst-sequencediagram.txt))
