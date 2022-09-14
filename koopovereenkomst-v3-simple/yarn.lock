@@ -2154,6 +2154,11 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.4.tgz#0c8b74c50f29ee44f423f7416829c0bf8bb5eb27"
   integrity sha512-LwzQKA4vzIct1zNZzBmRKI9QuNpLgTQMEjsQLf3BXuGYb3QPTP4Yjf6mkdX+X1mYttZ808QpOwAzZjv28kq7DA==
 
+"@solid/context@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@solid/context/-/context-1.1.0.tgz#3b4e95311731e89cd955b7e6c8981ff9650072d1"
+  integrity sha512-8PN34BsT99t6GZR+U8/lmpLVkg5yGP0VqkiS3RMKtOBqrnBnlrwesMZ0d1wSbgLB047Z5Ubn8M7Ol9Bmu03Z8A==
+
 "@swc/helpers@0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.4.3.tgz#16593dfc248c53b699d4b5026040f88ddb497012"
