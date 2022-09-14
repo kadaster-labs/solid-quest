@@ -12,7 +12,7 @@ zvg:koopovereenkomst
     a zvg:Koop;
     zvg:aangebodenDoor marc:;
     zvg:aan janneke:;
-    zvg:koomsom 412000;
+    zvg:koopsom 412000;
     zvg:vanZakelijkRecht <https://data.kkg.kadaster.nl/id/zakelijkrecht/1004387823748930> .
 
 marc:
