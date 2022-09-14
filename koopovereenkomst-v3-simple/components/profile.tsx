@@ -1,5 +1,5 @@
 import {
-    CombinedDataProvider, Text, useSession
+    CombinedDataProvider, Text, useSession, Value
 } from "@inrupt/solid-ui-react";
 import { FOAF, VCARD } from "@inrupt/vocab-common-rdf";
 
@@ -7,6 +7,10 @@ export default function Profile() {
 
     const { session } = useSession();
     const { webId } = session.info;
+
+    const logError = async function (e) {
+        console.log(`error gebeurt`, e);
+    }
 
     return (
         <div>
@@ -17,7 +21,7 @@ export default function Profile() {
                     <li>name (vcard): <Text property={VCARD.fn} /></li>
                     {/* <li>lastname: <Text property={FOAF.lastName} /></li>
                     <li>firstname: <Text property={FOAF.firstName} /></li> */}
-                    <li>birthday: <Text property={VCARD.bday} /></li>
+                    <li>birthday: <Value property={VCARD.bday} dataType="datetime" /></li>
                 </ul>
             </CombinedDataProvider>
         </div>
