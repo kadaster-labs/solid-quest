@@ -43,7 +43,7 @@ Bovenstaande is in detail uitgewerkt in een [Sequence Diagram](https://raw.githu
 
 ### Techniek
 
-- [**v1**](./demonstrator-koopovereenkomst-solid-app/) : Voor de eerste versie is een poging gedaan op basis van ReactJS en GatsbyJS
+- **v1** (verwijderd: zie [commit 5aa84140](https://github.com/marcvanandel/solid-quest/tree/5aa841404d5f50c8144a8caa1527101fbdb05bad)) : Voor de eerste versie is een poging gedaan op basis van ReactJS en GatsbyJS
   Voor de realisatie van de Koopovereenkomst App is gekozen voor Typescript en [React](https://reactjs.org/). Het framework wat deze combinatie snel en gemakkelijk maakt en ook gebruikt is, is [Gatsby](https://www.gatsbyjs.com/). (zie ook issue #4)
   -> dit leverde behoorlijk veel dependency issues op ... :(
 - **v2**: Een tweede versie ... dit GitHub niet eens gehaald heeft
