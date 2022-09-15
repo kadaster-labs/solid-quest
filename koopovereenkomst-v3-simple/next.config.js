@@ -4,9 +4,19 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  basePath: '/solid-quest',
+  basePath: "/solid-quest",
   images: {
     loader: "custom",
+  },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/solid-quest/",
+        permanent: false,
+        basePath: false,
+      },
+    ];
   },
 };
 
