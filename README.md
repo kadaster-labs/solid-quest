@@ -48,3 +48,23 @@ Bovenstaande is in detail uitgewerkt in een [Sequence Diagram](https://raw.githu
   -> dit leverde behoorlijk veel dependency issues op ... :(
 - **v2**: Een tweede versie ... dit GitHub niet eens gehaald heeft
 - [**v3**](koopovereenkomst-v3-simple/): Een Next.js versie :tada:
+
+### Development
+
+To start a 'verkoper' and 'koper' POD based on [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer) use `docker-compose`:
+
+```bash
+docker compose up
+```
+
+- Verkoper POD: [localhost:3001](http://localhost:3001)
+- Koper POD: [localhost:3002](http://localhost:3002)
+
+To start the 'Koopovereenkomst App' switch to the `koopovereenkomst-v3-simple` folder and run `yarn dev`:
+
+```bash
+cd koopovereenkomst-v3-simple
+yarn dev
+```
+
+Open the app at [localhost:3000](http://localhost:3000)
