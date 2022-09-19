@@ -1936,7 +1936,7 @@
     crypto-js "^4.0.0"
     serialize-javascript "^4.0.0"
 
-"@inrupt/solid-client-authn-browser@^1.12.0", "@inrupt/solid-client-authn-browser@^1.12.1":
+"@inrupt/solid-client-authn-browser@^1.12.0", "@inrupt/solid-client-authn-browser@^1.12.1", "@inrupt/solid-client-authn-browser@^1.12.2":
   version "1.12.2"
   resolved "https://registry.yarnpkg.com/@inrupt/solid-client-authn-browser/-/solid-client-authn-browser-1.12.2.tgz#c76e05eb14f13eee338803e8e7b0984b7acf41bd"
   integrity sha512-7yNKJjg7ObBCtSuus2n8rNIet5FbALzRdrY7JaQlq6frJtRd1IR5KszD+xhC5qdU+HpeUb1s4Q3+HEsPx7KHYA==

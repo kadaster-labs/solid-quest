@@ -1,4 +1,5 @@
-import { getInteger, getSolidDataset, getThingAll, isThing } from '@inrupt/solid-client';
+import { getInteger, getSolidDataset, getThingAll } from '@inrupt/solid-client';
+import { fetch } from '@inrupt/solid-client-authn-browser';
 import { useSession } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
 import { useEffect, useState } from "react";
@@ -56,27 +57,19 @@ export default function Verkoper() {
     const koopovereenkomstFile = () => {
         return `${podUrl}koopovereenkomst-${caseId}.ttl`;
     }
-    // const koopovereenkomstFile = 'https://marcvanandel.solidcommunity.net/zorgeloosvastgoed/koopovereenkomst-123.ttl';
 
     const openenKoopovereenkomstWithInruptSolidClient = async function () {
         try {
-            const theKO = await getSolidDataset(koopovereenkomstFile());
-            // const theKO = await getSolidDataset(`https://marcvanandel.solidcommunity.net/zorgeloosvastgoed/koopovereenkomst-${caseId}.ttl`)
 
-
-            if (isThing(theKO)) {
-                alert('Deze koopovereenkomst bestaat!')
-            }
-            else {
-                alert('Deze koopovereenkomst bestaat NIET! Aanmaken?')
-            }
+            const theKO = await getSolidDataset(koopovereenkomstFile(), { fetch: fetch });
 
             for (const thing of getThingAll(theKO)) {
                 // console.log(JSON.stringify(thing));
                 // De koper vraagt specifiek de koopsom op.
                 const koopsom = getInteger(thing, zvg.koopsom)
                 if (koopsom) {
-                    console.log(`Koopsom: ${koopsom}`)
+                    console.log(`Koopsom: ${koopsom}`);
+                    alert(`Koopsom: ${koopsom}`);
                 }
             }
         } catch (error) {
