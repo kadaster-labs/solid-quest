@@ -43,6 +43,11 @@ const zvg = {
     koopsom: zvg_base + 'koopsom',
 }
 
+interface Case {
+    caseId?: string;
+    koopsom?: number;
+}
+
 export default function Verkoper() {
 
     const title = "Verkoper Homepage";
@@ -52,6 +57,7 @@ export default function Verkoper() {
 
     const [podUrl, setPodUrl] = useState("");
     const [caseId, setCaseId] = useState("");
+    const [curCase, setCase] = useState<Case>({} as Case);
     const [errors, setErrors] = useState("");
 
     const koopovereenkomstFile = () => {
@@ -61,7 +67,14 @@ export default function Verkoper() {
     const openenKoopovereenkomstWithInruptSolidClient = async function () {
         try {
 
+            setCase({});
+
             const theKO = await getSolidDataset(koopovereenkomstFile(), { fetch: fetch });
+
+            setCase(prevState => ({
+                ...prevState,
+                caseId: caseId,
+            }));
 
             for (const thing of getThingAll(theKO)) {
                 // console.log(JSON.stringify(thing));
@@ -69,7 +82,11 @@ export default function Verkoper() {
                 const koopsom = getInteger(thing, zvg.koopsom)
                 if (koopsom) {
                     console.log(`Koopsom: ${koopsom}`);
-                    alert(`Koopsom: ${koopsom}`);
+                    // alert(`Koopsom: ${koopsom}`);
+                    setCase(prevState => ({
+                        ...prevState,
+                        koopsom: koopsom,
+                    }))
                 }
             }
         } catch (error) {
@@ -134,11 +151,18 @@ export default function Verkoper() {
                         defaultValue={caseId}
                         onChange={(e) => setCaseId(e.target.value)}
                     />
-                    <button onClick={openenKoopovereenkomstWithLDflex}>Openen met LDflex</button>
+                    <button disabled onClick={openenKoopovereenkomstWithLDflex}>Openen met LDflex</button>
                     <button onClick={openenKoopovereenkomstWithInruptSolidClient}>Openen met Inrupt Solid Client</button>
                     {errors !== "" && <div className={styles.errors}>
                         <p>{errors}</p>
                         <button onClick={() => setErrors("")}>clear</button>
+                    </div>
+                    }
+                    {curCase.caseId && <div className={styles.info}>
+                        <p>Koopovereenkomst info (from {koopovereenkomstFile()}):</p>
+                        <ul>
+                            <li>Koopsom: {curCase.koopsom}</li>
+                        </ul>
                     </div>
                     }
                 </div>}
