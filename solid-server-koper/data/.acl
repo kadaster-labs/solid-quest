@@ -16,7 +16,7 @@
     a acl:Authorization;
     acl:agent <http://localhost:3002/profile/card#me>;
     # Optional owner email, to be used for account recovery:
-    acl:agent <mailto:vera@world.com>;
+    acl:agent <mailto:koos@world.com>;
     # Set the access to the root storage folder itself
     acl:accessTo <./>;
     # All resources will inherit this authorization, by default
