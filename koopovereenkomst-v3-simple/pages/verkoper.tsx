@@ -1,7 +1,7 @@
 import { getInteger, getSolidDataset, getThingAll, isThing } from '@inrupt/solid-client';
 import { useSession } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KadasterKnowledgeGraph from "../components/kkg";
 import Layout from '../components/layout';
 import Profile from "../components/profile";
@@ -47,15 +47,19 @@ export default function Verkoper() {
     const title = "Verkoper Homepage";
 
     const { session } = useSession();
-    const { webId } = session.info;
+    const webId = session.info.webId;
+
+    const [podUrl, setPodUrl] = useState("");
 
     const [caseId, setCaseId] = useState("");
 
-    const koopovereenkomstFile = 'http://localhost:3001/koopovereenkomst-123.ttl';
+    const koopovereenkomstFile = () =>{
+        return `${podUrl}koopovereenkomst-${caseId}.ttl`;
+    }
     // const koopovereenkomstFile = 'https://marcvanandel.solidcommunity.net/zorgeloosvastgoed/koopovereenkomst-123.ttl';
 
     const openenKoopovereenkomstWithInruptSolidClient = async function () {
-        const theKO = await getSolidDataset(koopovereenkomstFile);
+        const theKO = await getSolidDataset(koopovereenkomstFile());
         // const theKO = await getSolidDataset(`https://marcvanandel.solidcommunity.net/zorgeloosvastgoed/koopovereenkomst-${caseId}.ttl`)
 
 
@@ -79,7 +83,7 @@ export default function Verkoper() {
     const openenKoopovereenkomstWithLDflex = async function () {
         console.log(`Openen van Koopovereenkomst [caseId: ${caseId}]`);
 
-        const queryEngine = new ComunicaEngine(koopovereenkomstFile);
+        const queryEngine = new ComunicaEngine(koopovereenkomstFile());
         // see https://github.com/LDflex/Query-Solid#adding-a-custom-json-ld-context
         const path = new PathFactory({ context, queryEngine });
         const ko = path.create({
@@ -94,6 +98,19 @@ export default function Verkoper() {
         // console.log(`username: ${await solid.data['https://ruben.verborgh.org/profile/#me'].firstName}`);
     }
 
+    useEffect(() => {
+        if (webId !== "") {
+            try {
+                const url = new URL(webId);
+                const thePodUrl = webId.split(url.pathname)[0] + "/";
+                console.debug('The POD url is: ', thePodUrl);
+                setPodUrl(thePodUrl);
+            } catch (error) {
+
+            }
+        }
+    }, [podUrl, webId]);
+
     return (
         <Layout role="verkoper">
             <Head>
@@ -106,6 +123,7 @@ export default function Verkoper() {
             {session.info.isLoggedIn &&
                 <div className={styles.koopovereenkomstMain}>
                     <p>logged in: {webId}</p>
+                    <p>POD url: {podUrl}</p>
                     <label>Koopovereenkomst nummer:</label>
                     <input
                         id="caseId"
