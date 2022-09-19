@@ -7,17 +7,17 @@
 
 <>
     a foaf:PersonalProfileDocument;
-    foaf:maker <http://localhost:3001/profile/card#me>;
-    foaf:primaryTopic <http://localhost:3001/profile/card#me>.
+    foaf:maker <http://localhost:3002/profile/card#me>;
+    foaf:primaryTopic <http://localhost:3002/profile/card#me>.
 
 :me
     a schema:Person, foaf:Person;
-    vcard:bday "1988-04-13T08:30:00.000Z"^^xsd:dateTime;
-    foaf:name "Verkoper Vera";
-    vcard:fn "Verkoper Vera".
+    vcard:bday "1992-11-28T16:01:00.000Z"^^xsd:dateTime;
+    foaf:name "Koper Koos";
+    vcard:fn "Koper Koos".
 
-<http://localhost:3001/profile/card#me>
+<http://localhost:3002/profile/card#me>
     
-    solid:oidcIssuer <http://localhost:3001/>;
+    solid:oidcIssuer <http://localhost:3002/>;
     a foaf:Person.
 
