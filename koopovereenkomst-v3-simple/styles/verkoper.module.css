@@ -8,9 +8,16 @@
   border: 1px solid black;
 }
 
+.errors {
+  background-color: rgb(255, 223, 223);
+  border: 1px solid rgb(114, 0, 0);
+}
+
 @media (prefers-color-scheme: dark) {
     .koopovereenkomstMain button {
       border: 1px solid lightgray;
     }
-    
+    .errors {
+      color:rgb(114, 0, 0);
+    }
 }

@@ -50,52 +50,62 @@ export default function Verkoper() {
     const webId = session.info.webId;
 
     const [podUrl, setPodUrl] = useState("");
-
     const [caseId, setCaseId] = useState("");
+    const [errors, setErrors] = useState("");
 
-    const koopovereenkomstFile = () =>{
+    const koopovereenkomstFile = () => {
         return `${podUrl}koopovereenkomst-${caseId}.ttl`;
     }
     // const koopovereenkomstFile = 'https://marcvanandel.solidcommunity.net/zorgeloosvastgoed/koopovereenkomst-123.ttl';
 
     const openenKoopovereenkomstWithInruptSolidClient = async function () {
-        const theKO = await getSolidDataset(koopovereenkomstFile());
-        // const theKO = await getSolidDataset(`https://marcvanandel.solidcommunity.net/zorgeloosvastgoed/koopovereenkomst-${caseId}.ttl`)
+        try {
+            const theKO = await getSolidDataset(koopovereenkomstFile());
+            // const theKO = await getSolidDataset(`https://marcvanandel.solidcommunity.net/zorgeloosvastgoed/koopovereenkomst-${caseId}.ttl`)
 
 
-        if (isThing(theKO)) {
-            alert('Deze koopovereenkomst bestaat!')
-        }
-        else {
-            alert('Deze koopovereenkomst bestaat NIET! Aanmaken?')
-        }
-
-        for (const thing of getThingAll(theKO)) {
-            // console.log(JSON.stringify(thing));
-            // De koper vraagt specifiek de koopsom op.
-            const koopsom = getInteger(thing, zvg.koopsom)
-            if (koopsom) {
-                console.log(`Koopsom: ${koopsom}`)
+            if (isThing(theKO)) {
+                alert('Deze koopovereenkomst bestaat!')
             }
+            else {
+                alert('Deze koopovereenkomst bestaat NIET! Aanmaken?')
+            }
+
+            for (const thing of getThingAll(theKO)) {
+                // console.log(JSON.stringify(thing));
+                // De koper vraagt specifiek de koopsom op.
+                const koopsom = getInteger(thing, zvg.koopsom)
+                if (koopsom) {
+                    console.log(`Koopsom: ${koopsom}`)
+                }
+            }
+        } catch (error) {
+            setErrors('Error opening koopovereenkomst! ' + error);
+            throw error;
         }
     }
 
     const openenKoopovereenkomstWithLDflex = async function () {
-        console.log(`Openen van Koopovereenkomst [caseId: ${caseId}]`);
+        try {
+            console.log(`Openen van Koopovereenkomst [caseId: ${caseId}]`);
 
-        const queryEngine = new ComunicaEngine(koopovereenkomstFile());
-        // see https://github.com/LDflex/Query-Solid#adding-a-custom-json-ld-context
-        const path = new PathFactory({ context, queryEngine });
-        const ko = path.create({
-            subject: namedNode(`${prefix.zvg}koopovereenkomst`),
-        });
+            const queryEngine = new ComunicaEngine(koopovereenkomstFile());
+            // see https://github.com/LDflex/Query-Solid#adding-a-custom-json-ld-context
+            const path = new PathFactory({ context, queryEngine });
+            const ko = path.create({
+                subject: namedNode(`${prefix.zvg}koopovereenkomst`),
+            });
 
-        console.log(`iets uit de ttl: ${await ko.koopsom}`);
+            console.log(`iets uit de ttl: ${await ko.koopsom}`);
 
-        // const ruben = solid.data['https://ruben.verborgh.org/profile/#me'];
-        // console.log(await ruben.name);
+            // const ruben = solid.data['https://ruben.verborgh.org/profile/#me'];
+            // console.log(await ruben.name);
 
-        // console.log(`username: ${await solid.data['https://ruben.verborgh.org/profile/#me'].firstName}`);
+            // console.log(`username: ${await solid.data['https://ruben.verborgh.org/profile/#me'].firstName}`);
+        } catch (error) {
+            setErrors('Error opening koopovereenkomst! ' + error);
+            throw error;
+        }
     }
 
     useEffect(() => {
@@ -133,6 +143,11 @@ export default function Verkoper() {
                     />
                     <button onClick={openenKoopovereenkomstWithLDflex}>Openen met LDflex</button>
                     <button onClick={openenKoopovereenkomstWithInruptSolidClient}>Openen met Inrupt Solid Client</button>
+                    {errors !== "" && <div className={styles.errors}>
+                        <p>{errors}</p>
+                        <button onClick={() => setErrors("")}>clear</button>
+                    </div>
+                    }
                 </div>}
 
             {session.info.isLoggedIn && <Profile />}
