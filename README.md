@@ -6,7 +6,7 @@ Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of c
 
 ## Collected Info
 
-- Personal Online Dataspaces (PODs)
+- Personal Online Datastore (PODs)
   - SOLID core / general info
     - [SOLID Project](https://solidproject.org/) - the _base_ of SOLID
     - [SolidOS](https://github.com/SolidOS/solidos)
