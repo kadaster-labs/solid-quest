@@ -1,0 +1,13 @@
+{
+  "name": "solid-vc-testje",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "marcvanandel <marc.vanandel@kadaster.nl>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@digitalbazaar/ed25519-signature-2018": "^3.0.0",
+    "@digitalbazaar/ed25519-verification-key-2018": "^4.0.0",
+    "@digitalbazaar/vc": "^5.0.0"
+  }
+}
