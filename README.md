@@ -24,16 +24,31 @@ Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of c
   - [iSHARE](https://ishare.eu/) - iSHARE is the European standard for and trust network of international business data sharing in a sovereign way.
   - [Gaia-X](https://gaia-x.eu/) - Gaia-X is a European project and aims to establish a data space ecosystem, whereby data is shared and made available in a trustworthy environment
 
-## Data pods vs data spaces
+## Knowledge
+
+### Data pods vs data spaces
 
 We merken dat de termen data pods en data spaces vaak door elkaar worden gebruikt, terwijl er volgens ons verschillende dingen mee worden bedoeld. Voor data pods is de definitie van [PLDN](https://www.pldn.nl/wiki/PODS) vrij duidelijk:
+
 > "Personal Online Data Stores (PODS) of Personal Online Data Storage Containers zijn beveiligde online opslagplaatsen voor persoonlijke gegevens waar apps toegang tot kunnen hebben als zij daarvoor geautoriseerd zijn."
 
 De definitie van een data space is minder duidelijk. [Gaia-X](https://gaia-x.eu/what-is-gaia-x/core-elements/data-spaces/) heeft het bijvoorbeeld over 
 
 > "The term ‘data space’ refers to a type of data relationship between trusted partners who adhere to the same high level standards and guidelines in relation to data storage and sharing within one or many Vertical Ecosystems." 
 
-Onze vertaling is dat pods vooral gericht zijn op persoonlijke data kluizen waarbij de burger zelf controle heeft over welke data die erin plaatst en welke data die deelt. Data spaces lijken meer gericht te zijn op organisaties met als doel het stimuleren van data delen/samenwerken en tegelijkertijd controle te houden over je data. Binnen dit project zal de focus meer liggen op data pods.
+Onze vertaling is dat pods vooral gericht zijn op persoonlijke data kluizen; een persoonlijke online datastore. Als burger heb ik zelf controle over wat ik daar in zet, wie of welke apps ik toegang verleen en welke data ik (dus) deel met wie. De visie van het Solid Project gaat nog verder in de zin dat _alle_ data die ik online deel, in mijn pod zou moeten staan. Applicaties en platformen kunnen deze data gebruiken zolang zij toegang verleent krijgen door de burger zelf. Platformen als Facebook, Twitter e.d. zijn rijke applicaties die vooral bestaan om de functionaliteiten die zij bieden, terwijl de data in alle pods van alle gebruikers staat. (Dit is ook wat [Post Platforms Initiative](https://postplatforms.org/#concept) tracht te bereiken)
+
+Data spaces lijken meer gericht te zijn op organisaties met als doel het stimuleren en bereiken van data delen/samenwerken en tegelijkertijd controle te houden over je data.
+
+Binnen dit project zal de focus meer liggen op data pods.
+
+### WebID
+
+Een WebID duidt op meerdere 'dingen'. Het is:
+
+1. een unieke IRI (International Resource Identifier) en URL
+1. een document dat een 'resource' beschrijft; dat kan een beschrijving van de mens zijn, zijn profiel dus, maar ook een organisatie, een service (bot)
+1. een service voor authenticatie en deels autorisatie (OpenID Connect / OAuth2)
 
 ## Work in Progress
 
