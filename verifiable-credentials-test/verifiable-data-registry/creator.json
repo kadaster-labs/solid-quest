@@ -1,0 +1,7 @@
+{
+    "@context": "https://w3id.org/security/v2",
+    "id": "http://localhost:8080/creator.json",
+    "assertionMethod": [
+        "http://localhost:8080/public-key.json"
+    ]
+}

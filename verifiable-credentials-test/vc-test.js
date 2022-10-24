@@ -1,17 +1,26 @@
 import * as vc from "@digitalbazaar/vc";
 
+import { documentLoader } from "./document-loader.js";
+
 // Required to set up a suite instance with private key
 import { Ed25519Signature2018 } from "@digitalbazaar/ed25519-signature-2018";
 import { Ed25519VerificationKey2018 } from "@digitalbazaar/ed25519-verification-key-2018";
 
 export default class VcTest {
   async run(params) {
-    const keyPair = await Ed25519VerificationKey2018.generate({controller: "did:example:123"});
+    const controller = "http://localhost:8080/creator.json";
+    
+    const keyPair = await Ed25519VerificationKey2018.generate({
+      id: "http://localhost:8080/public-key.json",
+      controller,
+      // Make sure the keyPair.publicKeyBase58 is updated in public-key.json
+      // It shouldn't change, as long as seed is kept the same
+      seed: Buffer.alloc(32).fill(0)
+    });
 
     console.log(`generated keypair with\npublic key:\n${keyPair.publicKeyBase58}\nand private key:\n${keyPair.privateKeyBase58}`);
 
     const suite = new Ed25519Signature2018({
-      verificationMethod: keyPair.id,
       key: keyPair,
     });
 
@@ -23,7 +32,7 @@ export default class VcTest {
       ],
       id: "https://example.com/credentials/1872",
       type: ["VerifiableCredential", "AlumniCredential"],
-      issuer: "https://example.edu/issuers/565049",
+      issuer: controller,
       issuanceDate: "2010-01-01T19:23:24Z",
       credentialSubject: {
         id: "did:example:ebfeb1f712ebc6f1c276e12ec21",
@@ -31,13 +40,13 @@ export default class VcTest {
       },
     };
 
-    const signedVC = await vc.issue({ credential, suite });
+    const signedVC = await vc.issue({ credential, suite, documentLoader });
 
     console.log(JSON.stringify(signedVC, null, 2));
 
     console.log('\n--------------------------------------------------------\n');
 
-    const result = await vc.verifyCredential({ credential, suite });
+    const result = await vc.verifyCredential({ credential: signedVC, suite, documentLoader });
 
     console.log(JSON.stringify(result, null, 2));
   }
