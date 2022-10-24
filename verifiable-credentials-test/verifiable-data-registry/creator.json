@@ -3,5 +3,8 @@
     "id": "http://localhost:8080/creator.json",
     "assertionMethod": [
         "http://localhost:8080/public-key.json"
+    ],
+    "authentication": [
+        "http://localhost:8080/public-key.json"
     ]
 }

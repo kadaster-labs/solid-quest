@@ -1,4 +1,5 @@
 import * as vc from "@digitalbazaar/vc";
+import { v4 as uuid } from 'uuid';
 
 import { documentLoader } from "./document-loader.js";
 
@@ -9,7 +10,7 @@ import { Ed25519VerificationKey2018 } from "@digitalbazaar/ed25519-verification-
 export default class VcTest {
   async run(params) {
     const controller = "http://localhost:8080/creator.json";
-    
+
     const keyPair = await Ed25519VerificationKey2018.generate({
       id: "http://localhost:8080/public-key.json",
       controller,
@@ -46,9 +47,38 @@ export default class VcTest {
 
     console.log('\n--------------------------------------------------------\n');
 
-    const result = await vc.verifyCredential({ credential: signedVC, suite, documentLoader });
+    const credentialVerificationResult = await vc.verifyCredential({ credential: signedVC, suite, documentLoader });
 
-    console.log(JSON.stringify(result, null, 2));
+    console.log(JSON.stringify(credentialVerificationResult, null, 2));
+
+    console.log('\n--------------------------------------------------------\n');
+
+    //
+    // Create presentation
+    // 
+    // In this case, the VC and VP are signed with the same suite, this means that
+    // in effect issuer == holder. Normally, they would be different, and have their
+    // own keys
+    //
+    const presentation = vc.createPresentation({
+      verifiableCredential: [signedVC]
+    });
+
+    console.log(JSON.stringify(presentation, null, 2));
+
+    const challenge = uuid(); // serves to prevent presentation replay attacks
+
+    const signedPresenation = await vc.signPresentation({
+      presentation, suite, challenge, documentLoader
+    });
+
+    console.log(JSON.stringify(signedPresenation, null, 2));
+
+    console.log('\n--------------------------------------------------------\n');
+
+    const presentationVerificationResult = await vc.verify({ presentation, challenge, suite, documentLoader });
+
+    console.log(JSON.stringify(presentationVerificationResult, null, 2));
   }
 }
 
