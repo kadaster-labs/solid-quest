@@ -9,7 +9,7 @@
 @prefix nen3610: <https://data.kkg.kadaster.nl/nen3610/model/def/> .
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
 
-koopovereenkomst:123
+koopovereenkomst:
     a zvg:Koop;
     zvg:aangebodenDoor marc:;
     zvg:aan janneke:;
