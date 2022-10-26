@@ -1,7 +1,7 @@
 {
-    "id": "http://localhost:8080/public-key.json",
+    "id": "http://localhost:8080/issuer-key.json",
     "type": "Ed25519VerificationKey2018",
     "publicKeyBase58": "4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS",
     "@context": "https://w3id.org/security/v2",
-    "controller": "http://localhost:8080/creator.json"
+    "controller": "http://localhost:8080/issuer.json"
 }

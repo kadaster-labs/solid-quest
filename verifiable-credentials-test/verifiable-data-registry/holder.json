@@ -1,0 +1,10 @@
+{
+    "@context": "https://w3id.org/security/v2",
+    "id": "http://localhost:8080/holder.json",
+    "assertionMethod": [
+        "http://localhost:8080/holder-key.json"
+    ],
+    "authentication": [
+        "http://localhost:8080/holder-key.json"
+    ]
+}

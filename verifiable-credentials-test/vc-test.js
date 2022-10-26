@@ -7,12 +7,12 @@ import { documentLoader } from "./document-loader.js";
 import { Ed25519Signature2018 } from "@digitalbazaar/ed25519-signature-2018";
 import { Ed25519VerificationKey2018 } from "@digitalbazaar/ed25519-verification-key-2018";
 
-export default class VcTest {
-  async run(params) {
-    const controller = "http://localhost:8080/creator.json";
+export default class VcExample {
+  async generateCredential() {
+    const controller = "http://localhost:8080/issuer.json";
 
     const keyPair = await Ed25519VerificationKey2018.generate({
-      id: "http://localhost:8080/public-key.json",
+      id: "http://localhost:8080/issuer-key.json",
       controller,
       // Make sure the keyPair.publicKeyBase58 is updated in public-key.json
       // It shouldn't change, as long as seed is kept the same
@@ -43,25 +43,28 @@ export default class VcTest {
 
     const signedVC = await vc.issue({ credential, suite, documentLoader });
 
-    console.log(JSON.stringify(signedVC, null, 2));
+    return signedVC;
+  }
 
-    console.log('\n--------------------------------------------------------\n');
+  async createPresentation(credential) {
+    const controller = "http://localhost:8080/holder.json";
 
-    const credentialVerificationResult = await vc.verifyCredential({ credential: signedVC, suite, documentLoader });
+    const keyPair = await Ed25519VerificationKey2018.generate({
+      id: "http://localhost:8080/holder-key.json",
+      controller,
+      // Make sure the keyPair.publicKeyBase58 is updated in public-key.json
+      // It shouldn't change, as long as seed is kept the same
+      seed: Buffer.alloc(32).fill(1)
+    });
 
-    console.log(JSON.stringify(credentialVerificationResult, null, 2));
+    console.log(`generated keypair with\npublic key:\n${keyPair.publicKeyBase58}\nand private key:\n${keyPair.privateKeyBase58}`);
 
-    console.log('\n--------------------------------------------------------\n');
+    const suite = new Ed25519Signature2018({
+      key: keyPair,
+    });
 
-    //
-    // Create presentation
-    // 
-    // In this case, the VC and VP are signed with the same suite, this means that
-    // in effect issuer == holder. Normally, they would be different, and have their
-    // own keys
-    //
     const presentation = vc.createPresentation({
-      verifiableCredential: [signedVC]
+      verifiableCredential: [credential]
     });
 
     console.log(JSON.stringify(presentation, null, 2));
@@ -72,17 +75,84 @@ export default class VcTest {
       presentation, suite, challenge, documentLoader
     });
 
+    return { signedPresenation, challenge };
+  }
+
+  async run(params) {
+
+    //
+    // Issuer
+    //
+
+    // issuer issues a (signed) Verifiable Credential
+    const signedVC = await this.generateCredential();
+
+    console.log(JSON.stringify(signedVC, null, 2));
+
+
+
+    console.log('\n--------------------------------------------------------\n');
+
+    //
+    // Transfers securely to holder
+    //
+
+    // holder might want to verify the credential
+    let suite = [new Ed25519Signature2018({
+      key: new Ed25519VerificationKey2018({
+        controller: signedVC.issuer,
+        id: signedVC.proof.verificationMethod,
+        // publicKeyBase58 can be looked up in signedVC.proof.verificationMethod
+        publicKeyBase58: "4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS",
+      })
+    })];
+
+    const credentialVerificationResult = await vc.verifyCredential({
+      credential: signedVC,
+      suite,
+      documentLoader
+    });
+
+    console.log(JSON.stringify(credentialVerificationResult, null, 2));
+
+    console.log('\n--------------------------------------------------------\n');
+
+    // Holder creates presentation to share with verifiers
+    const { signedPresenation, challenge } = await this.createPresentation(signedVC);
+
     console.log(JSON.stringify(signedPresenation, null, 2));
 
     console.log('\n--------------------------------------------------------\n');
 
-    const presentationVerificationResult = await vc.verify({ presentation, challenge, suite, documentLoader });
+    //
+    // Holder transfers signed presentation and challenge securely to the verifier
+    //
+    // suite contains all signature suites of the enclosed VCs and the surrounding presentation
+    suite = [new Ed25519Signature2018({
+      key: new Ed25519VerificationKey2018({
+        controller: "http://localhost:8080/holder.json",
+        id: signedPresenation.proof.verificationMethod,
+        // publicKeyBase58 can be looked up in signedVC.proof.verificationMethod
+        publicKeyBase58: "AKnL4NNf3DGWZJS6cPknBuEGnVsV4A4m5tgebLHaRSZ9",
+      })
+    }), new Ed25519Signature2018({
+      key: new Ed25519VerificationKey2018({
+        controller: signedPresenation.verifiableCredential[0].issuer,
+        id: signedPresenation.verifiableCredential[0].proof.verificationMethod,
+        // publicKeyBase58 can be looked up in
+        // signedPresenation.verifiableCredential[0].proof.verificationMethod
+        publicKeyBase58: "4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS",
+      })
+    })];
+
+    // Verify the presentation
+    const presentationVerificationResult = await vc.verify({ presentation: signedPresenation, challenge, suite, documentLoader });
 
     console.log(JSON.stringify(presentationVerificationResult, null, 2));
   }
 }
 
-const vcTest = new VcTest();
+const vcTest = new VcExample();
 
 vcTest.run().catch((e) => {
   console.error(e);
