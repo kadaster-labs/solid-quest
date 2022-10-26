@@ -6,6 +6,10 @@ See [issue #13](https://github.com/marcvanandel/solid-quest/issues/13) for more 
 - https://www.w3.org/TR/vc-data-model-2.0
 - https://w3c.github.io/vc-imp-guide/
 
+Two Master's theses regarding IRMA/VC/Solid:
+- https://research.ou.nl/ws/portalfiles/portal/31027221/Ostkamp_D_IM9906_AF_SE_scriptie_Pure.pdf
+- https://dspace.mit.edu/bitstream/handle/1721.1/121667/1102055877-MIT.pdf
+
 Contexts define the language used in the JSON-LDs
 - https://www.w3.org/2018/credentials/v1
 - https://www.w3.org/2018/credentials/examples/v1
