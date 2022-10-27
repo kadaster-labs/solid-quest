@@ -15,7 +15,6 @@ export default class VcExample {
     const controller = "http://localhost:8080/issuer.json";
 
     const keyPair = await Ed25519VerificationKey2020.generate({
-      id: controller + '#z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp',
       controller,
       // Make sure the keyPair.publicKeyMultibase is updated in issuer.json
       // It shouldn't change, as long as seed is kept the same
@@ -40,7 +39,6 @@ export default class VcExample {
     const controller = "http://localhost:8080/holder.json";
 
     const keyPair = await Ed25519VerificationKey2020.generate({
-      id: controller + '#z6Mkon3Necd6NkkyfoGoHxid2znGc59LU3K7mubaRcFbLfLX',
       controller,
       // Make sure the keyPair.publicKeyMultibase is updated in public-key.json
       // It shouldn't change, as long as seed is kept the same
@@ -57,11 +55,11 @@ export default class VcExample {
 
     const challenge = uuid(); // serves to prevent presentation replay attacks
 
-    const signedPresenation = await vc.signPresentation({
+    const signedPresentation = await vc.signPresentation({
       presentation, suite, challenge, documentLoader
     });
 
-    return { signedPresenation, challenge };
+    return { signedPresentation, challenge };
   }
 
   async run(params) {
@@ -118,7 +116,7 @@ export default class VcExample {
         documentLoader
       }
     )
-    // // Werkt ook:
+    // // Also possible, use jsigs directly:
     // const credentialVerificationResult = await jsigs.verify(
     //   signedVC,
     //   {
@@ -137,9 +135,9 @@ export default class VcExample {
       verifiableCredential: [signedVC]
     });
 
-    const { signedPresenation, challenge } = await this.signPresentation(presentation);
+    const { signedPresentation, challenge } = await this.signPresentation(presentation);
 
-    console.log(JSON.stringify(signedPresenation, null, 2));
+    console.log(JSON.stringify(signedPresentation, null, 2));
 
     console.log('\n--------------------------------------------------------\n');
 
@@ -149,20 +147,20 @@ export default class VcExample {
     // suite contains all signature suites of the enclosed VCs and the surrounding presentation
     suite = [new Ed25519Signature2020({
       key: new Ed25519VerificationKey2020({
-        id: signedPresenation.proof.verificationMethod,
-        controller: signedPresenation.proof.verificationMethod.split('#')[0],
-        publicKeyMultibase: signedPresenation.proof.verificationMethod.split('#')[1],
+        id: signedPresentation.proof.verificationMethod,
+        controller: signedPresentation.proof.verificationMethod.split('#')[0],
+        publicKeyMultibase: signedPresentation.proof.verificationMethod.split('#')[1],
       })
     }), new Ed25519Signature2020({
       key: new Ed25519VerificationKey2020({
-        id: signedPresenation.verifiableCredential[0].proof.verificationMethod,
-        controller: signedPresenation.verifiableCredential[0].proof.verificationMethod.split('#')[0],
-        publicKeyMultibase: signedPresenation.verifiableCredential[0].proof.verificationMethod.split('#')[1],
+        id: signedPresentation.verifiableCredential[0].proof.verificationMethod,
+        controller: signedPresentation.verifiableCredential[0].proof.verificationMethod.split('#')[0],
+        publicKeyMultibase: signedPresentation.verifiableCredential[0].proof.verificationMethod.split('#')[1],
       })
     })];
 
     // Verify the presentation
-    const presentationVerificationResult = await vc.verify({ presentation: signedPresenation, challenge, suite, documentLoader });
+    const presentationVerificationResult = await vc.verify({ presentation: signedPresentation, challenge, suite, documentLoader });
 
     console.log(JSON.stringify(presentationVerificationResult, null, 2));
   }
