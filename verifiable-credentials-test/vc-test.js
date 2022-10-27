@@ -1,50 +1,55 @@
+import jsigs from 'jsonld-signatures';
+const { purposes: { AssertionProofPurpose } } = jsigs;
+
 import * as vc from "@digitalbazaar/vc";
 import { v4 as uuid } from 'uuid';
 
 import { documentLoader } from "./document-loader.js";
 
 // Required to set up a suite instance with private key
-import { Ed25519Signature2018 } from "@digitalbazaar/ed25519-signature-2018";
-import { Ed25519VerificationKey2018 } from "@digitalbazaar/ed25519-verification-key-2018";
+import { Ed25519Signature2020 } from "@digitalbazaar/ed25519-signature-2020";
+import { Ed25519VerificationKey2020 } from "@digitalbazaar/ed25519-verification-key-2020";
 
 export default class VcExample {
-  async signCredential(credential) {
+  async signCredential(unsignedCredential) {
     const controller = "http://localhost:8080/issuer.json";
 
-    const keyPair = await Ed25519VerificationKey2018.generate({
-      id: "http://localhost:8080/issuer-key.json",
+    const keyPair = await Ed25519VerificationKey2020.generate({
+      id: controller + '#z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp',
       controller,
-      // Make sure the keyPair.publicKeyBase58 is updated in public-key.json
+      // Make sure the keyPair.publicKeyMultibase is updated in issuer.json
       // It shouldn't change, as long as seed is kept the same
       seed: Buffer.alloc(32).fill(0)
     });
 
-    console.log(`generated keypair with\npublic key:\n${keyPair.publicKeyBase58}\nand private key:\n${keyPair.privateKeyBase58}`);
+    console.log(`generated keypair with\npublic key:\n${keyPair.publicKeyMultibase}\nand private key:\n${keyPair.privateKeyMultibase}`);
 
-    const suite = new Ed25519Signature2018({
-      key: keyPair,
+    const suite = new Ed25519Signature2020({ key: keyPair });
+    suite.date = '2010-01-01T19:23:24Z';
+
+    const signedCredential = await jsigs.sign(unsignedCredential, {
+      suite,
+      purpose: new AssertionProofPurpose(),
+      documentLoader
     });
 
-
-    const signedVC = await vc.issue({ credential, suite, documentLoader });
-
-    return signedVC;
+    return signedCredential;
   }
 
   async signPresentation(presentation) {
     const controller = "http://localhost:8080/holder.json";
 
-    const keyPair = await Ed25519VerificationKey2018.generate({
-      id: "http://localhost:8080/holder-key.json",
+    const keyPair = await Ed25519VerificationKey2020.generate({
+      id: controller + '#z6Mkon3Necd6NkkyfoGoHxid2znGc59LU3K7mubaRcFbLfLX',
       controller,
-      // Make sure the keyPair.publicKeyBase58 is updated in public-key.json
+      // Make sure the keyPair.publicKeyMultibase is updated in public-key.json
       // It shouldn't change, as long as seed is kept the same
       seed: Buffer.alloc(32).fill(1)
     });
 
     console.log(`generated keypair with\npublic key:\n${keyPair.publicKeyBase58}\nand private key:\n${keyPair.privateKeyBase58}`);
 
-    const suite = new Ed25519Signature2018({
+    const suite = new Ed25519Signature2020({
       key: keyPair,
     });
 
@@ -66,28 +71,26 @@ export default class VcExample {
     //
 
     // Sample unsigned credential
-    const credential = {
-      "@context": [
-        "https://www.w3.org/2018/credentials/v1",
-        "https://labs.kadaster.nl/assets/json-ld/brt/0.0/brt.jsonld",
+    const unsignedCredential = {
+      '@context': [
+        'https://www.w3.org/2018/credentials/v1',
+        {
+          AlumniCredential: 'https://schema.org#AlumniCredential',
+          alumniOf: 'https://schema.org#alumniOf'
+        }
       ],
-      id: "https://example.com/credentials/1872",
-      type: ["VerifiableCredential", "RelationshipCredential"],
-      issuer: "http://localhost:8080/issuer.json",
-      issuanceDate: "2010-01-01T19:23:24Z",
-      credentialSubject: [{
-        "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-        "name": "Jayden Doe",
-        "spouse": "did:example:c276e12ec21ebfeb1f712ebc6f1"
-      }, {
-        "id": "did:example:c276e12ec21ebfeb1f712ebc6f1",
-        "name": "Morgan Doe",
-        "spouse": "did:example:ebfeb1f712ebc6f1c276e12ec21"
-      }],
+      id: 'http://example.edu/credentials/1872',
+      type: ['VerifiableCredential', 'AlumniCredential'],
+      issuer: 'http://localhost:8080/issuer.json',
+      issuanceDate: '2010-01-01T19:23:24Z',
+      credentialSubject: {
+        id: 'https://example.edu/students/alice',
+        alumniOf: 'Example University'
+      }
     };
 
     // issuer issues a (signed) Verifiable Credential
-    const signedVC = await this.signCredential(credential);
+    const signedVC = await this.signCredential(unsignedCredential);
 
     console.log(JSON.stringify(signedVC, null, 2));
 
@@ -100,20 +103,30 @@ export default class VcExample {
     //
 
     // holder might want to verify the credential
-    let suite = [new Ed25519Signature2018({
-      key: new Ed25519VerificationKey2018({
+    let suite = [new Ed25519Signature2020({
+      key: new Ed25519VerificationKey2020({
         controller: signedVC.issuer,
         id: signedVC.proof.verificationMethod,
-        // publicKeyBase58 can be looked up in signedVC.proof.verificationMethod
-        publicKeyBase58: "4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS",
+        publicKeyMultibase: signedVC.proof.verificationMethod.split('#')[1],
       })
     })];
 
-    const credentialVerificationResult = await vc.verifyCredential({
-      credential: signedVC,
-      suite,
-      documentLoader
-    });
+    const credentialVerificationResult = await vc.verifyCredential(
+      {
+        credential: signedVC,
+        suite,
+        documentLoader
+      }
+    )
+    // // Werkt ook:
+    // const credentialVerificationResult = await jsigs.verify(
+    //   signedVC,
+    //   {
+    //     suite,
+    //     purpose: new AssertionProofPurpose(),
+    //     documentLoader
+    //   }
+    // );
 
     console.log(JSON.stringify(credentialVerificationResult, null, 2));
 
@@ -121,7 +134,7 @@ export default class VcExample {
 
     // Holder creates presentation to share with verifiers
     const presentation = vc.createPresentation({
-      verifiableCredential: [credential]
+      verifiableCredential: [signedVC]
     });
 
     const { signedPresenation, challenge } = await this.signPresentation(presentation);
@@ -134,20 +147,17 @@ export default class VcExample {
     // Holder transfers signed presentation and challenge securely to the verifier
     //
     // suite contains all signature suites of the enclosed VCs and the surrounding presentation
-    suite = [new Ed25519Signature2018({
-      key: new Ed25519VerificationKey2018({
-        controller: "http://localhost:8080/holder.json",
+    suite = [new Ed25519Signature2020({
+      key: new Ed25519VerificationKey2020({
         id: signedPresenation.proof.verificationMethod,
-        // publicKeyBase58 can be looked up in signedVC.proof.verificationMethod
-        publicKeyBase58: "AKnL4NNf3DGWZJS6cPknBuEGnVsV4A4m5tgebLHaRSZ9",
+        controller: signedPresenation.proof.verificationMethod.split('#')[0],
+        publicKeyMultibase: signedPresenation.proof.verificationMethod.split('#')[1],
       })
-    }), new Ed25519Signature2018({
-      key: new Ed25519VerificationKey2018({
-        controller: signedPresenation.verifiableCredential[0].issuer,
+    }), new Ed25519Signature2020({
+      key: new Ed25519VerificationKey2020({
         id: signedPresenation.verifiableCredential[0].proof.verificationMethod,
-        // publicKeyBase58 can be looked up in
-        // signedPresenation.verifiableCredential[0].proof.verificationMethod
-        publicKeyBase58: "4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS",
+        controller: signedPresenation.verifiableCredential[0].proof.verificationMethod.split('#')[0],
+        publicKeyMultibase: signedPresenation.verifiableCredential[0].proof.verificationMethod.split('#')[1],
       })
     })];
 

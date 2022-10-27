@@ -1,7 +1,0 @@
-{
-    "id": "http://localhost:8080/holder-key.json",
-    "type": "Ed25519VerificationKey2018",
-    "publicKeyBase58": "AKnL4NNf3DGWZJS6cPknBuEGnVsV4A4m5tgebLHaRSZ9",
-    "@context": "https://w3id.org/security/v2",
-    "controller": "http://localhost:8080/holder.json"
-}

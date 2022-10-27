@@ -2,27 +2,16 @@
 # yarn lockfile v1
 
 
-"@digitalbazaar/ed25519-signature-2018@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@digitalbazaar/ed25519-signature-2018/-/ed25519-signature-2018-3.0.0.tgz#055f55b3bed251a3709319a0bf2ed58b0c4b403e"
-  integrity sha512-4VtBtupbcikNWbD9Dd05LQAla4lwPyTCovBVcCLXFksr7VP/1nv3TLH05WynO7lby1BuNXsERA1T9aAlnpd+jA==
+"@digitalbazaar/ed25519-signature-2020@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@digitalbazaar/ed25519-signature-2020/-/ed25519-signature-2020-5.0.0.tgz#9a7185a259b2454bb1cebc01439b5b455da854cb"
+  integrity sha512-+udmlACPjdRhIAi6udCgDvUfISFLzU+q2/Ck2s2RgDUb3M6f3sJ8eM5rMKaE054StKKFn8U4vlbrfxjL+R0XUw==
   dependencies:
-    "@digitalbazaar/ed25519-verification-key-2018" "^4.0.0"
     "@digitalbazaar/ed25519-verification-key-2020" "^4.0.0"
-    "@digitalbazaar/jws-linked-data-signature" "^2.0.0"
     base58-universal "^2.0.0"
     ed25519-signature-2018-context "^1.1.0"
     ed25519-signature-2020-context "^1.1.0"
-    jsonld "^6.0.0"
-
-"@digitalbazaar/ed25519-verification-key-2018@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@digitalbazaar/ed25519-verification-key-2018/-/ed25519-verification-key-2018-4.0.0.tgz#0873fbd2c4d44ff06fbadf057bb4c0b93b1c0cd8"
-  integrity sha512-65O08XDDJYZVeQJ86fd7ClZLzMwQsJ0zQpLhvzjE9LRGrD0BPwWFrC/vNW3XTYzzvNwbP7ipFomF95JgGLzabQ==
-  dependencies:
-    "@noble/ed25519" "^1.6.0"
-    base58-universal "^2.0.0"
-    crypto-ld "^7.0.0"
+    jsonld-signatures "^11.0.0"
 
 "@digitalbazaar/ed25519-verification-key-2020@^4.0.0":
   version "4.1.0"
@@ -42,14 +31,6 @@
     ky "^0.30.0"
     ky-universal "^0.10.1"
     undici "^5.2.0"
-
-"@digitalbazaar/jws-linked-data-signature@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@digitalbazaar/jws-linked-data-signature/-/jws-linked-data-signature-2.0.0.tgz#2a0035fc2f52fb5dd44c26e016fdc15abc8d03c5"
-  integrity sha512-FsSTs7kP2pkFMPinuMLJwCJdJyq7Ghne7D68HVaP8jSLg1H0taLNTFOsMM18p/50RcfZbIHIGV5UbEYSTJ245A==
-  dependencies:
-    base64url-universal "^2.0.0"
-    jsonld-signatures "^10.0.0"
 
 "@digitalbazaar/vc@^5.0.0":
   version "5.0.0"
@@ -186,15 +167,6 @@ formdata-polyfill@^4.0.10:
   dependencies:
     fetch-blob "^3.1.2"
 
-jsonld-signatures@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/jsonld-signatures/-/jsonld-signatures-10.0.0.tgz#7342d70479f8f450148086c96e48517deeaefdf3"
-  integrity sha512-Zvwwm2xO93QUaEi8LQGh96Sk2J9TS/VLTuXP+WiHQzwKEryNs/2r/1dcaGJ2y5uIHCwPB1nYq0W1A+U2uOvHUA==
-  dependencies:
-    jsonld "^6.0.0"
-    security-context "^4.0.0"
-    serialize-error "^8.0.1"
-
 jsonld-signatures@^11.0.0:
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/jsonld-signatures/-/jsonld-signatures-11.0.0.tgz#a4445de53fda33969a61d3c1eb9b9658236a998c"
@@ -203,16 +175,6 @@ jsonld-signatures@^11.0.0:
     jsonld "^8.0.0"
     security-context "^4.0.0"
     serialize-error "^8.1.0"
-
-jsonld@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/jsonld/-/jsonld-6.0.0.tgz#560a8a871dce72aba5d4c6b08356438d863d62fb"
-  integrity sha512-1SkN2RXhMCTCSkX+bzHvr9ycM2HTmjWyV41hn2xG7k6BqlCgRjw0zHmuqfphjBRPqi1gKMIqgBCe/0RZMcWrAA==
-  dependencies:
-    "@digitalbazaar/http-client" "^3.2.0"
-    canonicalize "^1.0.1"
-    lru-cache "^6.0.0"
-    rdf-canonize "^3.0.0"
 
 jsonld@^8.0.0:
   version "8.1.0"
@@ -287,7 +249,7 @@ security-context@^4.0.0:
   resolved "https://registry.yarnpkg.com/security-context/-/security-context-4.0.0.tgz#e73f5d22bee9c7699a02eaaced359d001dc948e9"
   integrity sha512-yiDCS7tpKQl6p4NG57BdKLTSNLFfj5HosBIzXBl4jZf/qorJzSzbEUIdLhN+vVYgyLlvjixY8DPPTgqI8zvNCA==
 
-serialize-error@^8.0.1, serialize-error@^8.1.0:
+serialize-error@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-8.1.0.tgz#3a069970c712f78634942ddd50fbbc0eaebe2f67"
   integrity sha512-3NnuWfM6vBYoy5gZFvHiYsVbafvI9vZv/+jlIigFn4oP4zjNPK3LhcY0xSCgeb1a5L8jO71Mit9LlNoi2UfDDQ==
