@@ -8,7 +8,7 @@ import { Ed25519Signature2018 } from "@digitalbazaar/ed25519-signature-2018";
 import { Ed25519VerificationKey2018 } from "@digitalbazaar/ed25519-verification-key-2018";
 
 export default class VcExample {
-  async generateCredential() {
+  async signCredential(credential) {
     const controller = "http://localhost:8080/issuer.json";
 
     const keyPair = await Ed25519VerificationKey2018.generate({
@@ -25,28 +25,13 @@ export default class VcExample {
       key: keyPair,
     });
 
-    // Sample unsigned credential
-    const credential = {
-      "@context": [
-        "https://www.w3.org/2018/credentials/v1",
-        "https://www.w3.org/2018/credentials/examples/v1",
-      ],
-      id: "https://example.com/credentials/1872",
-      type: ["VerifiableCredential", "AlumniCredential"],
-      issuer: controller,
-      issuanceDate: "2010-01-01T19:23:24Z",
-      credentialSubject: {
-        id: "did:example:ebfeb1f712ebc6f1c276e12ec21",
-        alumniOf: "Example University",
-      },
-    };
 
     const signedVC = await vc.issue({ credential, suite, documentLoader });
 
     return signedVC;
   }
 
-  async createPresentation(credential) {
+  async signPresentation(presentation) {
     const controller = "http://localhost:8080/holder.json";
 
     const keyPair = await Ed25519VerificationKey2018.generate({
@@ -61,10 +46,6 @@ export default class VcExample {
 
     const suite = new Ed25519Signature2018({
       key: keyPair,
-    });
-
-    const presentation = vc.createPresentation({
-      verifiableCredential: [credential]
     });
 
     console.log(JSON.stringify(presentation, null, 2));
@@ -84,8 +65,29 @@ export default class VcExample {
     // Issuer
     //
 
+    // Sample unsigned credential
+    const credential = {
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://labs.kadaster.nl/assets/json-ld/brt/0.0/brt.jsonld",
+      ],
+      id: "https://example.com/credentials/1872",
+      type: ["VerifiableCredential", "RelationshipCredential"],
+      issuer: "http://localhost:8080/issuer.json",
+      issuanceDate: "2010-01-01T19:23:24Z",
+      credentialSubject: [{
+        "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+        "name": "Jayden Doe",
+        "spouse": "did:example:c276e12ec21ebfeb1f712ebc6f1"
+      }, {
+        "id": "did:example:c276e12ec21ebfeb1f712ebc6f1",
+        "name": "Morgan Doe",
+        "spouse": "did:example:ebfeb1f712ebc6f1c276e12ec21"
+      }],
+    };
+
     // issuer issues a (signed) Verifiable Credential
-    const signedVC = await this.generateCredential();
+    const signedVC = await this.signCredential(credential);
 
     console.log(JSON.stringify(signedVC, null, 2));
 
@@ -118,7 +120,11 @@ export default class VcExample {
     console.log('\n--------------------------------------------------------\n');
 
     // Holder creates presentation to share with verifiers
-    const { signedPresenation, challenge } = await this.createPresentation(signedVC);
+    const presentation = vc.createPresentation({
+      verifiableCredential: [credential]
+    });
+
+    const { signedPresenation, challenge } = await this.signPresentation(presentation);
 
     console.log(JSON.stringify(signedPresenation, null, 2));
 

@@ -3,8 +3,5 @@
     "id": "http://localhost:8080/issuer.json",
     "assertionMethod": [
         "http://localhost:8080/issuer-key.json"
-    ],
-    "authentication": [
-        "http://localhost:8080/issuer-key.json"
     ]
 }
