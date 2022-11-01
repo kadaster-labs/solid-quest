@@ -2,7 +2,7 @@
 
 Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of creating a [Demonstrator Koopovereenkomst Solid App](#demonstrator-koopovereenkomst-solid-app).
 
-[Live Demo](https://marcvanandel.github.io/solid-quest/)
+[Live Demo](https://kadaster-labs.github.io/solid-quest/)
 
 ## Collected Info
 
@@ -69,7 +69,7 @@ Issues rondom het realiseren van de demonstrator is er een apart [issue #4](http
 
 Deze repo bevat (een eerste opzet voor) de **Demonstrator Koopovereenkomst Solid App**. Deze is bedoeld om kennis op te doen van hoe Solid PODs werken en hoe deze te gebruiken. In deze demonstator wordt een vereenvoudigde koopovereenkomst gesloten tussen Verkoper Vera en Koper Koos. In een eerste iteratie hadden wij bedacht dat Makelaar Mike het proces faciliteert en de verantwoordelijkheid heeft om het proces te initiëren, info toe te voegen die telefonisch of mondeling tussen verkoper en koper tot stand komt. Al werkende zijn we gekomen tot het punt dat een Solid POD vooral alle eigen data zou moeten vasthouden ... en dus _niet_ in een externe POD. Aangezien Verkoper Vera haar huis verkoopt, is zij ook initiator en 'eigenaar' van de koopovereenkomst. De eerste en meeste data komt dan ook in haar POD terecht. Uiteraard zou de data van Koper Koos vooral in zijn POD terecht moeten komen en een links naar elkaars PODs behoort tot beider data.
 
-[Live Demo](https://marcvanandel.github.io/solid-quest/)
+[Live Demo](https://kadaster-labs.github.io/solid-quest/)
 
 ### Architectuur
 
