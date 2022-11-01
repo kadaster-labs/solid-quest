@@ -23,6 +23,8 @@ Our journey on [SOLID pods](https://solidproject.org/) ... towards the goal of c
   - [TNO on Internation Data Spaces](https://www.tno.nl/en/technology-science/technologies/international-data-spaces)
   - [iSHARE](https://ishare.eu/) - iSHARE is the European standard for and trust network of international business data sharing in a sovereign way.
   - [Gaia-X](https://gaia-x.eu/) - Gaia-X is a European project and aims to establish a data space ecosystem, whereby data is shared and made available in a trustworthy environment
+- Other
+  - [Rapport: Regie op Gegevens](https://www.rijksoverheid.nl/documenten/rapporten/2022/01/13/poc-gegevensinzage-burgers)
 
 ## Knowledge
 
