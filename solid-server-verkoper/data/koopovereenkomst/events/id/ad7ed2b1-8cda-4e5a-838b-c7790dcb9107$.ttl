@@ -1,4 +1,3 @@
-
 @prefix event: <> .
 @prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
 @prefix koopovereenkomst: <../../id/345> .
@@ -8,14 +7,14 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 event:
-    a zvg:kadastraalObjectIdToegevoegd;
+    a zvg:voorstelDatumVanLeveringGedaan;
     zvg:aggregateIdentifier koopovereenkomst:;
-    cloudevents:sequence "2"^^xsd:integer;
+    cloudevents:sequence "10"^^xsd:integer;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:;
-    cloudevents:time "2001-10-26T19:50:31Z"^^xsd:dateTime;
+    cloudevents:time "2001-10-24T11:47:52Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "2 kadastraal object id toegevoegd voor 345";
+    rdfs:label "voorstel datum van levering gedaan voor 345";
     cloudevents:data [
-      zvg:kadastraalObjectId <https://data.kkg.kadaster.nl/id/perceel/10020263270000>;
+      zvg:datumVanLevering: "2002-05-01T10:00:00Z"^^xsd:dateTime;
     ].

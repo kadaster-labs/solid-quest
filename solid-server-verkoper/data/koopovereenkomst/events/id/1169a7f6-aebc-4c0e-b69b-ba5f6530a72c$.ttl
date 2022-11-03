@@ -7,14 +7,14 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 event:
-    a zvg:koopovereenkomstGeinitieerd;
+    a zvg:bodGeaccepteerd;
     zvg:aggregateIdentifier koopovereenkomst:;
-    cloudevents:sequence "0"^^xsd:integer;
+    cloudevents:sequence "8"^^xsd:integer;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:;
-    cloudevents:time "2001-10-26T19:32:52Z"^^xsd:dateTime;
+    cloudevents:time "2001-10-23T23:24:31Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "0 koopovereenkomst geinitieerd voor 345";
+    rdfs:label "bod geaccepteerd voor 345";
     cloudevents:data [
-      zvg:koopovereenkomstTemplate "NVM Simple Default Koophuis";
+      zvg:bod 415000;
     ].
