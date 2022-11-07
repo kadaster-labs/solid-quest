@@ -2,17 +2,19 @@ version: '3.9'
 
 services:
   solid-server-verkoper:
-    build: ./
-    command: -p 3001 -c config-mashlib.json -f /data
+    image: solidproject/community-server:5.0.0
+    command: -p 3001 -c /config/config-mashlib.json
     ports:
         - 3001:3001
     volumes:
         - ./solid-server-verkoper/data:/data
+        - ./solid-server-verkoper/config:/config
 
   solid-server-koper:
-    build: ./
-    command: -p 3002 -c config-mashlib.json -f /data
+    image: solidproject/community-server:5.0.0
+    command: -p 3002 -c /config/config-mashlib.json
     ports:
         - 3002:3002
     volumes:
         - ./solid-server-koper/data:/data
+        - ./solid-server-koper/config:/config
