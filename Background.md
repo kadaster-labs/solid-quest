@@ -1,5 +1,6 @@
 # SOLID Quest - Achtergrondinformatie
 
+In dit bestand vind je links en informatie die we hebben verzameld tijdens onze SOLID Quest.
 
 ## Collected Info
 
@@ -12,6 +13,8 @@
   - [Universidad de Oviedo](https://arquisoft.github.io/) is actively developing and teaching about Software Architectures using SOLID
     - [Decentralized Chat App built on SOLID](https://arquisoft.github.io/dechat_es6a2/documentation.html) - Winning team of the 2019 challenge
     - [2021/2022 assignment: Decentralized Delivery (DeDe)](https://arquisoft.github.io/course2122/labAssignmentDescription.html) with [winning teams](https://arquisoft.github.io/course2122.html#SolidChallenge) (with [nice diagrams](https://arquisoft.github.io/dede_en2a/) explaining architecture and usage of SOLID)
+  - [Het Vlaamse Datanutsbedrijf](https://www.vlaanderen.be/digitaal-vlaanderen/het-vlaams-datanutsbedrijf) werkt concreet aan twee projecten: Diploma delen & Loongegevens delen. 
+    - [Projecten Vlaamse Datanutsbedrijf](https://www.vlaanderen.be/digitaal-vlaanderen/het-vlaams-datanutsbedrijf/projecten-vlaams-datanutsbedrijf)
   - Commercial Vendors
     - [Inrupt](https://inrupt.com/) - SOLID core developer company
     - [Digita](https://www.digita.ai/) (check the URL :laughing:) providing [use.id](https://get.use.id/), a free WebID (across orgs and platforms) 🤔
