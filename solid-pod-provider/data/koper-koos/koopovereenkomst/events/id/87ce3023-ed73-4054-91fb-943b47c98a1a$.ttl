@@ -14,7 +14,7 @@ event:
     cloudevents:subject koopovereenkomst:;
     cloudevents:time "2001-10-26T19:32:52Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "voorstel datum van levering gedaan voor 345";
-    cloudevents:data [
+    rdfs:label "11 | koper koos | voorstel datum van levering gedaan voor 345";
+    cloudevents:data {
       zvg:datumVanLevering: "2002-04-01T10:00:00Z"^^xsd:dateTime;
-    ].
+    } .

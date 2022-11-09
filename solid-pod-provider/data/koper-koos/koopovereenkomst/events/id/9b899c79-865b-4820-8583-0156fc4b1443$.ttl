@@ -14,7 +14,7 @@ event:
     cloudevents:subject koopovereenkomst:;
     cloudevents:time "2001-10-23T19:32:52Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "bod uitgebracht voor 345";
+    rdfs:label "07 | koper koos | bod uitgebracht voor 345";
     cloudevents:data [
       zvg:bod 415000;
     ].

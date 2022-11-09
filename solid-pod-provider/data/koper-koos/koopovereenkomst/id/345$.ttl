@@ -1,7 +1,7 @@
 @prefix marc: <https://marcvanandel.solidcommunity.net/> .
 @prefix janneke: <https://janneke.solidcommunity.net/> .
 @prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
-@prefix koopovereenkomst: <https://localhost:3001/koopovereenkomst/events/id/> .
+@prefix koopovereenkomst: <http://localhost:3001/verkoper-vera/koopovereenkomst/id/> .
 @prefix mak: <https://mak.zorgeloosvastgoed.nl/id/concept/> .
 @prefix sor: <https://data.kkg.kadaster.nl/sor/model/def/> .
 @prefix id:    <https://id.inrupt.com/> .
@@ -9,7 +9,7 @@
 @prefix nen3610: <https://data.kkg.kadaster.nl/nen3610/model/def/> .
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
 
-koopovereenkomst: .
+koopovereenkomst:345 .
 
 marc:
     a zvg:Verkoper, zvg:Partij, zvg:Persoon;

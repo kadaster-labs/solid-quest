@@ -14,8 +14,8 @@ event:
     cloudevents:subject koopovereenkomst:;
     cloudevents:time "2002-10-29T9:35:13Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "concept koopovereenkomst gelezen voor 345";
-    cloudevents:data [
+    rdfs:label "13 | koper koos | concept koopovereenkomst gelezen voor 345";
+    cloudevents:data {
       zvg:versie: "<sequence id?>";
       zvg:gelezenOp: "2002-10-29T9:35:12Z"^^xsd:dateTime;
-    ].
+    }.
