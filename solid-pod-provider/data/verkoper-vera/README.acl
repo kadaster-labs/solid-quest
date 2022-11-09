@@ -10,5 +10,5 @@
 <#owner>
     a acl:Authorization;
     acl:accessTo <./README>;
-    acl:agent <http://localhost:3001/profile/card#me>;
+    acl:agent <http://localhost:3001/verkoper-vera/profile/card#me>;
     acl:mode acl:Read, acl:Write, acl:Control.

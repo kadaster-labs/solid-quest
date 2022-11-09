@@ -6,7 +6,7 @@ Your pod is a **secure storage space** for your documents and data.
 You can choose to share those with other people and apps.
 
 As the owner of this pod,
-identified by <a href="http://localhost:3001/profile/card#me">http://localhost:3001/profile/card#me</a>,
+identified by <a href="http://localhost:3001/verkoper-vera/profile/card#me">http://localhost:3001/verkoper-vera/profile/card#me</a>,
 you have access to all of your documents.
 
 ## Working with your pod
@@ -14,7 +14,7 @@ The easiest way to interact with pods
 is through Solid apps.
 <br>
 For example,
-you can open your pod in [Databrowser](https://solidos.github.io/mashlib/dist/browse.html?uri=http://localhost:3001/).
+you can open your pod in [Databrowser](https://solidos.github.io/mashlib/dist/browse.html?uri=http://localhost:3001/verkoper-vera/).
 
 ## Learn more
 The [Solid website](https://solidproject.org/)
