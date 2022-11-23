@@ -11,7 +11,7 @@ Het is een (emerging) technologie waar we nog geen of nauwelijks ervaring mee he
 -	Blockchain 
 -	Data Spaces 
 
-#DataMinimalisatie #RegieOpGegevens #PrivacyEnhancingTechnologies #SOLID #VerifiableCredentials #EmergingTech #Cloud #Security #LinkedData 
+**#DataMinimalisatie #RegieOpGegevens #PrivacyEnhancingTechnologies #SOLID #VerifiableCredentials #EmergingTech #Cloud #Security #LinkedData**
 
 
 ## Table of Contents
