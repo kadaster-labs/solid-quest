@@ -2,7 +2,7 @@
 
 [Live Demo](https://kadaster-labs.github.io/solid-quest/)
 
-De Nederlandse overheid heeft de [Werkagenda Waardengedreven Digitaliseren](https://www.digitaleoverheid.nl/kabinetsbeleid-digitalisering/werkagenda/) opgesteld. Eén van de programmalijnen luidt: "Iedereen heeft regie op het digitale leven." *Daarvoor is regelgeving en beleid nodig, rond wallets en andere basisvoorzieningen.* [Solid](https://solidproject.org/) is een specificatie die het mogelijk maakt om je data op een veilige manier, decentraal, op te slaan in PODs, Personal Online Datastores. Als Kadaster bereiden wij ons voor op deze ontwikkelingen. Het begrijpen van de technologie is hiervoor randvoorwaardelijk. Daarom bouwen wij aan een demonstrator, met als voorbeeld usecase [Zorgeloos Vastgoed](https://www.zorgeloosvastgoed.nl/), om de (on)mogelijkheden van SOLID pods te onderzoeken en begrijpen.
+De Nederlandse overheid heeft de [Werkagenda Waardengedreven Digitaliseren](https://www.digitaleoverheid.nl/kabinetsbeleid-digitalisering/werkagenda/) opgesteld. Eén van de programmalijnen luidt: "Iedereen heeft regie op het digitale leven." *Daarvoor is regelgeving en beleid nodig, rond wallets en andere basisvoorzieningen.* [Solid](https://solidproject.org/) is een specificatie die het mogelijk maakt om je data op een veilige manier, decentraal, op te slaan in PODs, Personal Online Datastores. Als Kadaster bereiden wij ons voor op deze ontwikkelingen. Het begrijpen van de technologie is hiervoor randvoorwaardelijk. Daarom bouwen wij aan een demonstrator, met als voorbeeld usecase [Zorgeloos Vastgoed](https://www.zorgeloosvastgoed.nl/), om de (on)mogelijkheden van SOLID PODs te onderzoeken en begrijpen.
 
 Het is een (emerging) technologie waar we nog geen of nauwelijks ervaring mee hebben en ook benieuwd zijn hoe deze zich verhoudt tot andere ontwikkelingen:
 -	Verifiable Credentials
@@ -17,7 +17,7 @@ Het is een (emerging) technologie waar we nog geen of nauwelijks ervaring mee he
 ## Table of Contents
 
 - [References](References.md) - een overzicht van interessante links
-- [Background](Background.md) - een overzicht van onze opgedane kennis rondom data pods, WebID, VCs etc.
+- [Background](Background.md) - een overzicht van onze opgedane kennis rondom data PODs, WebID, VCs etc.
 - [Demonstrator](Demonstrator.md) - informatie rondom de demonstrator (architectuur, techniek etc.)
 
 
