@@ -1,7 +1,9 @@
 # SOLID Quest - Achtergrondinformatie
 
-Dit bestand is een verzameling van de kennis en terminologie die we hebben vergaard tijdens onze quest.
-
+Dit bestand is een verzameling van de kennis en terminologie die we hebben vergaard tijdens onze quest:
+- [Data pods vs data spaces](https://github.com/kadaster-labs/solid-quest/blob/Documentatie/Background.md#data-pods-vs-data-spaces)
+- [WebID](https://github.com/kadaster-labs/solid-quest/blob/Documentatie/Background.md#webid)
+- [Verifiable Credentials](https://github.com/kadaster-labs/solid-quest/blob/Documentatie/Background.md#verifiable-credentials-vcs)
 
 ## Data pods vs data spaces
 
