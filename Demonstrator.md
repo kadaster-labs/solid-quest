@@ -1,4 +1,3 @@
-
 # Demonstrator Koopovereenkomst Solid App
 
 Deze repo bevat (een eerste opzet voor) de **Demonstrator Koopovereenkomst Solid App**. Deze is bedoeld om kennis op te doen van hoe Solid PODs werken en hoe deze te gebruiken. In deze demonstator wordt een vereenvoudigde koopovereenkomst gesloten tussen Verkoper Vera en Koper Koos. In een eerste iteratie hadden wij bedacht dat Makelaar Mike het proces faciliteert en de verantwoordelijkheid heeft om het proces te initiëren, info toe te voegen die telefonisch of mondeling tussen verkoper en koper tot stand komt. Al werkende zijn we gekomen tot het punt dat een Solid POD vooral alle eigen data zou moeten vasthouden ... en dus _niet_ in een externe POD. Aangezien Verkoper Vera haar huis verkoopt, is zij ook initiator en 'eigenaar' van de koopovereenkomst. De eerste en meeste data komt dan ook in haar POD terecht. Uiteraard zou de data van Koper Koos vooral in zijn POD terecht moeten komen en een links naar elkaars PODs behoort tot beider data.
@@ -38,8 +37,8 @@ To start a 'verkoper' and 'koper' POD based on [Community Solid Server](https://
 docker compose up
 ```
 
-- Verkoper POD: [localhost:3001](http://localhost:3001)
-- Koper POD: [localhost:3002](http://localhost:3002)
+- Verkoper POD: [localhost:3001/verkoper-vera/](http://localhost:3001/verkoper-vera/)
+- Koper POD: [localhost:3001/koper-koos/](http://localhost:3001/koper-koos/)
 
 To start the 'Koopovereenkomst App' switch to the `koopovereenkomst-v3-simple` folder and run `yarn dev`:
 
