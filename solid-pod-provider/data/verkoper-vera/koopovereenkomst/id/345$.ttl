@@ -2,19 +2,36 @@
 @prefix janneke: <https://janneke.solidcommunity.net/> .
 @prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
 @prefix koopovereenkomst: <> .
+@prefix event: <../events/id/> .
+@prefix koperEvent: <http://localhost:3001/koper-koos/koopovereenkomst/events/id/> .
 @prefix mak: <https://mak.zorgeloosvastgoed.nl/id/concept/> .
 @prefix sor: <https://data.kkg.kadaster.nl/sor/model/def/> .
 @prefix id:    <https://id.inrupt.com/> .
 @prefix kluis: <https://storage.inrupt.com/8fe56928-30cb-4218-8afb-2f5583e21435/> .
 @prefix nen3610: <https://data.kkg.kadaster.nl/nen3610/model/def/> .
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <https://www.w3.org/TR/prov-o/#> .
 
-koopovereenkomst:123
-    a zvg:Koop;
-    zvg:aangebodenDoor marc:;
-    zvg:aan janneke:;
-    zvg:koopsom 412000;
-    zvg:vanZakelijkRecht <https://data.kkg.kadaster.nl/id/zakelijkrecht/1004387823748930> .
+koopovereenkomst:
+    prov:wasGeneratedBy 
+        event:1169a7f6-aebc-4c0e-b69b-ba5f6530a72c,
+        event:1bc24631-de10-42b1-8ffe-6c0509336dfa,
+        event:3c27a67c-ab1e-49cf-8e22-90f58e924e95,
+        koperEvent:36cf9c26-c692-48ee-8802-c8979a66d2d4,
+        event:674b0ed0-6501-42c1-aa99-1d045030288d,
+        koperEvent:3dcf3747-185f-4862-a442-47de5e236fa9,
+        event:817f3528-aa93-45bd-8462-ee43837f8df4,
+        koperEvent:4f5e143b-e2df-4fe9-9770-99c6b5bd4054,
+        event:9b39855b-5c40-4635-b0e8-906cbddcbc23,
+        koperEvent:87ce3023-ed73-4054-91fb-943b47c98a1a,
+        event:ad7ed2b1-8cda-4e5a-838b-c7790dcb9107,
+        koperEvent:9b899c79-865b-4820-8583-0156fc4b1443,
+        event:c572c5c8-2c84-4b5a-8eb2-630215eae840,
+        koperEvent:a3dd7c4b-1572-4837-a9fc-46219b751495,
+        event:c87c8a9b-0419-4b4f-89ed-3c97a5b3b51c,
+        koperEvent:c2a70f99-1542-4dc7-a9eb-c055158041bc,
+        event:f587c64e-d006-442c-9252-2d6ca21190af
+     .
 
 marc:
     a zvg:Verkoper, zvg:Partij, zvg:Persoon;

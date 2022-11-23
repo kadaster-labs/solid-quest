@@ -1,0 +1,20 @@
+@prefix event: <> .
+@prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
+@prefix koopovereenkomst: <../../id/345> .
+@prefix cloudevents: <https://cloudevents.io/def/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix me: </profile/card#me> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+event:
+    a zvg:voorstelDatumVanLeveringGedaan;
+    zvg:aggregateIdentifier koopovereenkomst:;
+    cloudevents:sequence "11"^^xsd:integer;
+    cloudevents:specversion "1.0";
+    cloudevents:subject koopovereenkomst:;
+    cloudevents:time "2001-10-26T19:32:52Z"^^xsd:dateTime;
+    cloudevents:source me:;
+    rdfs:label "11 | koper koos | voorstel datum van levering gedaan voor 345";
+    cloudevents:data {
+      zvg:datumVanLevering: "2002-04-01T10:00:00Z"^^xsd:dateTime;
+    } .
