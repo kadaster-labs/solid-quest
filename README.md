@@ -17,7 +17,10 @@ Het is een (emerging) technologie waar we nog geen of nauwelijks ervaring mee he
 ## Table of Contents
 
 - [References](References.md) - een overzicht van interessante links
-- [Background](Background.md) - een overzicht van onze opgedane kennis rondom data PODs, WebID, VCs etc.
+- [Background](Background.md) - een overzicht van onze opgedane kennis rondom;
+  - [Data PODs vs data spaces](Background.md#data-pods-vs-data-spaces)
+  - [WebID](Background.md#webid)
+  - [Verifiable Credentials](Background.md#verifiable-credentials-vcs)
 - [Demonstrator](Demonstrator.md) - informatie rondom de demonstrator (architectuur, techniek etc.)
 
 
