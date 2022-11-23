@@ -1,0 +1,47 @@
+@prefix marc: <https://marcvanandel.solidcommunity.net/> .
+@prefix janneke: <https://janneke.solidcommunity.net/> .
+@prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
+@prefix koopovereenkomst: <> .
+@prefix mak: <https://mak.zorgeloosvastgoed.nl/id/concept/> .
+@prefix sor: <https://data.kkg.kadaster.nl/sor/model/def/> .
+@prefix id:    <https://id.inrupt.com/> .
+@prefix kluis: <https://storage.inrupt.com/8fe56928-30cb-4218-8afb-2f5583e21435/> .
+@prefix nen3610: <https://data.kkg.kadaster.nl/nen3610/model/def/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+
+koopovereenkomst:
+    a zvg:Koop;
+    zvg:aangebodenDoor marc:;
+    zvg:aan janneke:;
+    zvg:koopsom 412000;
+    zvg:vanZakelijkRecht <https://data.kkg.kadaster.nl/id/zakelijkrecht/1004387823748930> .
+
+marc:
+    a zvg:Verkoper, zvg:Partij, zvg:Persoon;
+    zvg:naam <https://marcvanandel.solidcommunity.net/profile/card#me>;
+    zvg:identificatie <https://marcvanandel.solidcommunity.net/profile/card#me>;
+    zvg:voornamen "Marc";
+    zvg:geboorteplaats "Amsterdam";
+    zvg:geboortedatum "01 januari 1977"; # waarom niet foaf:born of foaf:birthday ?
+    # zvg:straat "Ravenklauw"; ## geen zvg:straat in ontologie?
+    zvg:huisnummer 850;
+    zvg:postcode "3528 BB";
+    zvg:woonplaatsNaam "Utrecht"; #tbd
+    zvg:e-mailAdres "c.c.jansen@gmail.com"; # werkt een dash in een naam?
+    zvg:telefoonnummer "030 767 1018";
+    zvg:isVerbondenIn <EenSoortPartnerschap> . #tbd
+
+janneke:
+    a zvg:Koper;
+    zvg:identificatie <https://janneke.solidcommunity.net/profile/card#me> .
+
+<https://data.kkg.kadaster.nl/id/zakelijkrecht/1004387823748930>
+    a zvg:Eigendom;
+    nen3610:identificatie <Eigendom/10>;
+    zvg:rustOp <https://data.kkg.kadaster.nl/id/perceel/10020263270000> .
+
+<https://data.kkg.kadaster.nl/id/perceel/10020263270000>
+    a zvg:Perceel, sor:Perceel; # is dit de manier om twee ontologieën aan elkaar te verbinden?
+    zvg:kadastraleGrootte <EenTypeOppervlak>; #ik verwacht een integer?
+    zvg:begrenzingPerceel "<http://www.opengis.net/def/crs/EPSG/0/28992> POLYGON((115508.737 402736.077,115491.98 402737.478,115485.828 402683.53,115487.015 402683.352,115488.751 402694.649,115507.943 402691.908,115513.943 402732.485,115524.856 402730.785,115525.304 402733.867,115508.737 402736.077))"^^geo:wktLiteral . 
+    

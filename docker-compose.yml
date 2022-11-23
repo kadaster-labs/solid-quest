@@ -1,21 +1,13 @@
 version: '3.9'
 
 services:
-  solid-server-verkoper:
-    image: solidproject/community-server:5.0.0
+  solid-pod-provider:
+    build:
+      context: community-server
     command: -p 3001
+    environment:
+        - CSS_ROOT_FILE_PATH=/data
     ports:
         - 3001:3001
     volumes:
-        - ./solid-server-verkoper/data:/data
-        - ./solid-server-verkoper/config:/config
-
-  solid-server-koper:
-    image: solidproject/community-server:5.0.0
-    command: -p 3002
-    ports:
-        - 3002:3002
-    volumes:
-        - ./solid-server-koper/data:/data
-        - ./solid-server-koper/config:/config
-
+        - ./solid-pod-provider/data:/data
