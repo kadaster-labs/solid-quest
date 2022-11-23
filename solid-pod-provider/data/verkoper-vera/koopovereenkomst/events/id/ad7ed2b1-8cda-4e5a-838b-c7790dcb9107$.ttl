@@ -12,7 +12,7 @@ event:
     cloudevents:sequence "10"^^xsd:integer;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
-    cloudevents:time "2001-10-24T11:47:52Z"^^xsd:dateTime;
+    cloudevents:time "2001-10-25T11:47:52Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "10 | verkoper vera | voorstel datum van levering gedaan voor 345";
     cloudevents:data [
