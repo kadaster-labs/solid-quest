@@ -15,6 +15,8 @@ event:
     cloudevents:time "2001-09-27T09:32:42Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "00 | verkoper vera | koopovereenkomst geinitieerd voor 345";
-    cloudevents:data [
-      zvg:koopovereenkomstTemplate "NVM Simple Default Koophuis";
-    ].
+    cloudevents:data <#data> .
+
+<#data>
+    a zvg:eventData;
+    zvg:koopovereenkomstTemplate "NVM Simple Default Koophuis" .

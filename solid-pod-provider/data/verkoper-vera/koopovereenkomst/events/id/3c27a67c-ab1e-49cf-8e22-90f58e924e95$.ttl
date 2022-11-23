@@ -16,6 +16,8 @@ event:
     cloudevents:time "2001-09-27T10:15:50Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "01 | verkoper vera | kadastraal object id toegevoegd voor 345";
-    cloudevents:data [
-      zvg:kadastraalObjectId <https://data.kkg.kadaster.nl/id/perceel/10020263270000>;
-    ].
+    cloudevents:data <#data> .
+
+<#data>
+    a zvg:eventData;
+    zvg:kadastraalObjectId <https://data.kkg.kadaster.nl/id/perceel/10020263270000> .

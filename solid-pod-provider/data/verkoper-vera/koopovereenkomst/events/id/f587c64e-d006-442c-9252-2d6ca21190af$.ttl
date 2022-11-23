@@ -15,8 +15,10 @@ event:
     cloudevents:time "2002-11-01T21:35:05Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "15 | verkoper vera | concept koopovereenkomst ondertekend voor 345";
-    cloudevents:data [
-      zvg:versie: "<sequence id?>";
-      zvg:ondertekendOp: "2002-11-01T21:35:04Z"^^xsd:dateTime;
-      zvg:proof: "<VC van ondertekening?>";
-    ].
+    cloudevents:data <#data> .
+
+<#data>
+    a zvg:eventData;
+    zvg:versie "<sequence id?>";
+    zvg:ondertekendOp "2002-11-01T21:35:04Z"^^xsd:dateTime;
+    zvg:proof "<VC van ondertekening?>" .

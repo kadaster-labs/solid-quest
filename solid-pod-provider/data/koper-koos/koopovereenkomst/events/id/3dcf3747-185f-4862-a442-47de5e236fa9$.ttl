@@ -15,6 +15,8 @@ event:
     cloudevents:time "2001-10-21T10:42:03Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "03 | koper koos | bod uitgebracht voor 345";
-    cloudevents:data [
-      zvg:bod 399000;
-    ].
+    cloudevents:data <#data> .
+
+<#data>
+    a zvg:eventData;
+    zvg:bod 399000 .

@@ -15,4 +15,7 @@ event:
     cloudevents:time "2001-10-21T16:37:03Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "04 | verkoper vera | bod niet geaccepteerd voor 345";
-    cloudevents:data [].
+    cloudevents:data <#data> .
+
+<#data>
+    a zvg:eventData.

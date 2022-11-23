@@ -16,6 +16,8 @@ event:
     cloudevents:time "2001-09-27T10:18:13Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "02 | verkoper vera | koopprijs ingesteld voor 345";
-    cloudevents:data [
-      zvg:vraagprijs 425000;
-    ].
+    cloudevents:data <#data> .
+
+<#data>
+    a zvg:eventData;
+    zvg:vraagprijs 425000 .
