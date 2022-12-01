@@ -1,4 +1,4 @@
-name: Kookovereenkomst CI
+name: Community Server CI
 
 on:
   push:
