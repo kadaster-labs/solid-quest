@@ -8,6 +8,7 @@ const nextConfig = {
   images: {
     loader: "custom",
   },
+  output: 'standalone',
   async redirects() {
     return [
       {

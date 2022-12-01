@@ -1,13 +1,19 @@
 version: '3.9'
 
 services:
+  koopovereenkomst-app:
+    build:
+      context: koopovereenkomst-v3-simple
+    ports:
+      - 3000:3000
+
   solid-pod-provider:
     build:
       context: community-server
     command: -p 3001
     environment:
-        - CSS_ROOT_FILE_PATH=/data
+      - CSS_ROOT_FILE_PATH=/data
     ports:
-        - 3001:3001
+      - 3001:3001
     volumes:
-        - ./solid-pod-provider/data:/data
+      - ./solid-pod-provider/data:/data
