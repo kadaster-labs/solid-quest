@@ -1,0 +1,3 @@
+[submodule "vc-api"]
+	path = vc-api
+	url = https://github.com/kadaster-labs/vc-api-nodejs

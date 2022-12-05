@@ -17,3 +17,9 @@ services:
       - 3001:3001
     volumes:
       - ./solid-pod-provider/data:/data
+
+  vc-api:
+    build:
+      context: vc-api
+    ports:
+      - 8080:8080
