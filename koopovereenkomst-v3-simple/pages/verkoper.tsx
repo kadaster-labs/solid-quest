@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import KadasterKnowledgeGraph from "../components/kkg";
 import Layout from '../components/layout';
 import Profile from "../components/profile";
+import VC from '../components/vc';
 import styles from '../styles/verkoper.module.css';
 
 // @ts-ignore
@@ -170,6 +171,8 @@ export default function Verkoper() {
             {session.info.isLoggedIn && <Profile />}
 
             {session.info.isLoggedIn && <KadasterKnowledgeGraph />}
+            
+            {session.info.isLoggedIn && <VC />}
 
         </Layout>
     );
