@@ -32,7 +32,6 @@ export default function LoginForm() {
                 <option value="https://solidcommunity.net">Solid Community</option>
                 <option value="https://broker.pod.inrupt.com">Inrupt</option>
                 <option value="http://localhost:3001">localhost:3001</option>
-                <option value="http://localhost:3002">localhost:3002</option>
             </select>
             <LoginButton
                 authOptions={{ clientName: siteTitle }}
