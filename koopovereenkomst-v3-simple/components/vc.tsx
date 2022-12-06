@@ -84,9 +84,9 @@ export default function VC() {
                 }
             }
 
-            document.getElementById("savedcredentials").value = listcontent;
-            document.getElementById("labelTextarea").textContent = "POD Content ↪";
-            document.getElementById("labelTextarea").href = credentialListUrl;
+            (document.getElementById("savedcredentials") as HTMLTextAreaElement).value = listcontent;
+            (document.getElementById("labelTextarea") as HTMLAnchorElement).textContent = "POD Content ↪";
+            (document.getElementById("labelTextarea") as HTMLAnchorElement).href = credentialListUrl;
         } catch (error) {
             console.log(error);
             labelCreateStatus.textContent = "Error" + error;
