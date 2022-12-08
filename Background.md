@@ -12,6 +12,8 @@ Dit bestand is een verzameling van de kennis en terminologie die we hebben verga
 
 ## Data PODs vs data spaces
 
+![POD vs Wallet vs Data Space](images/POD-vs-Wallet-vs-DataSpace.jpg)
+
 We merken dat de termen data PODs en data spaces vaak door elkaar worden gebruikt, terwijl er volgens ons verschillende dingen mee worden bedoeld. Voor data PODs is de definitie van [PLDN](https://www.pldn.nl/wiki/PODS) vrij duidelijk:
 
 > "Personal Online Data Stores (PODS) of Personal Online Data Storage Containers zijn beveiligde online opslagplaatsen voor persoonlijke gegevens waar apps toegang tot kunnen hebben als zij daarvoor geautoriseerd zijn."
