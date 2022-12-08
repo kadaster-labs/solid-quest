@@ -7,7 +7,8 @@ import {
     getFile,
     getSolidDataset,
     getSourceUrl,
-    saveFileInContainer
+    saveFileInContainer,
+    WithResourceInfo,
 } from '@inrupt/solid-client';
 import { useSession } from "@inrupt/solid-ui-react";
 
@@ -42,13 +43,13 @@ export default function VC() {
     const { webId } = session.info;
 
     const SELECTED_POD = webId.split('profile/card#me')[0];
+    const targetContainerURL = `${SELECTED_POD}credentials/`;
     const labelCreateStatus = document.querySelector("#labelCreateStatus");
 
     const save_jsonld_file = async (credential: VerifiableCredential) => {
       labelCreateStatus.textContent = "";
 
-      const credentialListUrl = `${SELECTED_POD}credentials`;
-      const targetContainerURL = `${SELECTED_POD}credentialsjsonld/`;
+      // Create Container to place VC in
       try {
         const container = await getSolidDataset(targetContainerURL, { fetch });
         await deleteRecursively(container);
@@ -61,9 +62,8 @@ export default function VC() {
       // Upload file into the targetContainer.
       const blob = new Blob([JSON.stringify(credential, null, 2)], {type: "application/json;charset=utf-8"});
 
-      let savedFile;
       try {
-        savedFile = await saveFileInContainer(
+        let savedFile = await saveFileInContainer(
           targetContainerURL,           // Container URL
           blob,                         // File
           { slug: "kadasterVC.jsonld", contentType: "application/ld+json", fetch: fetch }
@@ -71,19 +71,26 @@ export default function VC() {
         console.log(`File saved at ${getSourceUrl(savedFile)}`);
 
         labelCreateStatus.textContent = "✅ Saved";
+        return savedFile;
       } catch (error) {
         console.error(error);
+        return undefined;
+      }
+    }
+
+    async function readSolidVC(file: Blob & WithResourceInfo) {
+      if (!file) {
+        return;
       }
 
-      // Read File from POD
       try {
-        const fileBlob = await getFile(getSourceUrl(savedFile), { fetch });
+        const fileBlob = await getFile(getSourceUrl(file), { fetch });
         const tekst = await fileBlob.text();
         const content = JSON.parse(tekst);
 
         (document.getElementById("savedcredentials") as HTMLPreElement).textContent = JSON.stringify(content, null, 2);
         (document.getElementById("labelTextarea") as HTMLAnchorElement).textContent = "POD Content ↪";
-        (document.getElementById("labelTextarea") as HTMLAnchorElement).href = credentialListUrl;
+        (document.getElementById("labelTextarea") as HTMLAnchorElement).href = file.internal_resourceInfo.sourceIri;
       } catch (error) {
         console.log(error);
         labelCreateStatus.textContent = "Error" + error;
@@ -96,8 +103,10 @@ export default function VC() {
         const credential = await api.issueCredential() as VerifiableCredential;
         console.log("Recieved credential", credential);
 
-        await save_jsonld_file(credential)
+        const savedFile = await save_jsonld_file(credential);
         console.log("Saved credential");
+
+        await readSolidVC(savedFile);
     }
 
     return (
