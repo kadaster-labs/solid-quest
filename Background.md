@@ -4,6 +4,11 @@ Dit bestand is een verzameling van de kennis en terminologie die we hebben verga
 - [Data PODs vs data spaces](#data-pods-vs-data-spaces)
 - [WebID](#webid)
 - [Verifiable Credentials](#verifiable-credentials-vcs)
+  - [VCs vs IRMA](#vcs-vs-irma)
+- [Europese Digitale Identiteit](#europese-digitale-identiteit-edi) 
+  - [Wat houdt EDI in?](#wat-houdt-edi-in)
+  - [Welke stappen gaan er in 2023 genomen worden?](#welke-stappen-gaan-er-in-2023-genomen-worden)
+  - [Wat betekent dit voor het Kadaster?](#wat-betekent-dit-voor-het-kadaster)
 
 ## Data PODs vs data spaces
 
@@ -44,4 +49,30 @@ Schematische weergave
 
 Het doel van VC is om een open standaard te creeëren om credentials uit te kunnen wisselen. Op dit moment is IRMA niet compatible met VC en werkt dus alleen binnen het IRMA ecosysteem zelf. Er lijken meer demo's te zijn i.c.m. met IRMA, omdat die al verder lijkt te zijn. VC is echt nog meer in ontwikkeling.
 
+## Europese Digitale Identiteit (EDI)
+### Wat houdt EDI in?
+EDI staat voor Europese Digitale Identiteit. De Europese Commissie kwam op 3 juni 2021 met een [wetsvoorstel voor het EDI raamwerk](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:52021PC0281&from=EN) om de eIDAS verordening te herzien. Het is een raamwerk voor Europese Digitale Identiteiten; een set van afspraken waardoor nationaal uitgegeven Digitale Identiteiten en de wallets waarin deze worden meegedragen wederzijds worden erkend in de verschillende Europese lidstaten.
+
+Een wallet en digitale identiteit is niet hetzelfde. Een wallet is een applicatie of toepassing op een telefoon of tablet waarin een digitale identiteit (set van gegevens) kan worden opgeslagen en meegenomen. Het uitgangspunt is dat het gebruik van de wallet vrijwillig is voor burgers. 
+
+### Welke stappen gaan er in 2023 genomen worden?
+Europa gaat onderhandelen over de herziening van de eIDAS-verordening. Het betrouwbaar inloggen met elektronische identiteiten bij (semi-)overheidsdiensten, eventueel over de grens, is al geregeld.  Met de beoogde herziening ‘Raamwerk Europese Digitale Identiteit’ (EDI) moeten de volgende zaken ook geregeld worden:
+-	Alle lidstaten geven verplicht één of meer wallets uit. Wallets kunnen niet alleen in het publieke domein gebruikt worden, maar ook in het private domein (bijv. Google, Facebook & Amazon).
+-	Burgers en bedrijven kunnen hun digitale (bron)identiteit en gegevens, zoals diploma’s, zelf delen via een wallet applicatie op hun smartphone.
+-	Het gebruik van wallets voor natuurlijke personen is gratis, de wallet voldoet aan toegankelijkheidseisen en aan het hoogste niveau van betrouwbaarheid bij uitgifte en gebruik.
+-	Wallets zijn geschikt voor offline gebruik zonder internet.
+-	Wallets moeten de vertrouwensdiensten elektronische handtekening en zegel bevatten. Daarnaast is er verplichte nationale certificering, in Nederland door het Agentschap Telecom.
+
+Overeenstemming over en publicatie van de eIDAS-verordening wordt eind 2023 verwacht.
+
+In Nederland bestaat het [programma EDI Stelsel NL](https://edi.pleio.nl/). Dit programma zal een werkende eerste versie van een Nederlandse [open source wallet](https://github.com/MinBZK/nl-wallet-demo-app) neerzetten in 2023. Bij het ontwikkelen van die wallet staat co-creatie voorop, waarbij het bedrijfsleven, de wetenschap en ieder ander die zich betrokken voelt uitgenodigd wordt om concrete bijdragen te leveren.
+	
+### Wat betekent dit voor het Kadaster?
+De Nederlandse overheid heeft de [Werkagenda Waardengedreven Digitaliseren](https://www.digitaleoverheid.nl/kabinetsbeleid-digitalisering/werkagenda/) opgesteld. Eén van de programmalijnen luidt: "Iedereen heeft regie op het digitale leven." Daarvoor is regelgeving en beleid nodig, rond wallets en basisvoorzieningen.  
+
+In de [Digital Identity Architectural Reference Framework (ARF)](https://futurium.ec.europa.eu/sites/default/files/2022-02/Outline%20final.pdf), de onderlegger van het Europese EDI-stelsel, krijgen uitvoeringsorganisaties naast de rol van verstrekker van persoonsgegevens de taak om de betrouwbaarheid van data te verifiëren, die uit de wallet komen (zie: [iBestuur](https://ibestuur.nl/partner-live-event/herziene-eidas-grote-impact-op-uitvoeringsorganisaties). Dit betekent dat de systemen en processen zo ingericht moeten worden dat ze aan de eisen kunnen voldoen.
+
+Bovenstaande geldt dus ook voor het Kadaster. Het begrijpen van de technologie is randvoorwaardelijk (!) om je voor te bereiden op deze ontwikkelingen. Daarom onderzoeken we binnen de demonstrator ook de rol van [Verifiable Credentials](#verifiable-credentials-vcs):
+-	Hoe kan Kadaster in de rol van Issuer gegevens verstrekken? (Zie: [Issue: VC issuer Kadaster eigendomsrecht van perceel](https://github.com/kadaster-labs/solid-quest/issues/34))
+-	Hoe kan Kadaster in de rol van Verifier gegevens valideren? (Zie: [Issue: VC verifier Kadaster van ingeschreven koopovereenkomst](https://github.com/kadaster-labs/solid-quest/issues/36))
 

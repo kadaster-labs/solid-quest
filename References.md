@@ -21,5 +21,10 @@ In dit bestand vind je alle links naar (achtergrond)informatie die wij hebben ve
   - [TNO on Internation Data Spaces](https://www.tno.nl/en/technology-science/technologies/international-data-spaces)
   - [iSHARE](https://ishare.eu/) - iSHARE is the European standard for and trust network of international business data sharing in a sovereign way.
   - [Gaia-X](https://gaia-x.eu/) - Gaia-X is a European project and aims to establish a data space ecosystem, whereby data is shared and made available in a trustworthy environment
+- Europese Digitale Identiteit (EDI)
+  - [Pleio omgeving EDI](https://edi.pleio.nl/) - de ‘hub’ waar nieuws en relevante informatie over de NL wallet wordt gedeeld
+  - [Github NL wallet](https://github.com/MinBZK/nl-wallet-demo-app) - open source code van de NL wallet. Het doel is om de eerste werkende versie eind 2023 af te hebben.
+  - [Figma omgeving NL wallet](https://www.figma.com/file/dO5pKIIIyDgG0N2ZX4C2xd/2212_V1_Designs_NL-Voorbeeld-Wallet?node-id=1818%3A36637) - de ontwerpschermen van de demo NL wallet 
+  - [Digital Identity Architectural Reference Framework (ARF)](https://futurium.ec.europa.eu/sites/default/files/2022-02/Outline%20final.pdf)) - Deze outline bevat een uiteenzetting van de doelen van de wallet, rollen van partijen in het systeem, wallet functionaliteiten en bouwstenen.
 - Other
   - [Rapport: Regie op Gegevens](https://www.rijksoverheid.nl/documenten/rapporten/2022/01/13/poc-gegevensinzage-burgers)
