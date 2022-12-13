@@ -13,6 +13,7 @@
 @prefix prov: <https://www.w3.org/TR/prov-o/#> .
 
 koopovereenkomst:
+    a zvg:Koop;
     prov:wasGeneratedBy 
         event:1169a7f6-aebc-4c0e-b69b-ba5f6530a72c,
         event:1bc24631-de10-42b1-8ffe-6c0509336dfa,
@@ -31,7 +32,11 @@ koopovereenkomst:
         event:c87c8a9b-0419-4b4f-89ed-3c97a5b3b51c,
         koperEvent:c2a70f99-1542-4dc7-a9eb-c055158041bc,
         event:f587c64e-d006-442c-9252-2d6ca21190af
-     .
+     ;
+    zvg:aangebodenDoor marc:;
+    zvg:aan janneke:;
+    zvg:koopsom 412000;
+    zvg:vanZakelijkRecht <https://data.kkg.kadaster.nl/id/zakelijkrecht/1004387823748930> .
 
 marc:
     a zvg:Verkoper, zvg:Partij, zvg:Persoon;
