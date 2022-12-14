@@ -12,7 +12,11 @@ import {
 } from '@inrupt/solid-client';
 import { useSession } from "@inrupt/solid-ui-react";
 
-import { IssuerApi, VerifiableCredential } from '../api/vcApi';
+import {
+  GovernmentAgency,
+  IssuerCredentialsApi,
+  VerifiableCredential,
+} from '../api/vcApi';
 
 
 export async function deleteRecursively(dataset) {
@@ -99,11 +103,11 @@ export default function VC() {
     }
 
     const vcAPI = async () => {
-        const api = new IssuerApi({ basePath: "http://localhost:8080" });
-        const credential = await api.issueCredential() as VerifiableCredential;
-        console.log("Recieved credential", credential);
+        const api = new IssuerCredentialsApi({ basePath: "http://localhost:8080" });
+        const response = await api.issueCredential(GovernmentAgency.Kadaster);
+        console.log("Recieved response", response);
 
-        const savedFile = await save_jsonld_file(credential);
+        const savedFile = await save_jsonld_file(response.verifiableCredential);
         console.log("Saved credential");
 
         await readSolidVC(savedFile);
