@@ -60,7 +60,7 @@ export default class KoopovereenkomstAggregate {
     // add build up label
     try {
       Object.assign(e, {
-        newLabel: `${e.seq.padStart(2, "0")} | ${e.actor} | ${e.type} for ${
+        newLabel: `${e.seq.padStart(2, "0")} | ${e.time} | ${e.actor} | ${e.type} for ${
           e.aggregateId
         }`,
       });
@@ -72,25 +72,25 @@ export default class KoopovereenkomstAggregate {
       Object.assign(e, { bod: await event.eventData.bod.value });
     } else if (theType === "koopovereenkomstGeinitieerd") {
       Object.assign(e, { template: await event.eventData.template.value });
-    } else if (theType === "bodGeaccepteerd") {
-      Object.assign(e, { bod: await event.eventData.bod.value });
+    } else if (theType === "conceptKoopovereenkomstVerkoperOpgeslagen") {
+      console.log(`extract data from [${theType}] event`);
     } else if (theType === "kadastraalObjectIdToegevoegd") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "bodBevestigd") {
+    } else if (theType === "getekendeKoopovereenkomstKoperOpgeslagen") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "bodNietGeaccepteerd") {
+    } else if (theType === "datumVanLeveringToegevoegd") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "tegenbodUitgebracht") {
+    } else if (theType === "persoonsgegevensRefToegevoegd") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "vraagprijsIngesteld") {
+    } else if (theType === "conceptKoopovereenkomstKoperOpgeslagen") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "voorstelDatumVanLeveringGedaan") {
+    } else if (theType === "koopprijsToegevoegd") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "conceptKoopovereenkomstGelezen") {
+    } else if (theType === "getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "voorstelDatumVanLeveringGeaccepteerd") {
+    } else if (theType === "getekendeKoopovereenkomstVerkoperOpgeslagen") {
       console.log(`extract data from [${theType}] event`);
-    } else if (theType === "conceptKoopovereenkomstOndertekend") {
+    } else if (theType === "conceptKoopovereenkomstGetekend") {
       console.log(`extract data from [${theType}] event`);
     } else {
       console.warn(`unsupported event in handler: [${theType}]`);
