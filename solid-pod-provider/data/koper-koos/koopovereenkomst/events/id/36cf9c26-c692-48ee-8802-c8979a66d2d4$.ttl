@@ -11,7 +11,7 @@ event:
     zvg:aggregateIdentifier koopovereenkomst:345;
     cloudevents:sequence "11"^^xsd:integer;
     cloudevents:specversion "1.0";
-    cloudevents:subject koopovereenkomst:;
+    cloudevents:subject koopovereenkomst:345;
     cloudevents:time "2001-11-02T09:02:33Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "11 | koper koos | getekende koopovereenkomst koper opgeslagen voor 345";
