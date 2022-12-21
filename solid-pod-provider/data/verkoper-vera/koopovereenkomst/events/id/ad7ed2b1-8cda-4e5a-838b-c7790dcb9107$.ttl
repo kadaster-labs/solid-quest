@@ -7,16 +7,16 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 event:
-    a zvg:voorstelDatumVanLeveringGedaan;
+    a zvg:conceptKoopovereenkomstGetekend;
     zvg:aggregateIdentifier koopovereenkomst:345;
-    cloudevents:sequence "10"^^xsd:integer;
+    cloudevents:sequence "8"^^xsd:integer;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
-    cloudevents:time "2001-10-25T11:47:52Z"^^xsd:dateTime;
+    cloudevents:time "2001-10-30T11:47:52Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "10 | verkoper vera | voorstel datum van levering gedaan voor 345";
+    rdfs:label "08 | verkoper vera | concept koopovereenkomst getekend voor 345";
     cloudevents:data <#data> .
 
 <#data>
-    a zvg:eventData;
-    zvg:datumVanLevering "2002-05-01T10:00:00Z"^^xsd:dateTime .
+    a zvg:eventData .
+  
