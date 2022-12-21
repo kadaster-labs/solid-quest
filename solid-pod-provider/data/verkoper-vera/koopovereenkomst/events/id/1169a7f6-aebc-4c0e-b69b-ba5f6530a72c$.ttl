@@ -7,16 +7,16 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 event:
-    a zvg:bodGeaccepteerd;
+    a zvg:conceptKoopovereenkomstVerkoperOpgeslagen;
     zvg:aggregateIdentifier koopovereenkomst:345;
-    cloudevents:sequence "8"^^xsd:integer;
+    cloudevents:sequence "7"^^xsd:integer;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
     cloudevents:time "2001-10-23T23:24:31Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "08 | verkoper vera | bod geaccepteerd voor 345";
+    rdfs:label "07 | verkoper vera | concept koopovereenkomst verkoper opgeslagen voor 345";
     cloudevents:data <#data> .
 
 <#data>
-    a zvg:eventData;
-    zvg:bod 415000 .
+    a zvg:eventData .
+ 

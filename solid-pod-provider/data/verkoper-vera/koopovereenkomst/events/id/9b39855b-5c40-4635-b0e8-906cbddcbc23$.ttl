@@ -8,7 +8,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 event:
-    a zvg:vraagprijsIngesteld;
+    a zvg:koopprijsToegevoegd;
     zvg:aggregateIdentifier koopovereenkomst:345;
     cloudevents:sequence "2"^^xsd:integer;
     cloudevents:specversion "1.0";
@@ -20,4 +20,4 @@ event:
 
 <#data>
     a zvg:eventData;
-    zvg:vraagprijs 425000 .
+    zvg:koopprijs 425000 .
