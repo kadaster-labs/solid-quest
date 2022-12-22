@@ -101,11 +101,11 @@ export default class KoopovereenkomstAggregate {
     }
 
     if (theType === "koopovereenkomstGeinitieerd") {
-      this.processKoopovereenkomstGeinitieerd(e, event);
+      await this.processKoopovereenkomstGeinitieerd(e, event);
     } else if (theType === "kadastraalObjectIdToegevoegd") {
-      this.processKadastraalObjectIdToegevoegd(e, event);
+      await this.processKadastraalObjectIdToegevoegd(e, event);
     } else if (theType === "koopprijsToegevoegd") {
-      this.processKoopprijsToegevoegd(e, event);
+      await this.processKoopprijsToegevoegd(e, event);
     } else if (
       theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
       theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
