@@ -97,7 +97,7 @@ export default function Verkoper() {
 
             console.log(`\nAANGEBODEN DOOR: ${await ko.aangebodenDoor}`);
             console.log(`\nAAN: ${await ko.aan}`);
-            console.log(`\nKOOPSOM: ${await ko.koopsom}`);
+            console.log(`\nKOOPPRIJS: ${await ko.koopprijs}`);
 
             console.log('dump', aggregate.dump());
 
