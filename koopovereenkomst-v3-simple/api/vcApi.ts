@@ -1451,17 +1451,23 @@ export const IssuerCredentialsApiFetchParamCreator = function (configuration?: C
          * Issues a credential and returns it in the response body.
          * @summary Issues a credential and returns it in the response body.
          * @param {string} agency The government agency the user requires a VC from
+         * @param {string} webID WebID of the user to create VC for
          * @param {IssueCredentialRequest} [body] Parameters for issuing the credential.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        issueCredential(agency: string, body?: IssueCredentialRequest, options: any = {}): FetchArgs {
+        issueCredential(agency: string, webID: string, body?: IssueCredentialRequest, options: any = {}): FetchArgs {
             // verify required parameter 'agency' is not null or undefined
             if (agency === null || agency === undefined) {
                 throw new RequiredError('agency','Required parameter agency was null or undefined when calling issueCredential.');
             }
-            const localVarPath = `/{agency}/credentials/issue`
-                .replace(`{${"agency"}}`, encodeURIComponent(String(agency)));
+            // verify required parameter 'webID' is not null or undefined
+            if (webID === null || webID === undefined) {
+                throw new RequiredError('webID','Required parameter webID was null or undefined when calling issueCredential.');
+            }
+            const localVarPath = `/{agency}/credentials/issue/{webID}`
+                .replace(`{${"agency"}}`, encodeURIComponent(String(agency)))
+                .replace(`{${"webID"}}`, encodeURIComponent(String(webID)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
             const localVarHeaderParameter = {} as any;
@@ -1522,12 +1528,13 @@ export const IssuerCredentialsApiFp = function(configuration?: Configuration) {
          * Issues a credential and returns it in the response body.
          * @summary Issues a credential and returns it in the response body.
          * @param {string} agency The government agency the user requires a VC from
+         * @param {string} webID WebID of the user to create VC for
          * @param {IssueCredentialRequest} [body] Parameters for issuing the credential.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        issueCredential(agency: string, body?: IssueCredentialRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<IssueCredentialResponse> {
-            const localVarFetchArgs = IssuerCredentialsApiFetchParamCreator(configuration).issueCredential(agency, body, options);
+        issueCredential(agency: string, webID: string, body?: IssueCredentialRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<IssueCredentialResponse> {
+            const localVarFetchArgs = IssuerCredentialsApiFetchParamCreator(configuration).issueCredential(agency, webID, body, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1570,12 +1577,13 @@ export const IssuerCredentialsApiFactory = function (configuration?: Configurati
          * Issues a credential and returns it in the response body.
          * @summary Issues a credential and returns it in the response body.
          * @param {string} agency The government agency the user requires a VC from
+         * @param {string} webID WebID of the user to create VC for
          * @param {IssueCredentialRequest} [body] Parameters for issuing the credential.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        issueCredential(agency: string, body?: IssueCredentialRequest, options?: any) {
-            return IssuerCredentialsApiFp(configuration).issueCredential(agency, body, options)(fetch, basePath);
+        issueCredential(agency: string, webID: string, body?: IssueCredentialRequest, options?: any) {
+            return IssuerCredentialsApiFp(configuration).issueCredential(agency, webID, body, options)(fetch, basePath);
         },
         /**
          * Updates the status of an issued credential.
@@ -1600,14 +1608,15 @@ export class IssuerCredentialsApi extends BaseAPI {
     /**
      * Issues a credential and returns it in the response body.
      * @summary Issues a credential and returns it in the response body.
-     * @param {GovernmentAgency} agency The government agency the user requires a VC from
+     * @param {string} agency The government agency the user requires a VC from
+     * @param {string} webID WebID of the user to create VC for
      * @param {IssueCredentialRequest} [body] Parameters for issuing the credential.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof IssuerCredentialsApi
      */
-    public issueCredential(agency: GovernmentAgency, body?: IssueCredentialRequest, options?: any) {
-        return IssuerCredentialsApiFp(this.configuration).issueCredential(agency, body, options)(this.fetch, this.basePath);
+    public issueCredential(agency: string, webID: string, body?: IssueCredentialRequest, options?: any) {
+        return IssuerCredentialsApiFp(this.configuration).issueCredential(agency, webID, body, options)(this.fetch, this.basePath);
     }
 
     /**

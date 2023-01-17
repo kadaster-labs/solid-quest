@@ -104,7 +104,7 @@ export default function VC() {
 
     const vcAPI = async () => {
         const api = new IssuerCredentialsApi({ basePath: "http://localhost:8080" });
-        const response = await api.issueCredential(GovernmentAgency.Kadaster);
+        const response = await api.issueCredential(GovernmentAgency.Kadaster, webId);
         console.log("Recieved response", response);
 
         const savedFile = await save_jsonld_file(response.verifiableCredential);
