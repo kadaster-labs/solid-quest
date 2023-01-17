@@ -113,6 +113,18 @@ export default function VC() {
         await readSolidVC(savedFile);
     }
 
+    const loadVC = async () => {
+      const uri = `${targetContainerURL}kadasterVC.jsonld`;
+      const file = await getFile(uri, { fetch });
+      await readSolidVC(file);
+    }
+
+    try {
+      loadVC();
+    } catch (error) {
+      // Ignore
+    }
+
     return (
         <div>
             <h2>Verifiable Credentials</h2>
