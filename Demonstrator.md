@@ -34,7 +34,7 @@ Bovenstaande is in detail uitgewerkt in een [Sequence Diagram](https://raw.githu
 To start a 'verkoper' and 'koper' POD based on [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer) use `docker-compose`:
 
 ```bash
-docker compose up
+docker compose up solid-pod-provider
 ```
 
 - Verkoper POD: [localhost:3001/verkoper-vera/](http://localhost:3001/verkoper-vera/)
