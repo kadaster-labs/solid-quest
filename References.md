@@ -15,7 +15,7 @@ In dit bestand vind je alle links naar (achtergrond)informatie die wij hebben ve
     - [Projecten Vlaamse Datanutsbedrijf](https://www.vlaanderen.be/digitaal-vlaanderen/het-vlaams-datanutsbedrijf/projecten-vlaams-datanutsbedrijf)
   - Commercial Vendors
     - [Inrupt](https://inrupt.com/) - SOLID core developer company
-    - [Digita](https://www.digita.ai/) (check the URL :laughing:) providing [use.id](https://get.use.id/), a free WebID (across orgs and platforms) 🤔
+    - [Digita](https://www.digita.ai/) (check the URL :laughing:) providing [use.id](https://get.use.id/), a free WebID (across orgs and platforms) 🤔 See [Documentation for Developers](https://docs.use.id/) for more info
 - Data spaces
   - [Internation Data Spaces Association](https://internationaldataspaces.org/why/data-spaces/) 
   - [TNO on Internation Data Spaces](https://www.tno.nl/en/technology-science/technologies/international-data-spaces)
