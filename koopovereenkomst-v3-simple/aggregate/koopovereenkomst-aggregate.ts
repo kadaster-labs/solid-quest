@@ -5,7 +5,8 @@ import { PathFactory } from "ldflex";
 import ComunicaEngine from "@ldflex/comunica";
 // @ts-ignore
 import { namedNode } from "@rdfjs/data-model";
-import { KADASTER_KKG_CONTEXT } from "./context";
+import * as jsonld from "jsonld";
+import { GENERAL_CONTEXT, KADASTER_KKG_CONTEXT } from "./context";
 
 interface Event {
   aggregateId: string;
@@ -19,6 +20,7 @@ interface Event {
   template?: string;
   kadastraalObjectId?: string;
   koopprijs?: number;
+  datumVanLevering?: string;
 }
 
 interface Perceel {
@@ -27,7 +29,12 @@ interface Perceel {
 }
 
 export default class KoopovereenkomstAggregate {
-  private data: any = {};
+  private data: any = {
+    "@context": {
+      ...GENERAL_CONTEXT,
+      zvg: "http://taxonomie.zorgeloosvastgoed.nl/def/zvg#",
+    },
+  };
   private events: Event[] = [];
 
   private queryEngine = new ComunicaEngine(
@@ -39,19 +46,30 @@ export default class KoopovereenkomstAggregate {
   });
 
   constructor(ko: solidQuery, pod: solidQuery) {
-    this.data = {
-      ...this.data,
-      iri: ko.value,
-      id: ko.value.split("/").pop(),
-    };
+    this.dataAppend(
+      {
+        iri: "zvg:koopovereenkomst-iri",
+        koopovereenkomst: "zvg:koopovereenkomst",
+      },
+      {
+        iri: ko.value,
+        koopovereenkomst: {
+          "@id": ko.value.split("/").pop(),
+        },
+      }
+    );
   }
 
   public getEvents(): Event[] {
     return this.events.sort((a, b) => a.seq - b.seq);
   }
 
-  public dump(): object {
-    return this.data;
+  public async dumpJsonLD(): Promise<object> {
+    const p = new Promise<object>((resolve, reject) => {
+      resolve(this.data);
+    });
+    return p;
+    // return await jsonld.compact(this.data);
     // return {
     //   koopovereenkomstId: this.id,
     //   iri: this.iri,
@@ -59,6 +77,10 @@ export default class KoopovereenkomstAggregate {
     //   kadastraalObject: this.kadastraalObject,
     //   koopprijs: this.koopprijs,
     // };
+  }
+
+  public async dumpNQuads(): Promise<string> {
+    return await jsonld.toRDF(this.data, { format: "application/n-quads" });
   }
 
   public async handleEvent(eventUri: solidQuery) {
@@ -80,7 +102,7 @@ export default class KoopovereenkomstAggregate {
     }
     const curLabel = await event.label.value;
     const e = {
-      aggregateId: this.data.id,
+      aggregateId: this.data.koopovereenkomst["@id"],
       id: eventUri.value,
       seq: await event.sequence.value,
       type: theType,
@@ -106,10 +128,11 @@ export default class KoopovereenkomstAggregate {
       await this.processKadastraalObjectIdToegevoegd(e, event);
     } else if (theType === "koopprijsToegevoegd") {
       await this.processKoopprijsToegevoegd(e, event);
+    } else if (theType === "datumVanLeveringToegevoegd") {
+      await this.processDatumVanLeveringToegevoegd(e, event);
     } else if (
       theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
       theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
-      theType === "datumVanLeveringToegevoegd" ||
       theType === "persoonsgegevensRefToegevoegd" ||
       theType === "conceptKoopovereenkomstKoperOpgeslagen" ||
       theType ===
@@ -128,7 +151,24 @@ export default class KoopovereenkomstAggregate {
   private async processKoopprijsToegevoegd(e: Event, event: solidQuery) {
     Object.assign(e, { koopprijs: await event.eventData.koopprijs.value });
 
-    this.data = { ...this.data, koopprijs: e.koopprijs };
+    this.dataAppend({ koopprijs: "zvg:koopprijs" }, { koopprijs: e.koopprijs });
+    // this.data = { ...this.data, koopprijs: e.koopprijs };
+    // this.data["@context"] = {
+    //   ...this.data["@context"],
+    //   koopprijs: "zvg:koopprijs",
+    // };
+  }
+
+  private async processDatumVanLeveringToegevoegd(e: Event, event: solidQuery) {
+    Object.assign(e, {
+      datumVanLevering: await event.eventData.datumVanLevering.value,
+    });
+
+    this.dataAppend(
+      { datumVanLevering: "zvg:datumVanLevering" },
+      { datumVanLevering: e.datumVanLevering }
+    );
+    // this.data = { ...this.data, datumVanLevering: e.datumVanLevering };
   }
 
   private async processKadastraalObjectIdToegevoegd(
@@ -144,13 +184,24 @@ export default class KoopovereenkomstAggregate {
       subject: namedNode(`${e.kadastraalObjectId}`),
     });
 
-    this.data = {
-      ...this.data,
-      kadastraalObject: {
-        kadastraalObjectId: e.kadastraalObjectId,
-        perceelNummer: await perceel.perceelnummer.value,
+    this.dataAppend(
+      {
+        sor: "https://data.kkg.kadaster.nl/sor/model/def/",
+        perceel: "https://data.kkg.kadaster.nl/id/perceel/",
+        perceelnummer: {
+          "@id": "sor:perceelnummer",
+          "@type": "xsd:integer",
+        },
+        kadastraalObjectId: "zvg:kadastraalObjectId",
+        kadastraalObject: "zvg:kadastraalObject",
       },
-    };
+      {
+        kadastraalObject: {
+          kadastraalObjectId: e.kadastraalObjectId,
+          perceelNummer: await perceel.perceelnummer.value,
+        },
+      }
+    );
   }
 
   private async processKoopovereenkomstGeinitieerd(
@@ -160,12 +211,27 @@ export default class KoopovereenkomstAggregate {
     Object.assign(e, { template: await event.eventData.template.value });
 
     if (e.template === "NVM Simple Default Koophuis") {
-      this.data = { ...this.data, typeKoopovereenkomst: "Koop" };
+      this.dataAppend(
+        { typeKoopovereenkomst: "zvg:typeKoopovereenkomst" },
+        { typeKoopovereenkomst: "Koop" }
+      );
     } else {
       throw new Error(
         `Unsupported template [${e.template}] in processing events`
       );
     }
+  }
+
+  private dataAppend(context: object, value: object): void {
+    this.data = { ...this.data, ...value };
+    this.dataAppendContext(context);
+  }
+
+  private dataAppendContext(context: object): void {
+    this.data["@context"] = {
+      ...this.data["@context"],
+      ...context,
+    };
   }
 }
 

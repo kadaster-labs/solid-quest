@@ -99,7 +99,8 @@ export default function Verkoper() {
             console.log(`\nAAN: ${await ko.aan}`);
             console.log(`\nKOOPPRIJS: ${await ko.koopprijs}`);
 
-            console.log('dump', aggregate.dump());
+            console.log('dump JSON+LD', await aggregate.dumpJsonLD());
+            console.log('dump NQuads', await aggregate.dumpNQuads());
 
         } catch (error) {
             setErrors('Error opening koopovereenkomst! ' + error);
