@@ -1,3 +1,6 @@
-[submodule "vc-api"]
-	path = vc-api
-	url = https://github.com/kadaster-labs/vc-api-nodejs
+[submodule "solid-quest-koek-vc-api"]
+	path = koopovereenkomst-vc-api
+	url = https://github.com/kadaster-labs/solid-quest-koek-vc-api
+[submodule "solid-quest-koek-server"]
+	path = koopovereenkomst-server
+	url = https://github.com/kadaster-labs/solid-quest-koek-server

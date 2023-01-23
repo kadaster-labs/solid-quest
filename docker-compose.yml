@@ -6,6 +6,20 @@ services:
       context: koopovereenkomst-v3-simple
     ports:
       - 3000:3000
+      
+  koopovereenkomst-server:
+    build:
+      context: koopovereenkomst-server
+    environment:
+      - VC_API_URL=http://koopovereenkomst-vc-api:8081
+    ports:
+      - 8080:8080
+
+  koopovereenkomst-vc-api:
+    build:
+      context: koopovereenkomst-vc-api
+    ports:
+      - 8081:8081
 
   solid-pod-provider:
     build:
@@ -17,9 +31,3 @@ services:
       - 3001:3001
     volumes:
       - ./solid-pod-provider/data:/data
-
-  vc-api:
-    build:
-      context: vc-api
-    ports:
-      - 8080:8080
