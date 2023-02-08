@@ -4,7 +4,7 @@ export const GENERAL_CONTEXT = {
   prov: "https://www.w3.org/TR/prov-o/#",
 };
 
-export const SOLID_ZGV_CONTEXT = {
+export const SOLID_ZVG_CONTEXT = {
   ...GENERAL_CONTEXT,
   cloudevents: "https://cloudevents.io/def/",
 
