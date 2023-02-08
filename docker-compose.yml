@@ -7,17 +7,17 @@ services:
     ports:
       - 3000:3000
       
-  koopovereenkomst-server:
+  mock-overheid-server:
     build:
-      context: koopovereenkomst-server
+      context: mock-overheid-server
     environment:
-      - VC_API_URL=http://koopovereenkomst-vc-api:8081
+      - VC_API_URL=http://vc-api:8081
     ports:
       - 8080:8080
 
-  koopovereenkomst-vc-api:
+  vc-api:
     build:
-      context: koopovereenkomst-vc-api
+      context: vc-api
     ports:
       - 8081:8081
 

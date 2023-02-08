@@ -1,6 +1,6 @@
-[submodule "solid-quest-koek-vc-api"]
-	path = koopovereenkomst-vc-api
-	url = https://github.com/kadaster-labs/solid-quest-koek-vc-api
-[submodule "solid-quest-koek-server"]
-	path = koopovereenkomst-server
-	url = https://github.com/kadaster-labs/solid-quest-koek-server
+[submodule "solid-quest-vc-api"]
+	path = vc-api
+	url = https://github.com/kadaster-labs/solid-quest-vc-api
+[submodule "solid-quest-mock-overheid-server"]
+	path = mock-overheid-server
+	url = https://github.com/kadaster-labs/solid-quest-mock-overheid-server
