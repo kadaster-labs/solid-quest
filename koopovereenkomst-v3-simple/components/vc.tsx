@@ -1,117 +1,174 @@
-import { fetch } from '@inrupt/solid-client-authn-browser';
+import { fetch as solidFetch } from '@inrupt/solid-client-authn-browser';
 import {
-    addStringNoLocale,
-    createSolidDataset,
-    createThing,
+    createContainerAt,
+    deleteFile,
+    deleteSolidDataset,
+    getContainedResourceUrlAll,
+    getFile,
     getSolidDataset,
-    getStringNoLocale,
-    getThingAll,
-    removeThing,
-    saveSolidDatasetAt,
-    setThing
+    getSourceUrl,
+    saveFileInContainer,
+    overwriteFile,
+    WithResourceInfo,
 } from '@inrupt/solid-client';
 import { useSession } from "@inrupt/solid-ui-react";
-import { SCHEMA_INRUPT } from '@inrupt/vocab-common-rdf';
 
-import { IssuerApi } from '../api/vcApi';
+
+export async function deleteRecursively(dataset) {
+  console.log(dataset);
+  const containedResourceUrls = getContainedResourceUrlAll(dataset);
+  const containedDatasets = await Promise.all(containedResourceUrls.map(async resourceUrl => {
+    try {
+      return await getSolidDataset(resourceUrl, { fetch: solidFetch });
+    } catch(e) {
+      // The Resource might not have been a SolidDataset;
+      // we can delete it directly:
+      await deleteFile(resourceUrl, { fetch: solidFetch });
+      return null;
+    }
+  }));
+  await Promise.all(containedDatasets.map(async containedDataset => {
+    if (containedDataset === null) {
+      return;
+    }
+    return await deleteRecursively(containedDataset);
+  }));
+  return await deleteSolidDataset(dataset, { fetch: solidFetch });
+}
 
 export default function VC() {
 
     const { session } = useSession();
     const { webId } = session.info;
-    
-    console.log(webId);
-    const SELECTED_POD = webId.split('profile/card#me')[0];
 
+    const SELECTED_POD = webId.split('profile/card#me')[0];
+    const targetContainerURL = `${SELECTED_POD}credentials/`;
     const labelCreateStatus = document.querySelector("#labelCreateStatus");
 
-    const save = async (credential: string) => {
-        // Attempt at adapting https://docs.inrupt.com/developer-tools/javascript/client-libraries/tutorial/getting-started/
-        labelCreateStatus.textContent = "";
+    const save_jsonld_file = async (filename: string, credential: any) => {
+      labelCreateStatus.textContent = "";
 
-        const credentialListUrl = `${SELECTED_POD}credentials`;
+      // Create Container to place VC in
+      try {
+        const container = await getSolidDataset(targetContainerURL, { fetch: solidFetch });
+        // await deleteRecursively(container);
+        // await createContainerAt(targetContainerURL, { fetch: solidFetch });
+      } catch (error) {
+        console.error(error);
+        await createContainerAt(targetContainerURL, { fetch: solidFetch });
+      }
 
-        // Fetch or create a new reading list.
-        let myCredentialList;
+      // Upload file into the targetContainer.
+      console.log('json stringify credential', credential)
+      const blob = new Blob([JSON.stringify(credential, null, 2)], {type: "application/json;charset=utf-8"});
 
-        try {
-            // Attempt to retrieve the reading list in case it already exists.
-            myCredentialList = await getSolidDataset(credentialListUrl, { fetch: fetch });
-            // Clear the list to override the whole list
-            let items = getThingAll(myCredentialList);
-            items.forEach((item) => {
-                console.log(item);
-                myCredentialList = removeThing(myCredentialList, item);
-            });
-        } catch (error) {
-            if (typeof error.statusCode === "number" && error.statusCode === 404) {
-            // if not found, create a new SolidDataset (i.e., the reading list)
-            myCredentialList = createSolidDataset();
-            } else {
-            console.error(error.message);
-            }
-        }
+      try {
+        let savedFile = await overwriteFile(
+          `${targetContainerURL}/${filename}`,           // Container URL
+          blob,                         // File
+          { contentType: "application/ld+json", fetch: solidFetch }
+        );
+        console.log(`File saved at ${getSourceUrl(savedFile)}`);
 
-
-        // Add credential to the Dataset
-        if (credential.trim() !== "") {
-            let item = createThing({ name: "credential" });
-            item = addStringNoLocale(item, SCHEMA_INRUPT.name, credential);
-            myCredentialList = setThing(myCredentialList, item);
-        }
-
-
-        try {
-            // Save the SolidDataset
-            let savedCredentialList = await saveSolidDatasetAt(
-                credentialListUrl,
-                myCredentialList,
-                { fetch: fetch }
-            );
-
-            labelCreateStatus.textContent = "✅ Saved";
-
-            // Refetch the Reading List
-            savedCredentialList = await getSolidDataset(credentialListUrl, { fetch: fetch });
-
-            let items = getThingAll(savedCredentialList);
-
-            let listcontent = "";
-            for (let i = 0; i < items.length; i++) {
-                let item = getStringNoLocale(items[i], SCHEMA_INRUPT.name);
-                if (item !== null) {
-                listcontent += item + "\n";
-                }
-            }
-
-            (document.getElementById("savedcredentials") as HTMLTextAreaElement).value = listcontent;
-            (document.getElementById("labelTextarea") as HTMLAnchorElement).textContent = "POD Content ↪";
-            (document.getElementById("labelTextarea") as HTMLAnchorElement).href = credentialListUrl;
-        } catch (error) {
-            console.log(error);
-            labelCreateStatus.textContent = "Error" + error;
-            labelCreateStatus.setAttribute("role", "alert");
-        }
+        labelCreateStatus.textContent = "✅ Saved";
+        return savedFile;
+      } catch (error) {
+        console.error(error);
+        return undefined;
+      }
     }
 
+    async function readSolidVC(file: Blob & WithResourceInfo) {
+      if (!file) {
+        return;
+      }
 
-    const vcAPI = async () => {
-        const api = new IssuerApi({ basePath: "http://localhost:8080" });
-        const credential = await api.issueCredential();
-        console.log("Recieved credential", credential);
-
-        await save(JSON.stringify(credential));
-        console.log("Saved credential");
+      const fileBlob = await getFile(getSourceUrl(file), { fetch: solidFetch });
+      const tekst = await fileBlob.text();
+      const content = JSON.parse(tekst);
+      
+      return content;
     }
+
+    const vcAPI = async (service: string) => {
+        const response = await fetch(`http://localhost:8080/${service}/credentials/issue/${encodeURIComponent(webId)}`)
+        let result;
+        if (response.status >= 200 && response.status < 300) {
+            result = await response.json();
+        } else {
+            throw response;
+        }
+
+        console.log("Recieved response", result);
+        
+        return result.verifiableCredential;
+    }
+    
+    const vcAPIBRP = async () => {
+      const vc = await vcAPI('brp');
+      const savedFile = await save_jsonld_file('brp-credential.jsonld', vc);
+
+      console.log("Saved BRP credential");
+
+      
+      try {
+        const content = await readSolidVC(savedFile);
+
+        (document.getElementById("savedcredentialsbrp") as HTMLPreElement).textContent = JSON.stringify(content, null, 2);
+        (document.getElementById("labelTextareabrp") as HTMLAnchorElement).textContent = "POD Content ↪";
+        (document.getElementById("labelTextareabrp") as HTMLAnchorElement).href = savedFile.internal_resourceInfo.sourceIri;
+      } catch (error) {
+        console.log(error);
+        labelCreateStatus.textContent = "Error" + error;
+        labelCreateStatus.setAttribute("role", "alert");
+      }
+    }
+    
+    const vcAPIBRK = async () => {
+      const vc = await vcAPI('brk');
+      const savedFile = await save_jsonld_file('brk-credential.jsonld', vc);
+      console.log("Saved BRK credential");
+
+      try {
+        const content = await readSolidVC(savedFile);
+
+        (document.getElementById("savedcredentialsbrk") as HTMLPreElement).textContent = JSON.stringify(content, null, 2);
+        (document.getElementById("labelTextareabrk") as HTMLAnchorElement).textContent = "POD Content ↪";
+        (document.getElementById("labelTextareabrk") as HTMLAnchorElement).href = savedFile.internal_resourceInfo.sourceIri;
+      } catch (error) {
+        console.log(error);
+        labelCreateStatus.textContent = "Error" + error;
+        labelCreateStatus.setAttribute("role", "alert");
+      }
+    }
+
+    const loadVC = async () => {
+      const uri = `${targetContainerURL}kadasterVC.jsonld`;
+      const file = await getFile(uri, { fetch: solidFetch });
+      await readSolidVC(file);
+    }
+
+    // try {
+    //   loadVC();
+    // } catch (error) {
+    //   // Ignore
+    // }
 
     return (
         <div>
             <h2>Verifiable Credentials</h2>
-            <button onClick={vcAPI} title="VC API">Get VC and store in POD</button>
             <span id="labelCreateStatus"></span>
+            <h3>BRP</h3>
+            <button onClick={vcAPIBRP} title="VC API">Get BRP VC and store in POD</button>
             <hr/>
-            <a id="labelTextarea"></a><br/>
-            <textarea id="savedcredentials" name="savedcredentials" rows={5} cols={42} disabled></textarea>
+            <a id="labelTextareabrp"></a><br/>
+            <pre id="savedcredentialsbrp"></pre>
+            <hr/>
+            <h3>BRK</h3>
+            <button onClick={vcAPIBRK} title="VC API">Get BRK VC and store in POD</button>
+            <hr/>
+            <a id="labelTextareabrk"></a><br/>
+            <pre id="savedcredentialsbrk"></pre>
         </div>
     );
 }

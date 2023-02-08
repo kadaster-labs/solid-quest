@@ -1,3 +1,6 @@
-[submodule "vc-api"]
+[submodule "solid-quest-vc-api"]
 	path = vc-api
-	url = https://github.com/kadaster-labs/vc-api-nodejs
+	url = https://github.com/kadaster-labs/solid-quest-vc-api
+[submodule "solid-quest-mock-overheid-server"]
+	path = mock-overheid-server
+	url = https://github.com/kadaster-labs/solid-quest-mock-overheid-server
