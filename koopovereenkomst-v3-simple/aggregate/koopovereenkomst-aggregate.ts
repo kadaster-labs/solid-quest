@@ -64,19 +64,15 @@ export default class KoopovereenkomstAggregate {
     return this.events.sort((a, b) => a.seq - b.seq);
   }
 
+  public getData() : any {
+    return this.data;
+  }
+
   public async dumpJsonLD(): Promise<object> {
     const p = new Promise<object>((resolve, reject) => {
       resolve(this.data);
     });
     return p;
-    // return await jsonld.compact(this.data);
-    // return {
-    //   koopovereenkomstId: this.id,
-    //   iri: this.iri,
-    //   typeKoopovereenkomst: this.typeKoopovereenkomst,
-    //   kadastraalObject: this.kadastraalObject,
-    //   koopprijs: this.koopprijs,
-    // };
   }
 
   public async dumpNQuads(): Promise<string> {
@@ -84,11 +80,9 @@ export default class KoopovereenkomstAggregate {
   }
 
   public async handleEvent(eventUri: solidQuery) {
-    // console.log(`  - ${eventUri}`);
     let thePod: string;
     try {
       thePod = eventUri.value.split("3001")[1].split("/")[1];
-      // console.log(`  - the pod: ${thePod}`);
     } catch (error) {
       console.log("error extracting POD path", error);
     }
@@ -111,7 +105,7 @@ export default class KoopovereenkomstAggregate {
       time: await event.time.value,
     };
 
-    // add build up label
+    // add dynamic label
     try {
       Object.assign(e, {
         newLabel: `${e.seq.padStart(2, "0")} | ${e.time} | ${
@@ -152,11 +146,6 @@ export default class KoopovereenkomstAggregate {
     Object.assign(e, { koopprijs: await event.eventData.koopprijs.value });
 
     this.dataAppend({ koopprijs: "zvg:koopprijs" }, { koopprijs: e.koopprijs });
-    // this.data = { ...this.data, koopprijs: e.koopprijs };
-    // this.data["@context"] = {
-    //   ...this.data["@context"],
-    //   koopprijs: "zvg:koopprijs",
-    // };
   }
 
   private async processDatumVanLeveringToegevoegd(e: Event, event: solidQuery) {
@@ -168,7 +157,6 @@ export default class KoopovereenkomstAggregate {
       { datumVanLevering: "zvg:datumVanLevering" },
       { datumVanLevering: e.datumVanLevering }
     );
-    // this.data = { ...this.data, datumVanLevering: e.datumVanLevering };
   }
 
   private async processKadastraalObjectIdToegevoegd(

@@ -3,7 +3,7 @@ import { fetch } from '@inrupt/solid-client-authn-browser';
 import { useSession } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
 import { useEffect, useState } from "react";
-import { SOLID_ZGV_CONTEXT } from '../aggregate/context';
+import { SOLID_ZVG_CONTEXT } from '../aggregate/context';
 import KadasterKnowledgeGraph from "../components/kkg";
 import Layout from '../components/layout';
 import Profile from "../components/profile";
@@ -95,9 +95,9 @@ export default function Verkoper() {
                 console.error('Error handling events of koopovereenkomst!', error);
             }
 
-            console.log(`\nAANGEBODEN DOOR: ${await ko.aangebodenDoor}`);
-            console.log(`\nAAN: ${await ko.aan}`);
-            console.log(`\nKOOPPRIJS: ${await ko.koopprijs}`);
+            console.log(`\nAANGEBODEN DOOR: ${await aggregate.getData().aangebodenDoor}`);
+            console.log(`\nAAN: ${await aggregate.getData().aan}`);
+            console.log(`\nKOOPPRIJS: ${await aggregate.getData().koopprijs}`);
 
             console.log('dump JSON+LD', await aggregate.dumpJsonLD());
             console.log('dump NQuads', await aggregate.dumpNQuads());
@@ -120,7 +120,7 @@ export default function Verkoper() {
             }
 
             // https://github.com/LDflex/Query-Solid#adding-a-custom-json-ld-context
-            data.context.extend(SOLID_ZGV_CONTEXT);
+            data.context.extend(SOLID_ZVG_CONTEXT);
         }
     }, [podUrl, webId]);
 
