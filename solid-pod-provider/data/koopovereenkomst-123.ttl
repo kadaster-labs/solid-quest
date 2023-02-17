@@ -11,7 +11,7 @@
 
 koopovereenkomst:123
     a zvg:Koop;
-    zvg:aangebodenDoor marc:;
+    zvg:aangebodenDoor
     zvg:aan janneke:;
     zvg:koopsom 412000;
     zvg:vanZakelijkRecht <https://data.kkg.kadaster.nl/id/zakelijkrecht/1004387823748930> .
