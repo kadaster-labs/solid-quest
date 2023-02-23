@@ -38,3 +38,8 @@ In eerste instantie hebben we gewerkt met focusdagen en hebben we de onze bevind
 
 Issues rondom het realiseren van de demonstrator is er een apart [issue #4](https://github.com/marcvanandel/solid-quest/issues/4)
 
+## Formalities
+
+Everyone is welcome to contribute. We are inclusive and do not discriminate on ethnicity, gender or other personal preferences; contributions are expected to adhere to them.
+
+This content is published under [MIT License](LICENSE).
