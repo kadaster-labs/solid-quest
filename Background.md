@@ -4,6 +4,7 @@ Dit bestand is een verzameling van de kennis en terminologie die we hebben verga
 - [Data PODs vs data spaces](#data-pods-vs-data-spaces)
 - [WebID](#webid)
 - [Verifiable Credentials](#verifiable-credentials-vcs)
+  - [Verifiable Data Registry](#verifiable-data-registry)
   - [VCs vs IRMA](#vcs-vs-irma)
 - [Europese Digitale Identiteit](#europese-digitale-identiteit-edi) 
   - [Wat houdt EDI in?](#wat-houdt-edi-in)
@@ -42,6 +43,10 @@ Verifiable Credentials (VCs) zijn een open standaard voor digitale attributen/re
 
 Schematische weergave
 ![VC](images/VC.png)
+
+### Verifiable Data Registry
+
+Om de integriteit van VCs te waarborgen wil je er zeker van zijn dat een bepaalde VC is uitgegeven, door een issuer die daartoe bevoegd is, én niet is ingetrokken. Hier kan een Verifiable Data Registry, zoals bovenstaand afgebeeld, een cruciale rol spelen. In dit register wordt de metadata van uitgegeven VCs (het bewijs) weggeschreven. Dit zegt dus alleen iets over de herkomst van een VC en niets over de inhoudelijke juistheid van een VC. Het register kan zowel decentraal als centraal worden beheerd. Dataminimalisatie kan (en moet) in beide gevallen toegepast worden. Voor meer informatie, zie: [Issue: Verifiable Data Registry](https://github.com/kadaster-labs/solid-quest/issues/54))
 
 ### VCs vs IRMA
 
