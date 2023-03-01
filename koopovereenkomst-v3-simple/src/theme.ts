@@ -13,10 +13,10 @@ export const roboto = Roboto({
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#556cd6',
+            main: '#00889e',
         },
         secondary: {
-            main: '#19857b',
+            main: '#0f496f',
         },
         error: {
             main: red.A400,
@@ -24,6 +24,9 @@ const theme = createTheme({
     },
     typography: {
         fontFamily: roboto.style.fontFamily,
+        h1: {
+            fontSize: '3rem',
+        }
     },
 });
 

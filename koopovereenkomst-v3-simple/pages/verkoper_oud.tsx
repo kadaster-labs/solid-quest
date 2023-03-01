@@ -3,15 +3,16 @@ import { fetch } from '@inrupt/solid-client-authn-browser';
 import { useSession } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
 import { useEffect, useState } from "react";
-import { SOLID_ZVG_CONTEXT } from '../aggregate/context';
-import KadasterKnowledgeGraph from "../components/kkg";
-import Layout from '../components/layout';
-import Profile from "../components/profile";
-import VC from '../components/vc';
+import { SOLID_ZVG_CONTEXT } from '../src/aggregate/context';
+import KadasterKnowledgeGraph from "../src/KadasterKnowledgeGraph";
+import Layout from '../src/Layout';
+import Profile from "../src/Profile";
+import VC from '../src/VC';
 import styles from '../styles/verkoper.module.css';
 
 import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
-import KoopovereenkomstAggregate from '../aggregate/koopovereenkomst-aggregate';
+import KoopovereenkomstAggregate from '../src/aggregate/koopovereenkomst-aggregate';
+import HorizontalLinearStepper from './Verkoper';
 
 const zvg_base = 'http://taxonomie.zorgeloosvastgoed.nl/def/zvg#'
 const zvg = {

@@ -2,7 +2,7 @@ import {
     LoginButton
 } from "@inrupt/solid-ui-react";
 import { useEffect, useState } from "react";
-import { siteTitle } from "./layout";
+import { siteTitle } from "./Layout";
 
 export default function LoginForm() {
 

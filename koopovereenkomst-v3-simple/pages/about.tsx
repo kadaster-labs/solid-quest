@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "../src/Link";
 import ProTip from "../src/ProTip";
-import Copyright from "../src/Copyright";
+import Copyright from "../src/Footer";
 
 export default function About() {
   return (

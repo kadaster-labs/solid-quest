@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from './Image';
 import styles from '../styles/layout.module.css';
 import utilStyles from '../styles/utils.module.css';
-import ConnectSolid from "./ConnectSolid";
+import Footer from "./Footer";
 
 const name = 'Kadaster';
 export const siteTitle = 'Koopovereenkomst Solid App';
@@ -49,7 +49,6 @@ export default function Layout({ children, home, role }: {
                     ) : (
                         <>
                             <Link href="/">
-                                <a>
                                     <Image
                                         priority
                                         src="/solid-quest/images/kadaster.svg"
@@ -58,42 +57,18 @@ export default function Layout({ children, home, role }: {
                                         width={42}
                                         alt={name}
                                     />
-                                </a>
                             </Link>
                             <h2 className={utilStyles.headingLg}>
-                                <Link href="/">
-                                    <a className={utilStyles.colorInherit}>{name}</a>
+                                <Link href="/" className={utilStyles.colorInherit}>
+                                    {name}
                                 </Link>
                             </h2>
                         </>
                     )}
                     <div className={styles.middle} />
-                    <div className={styles.right}>
-                        <ConnectSolid />
-                    </div>
                 </header>
                 <main>{children}</main>
-                {!home && (
-                    <div className={styles.backToHome}>
-                        <Link href="/">
-                            <a>← Main home</a>
-                        </Link>
-                    </div>
-                )}
-                <footer className={styles.footer}>
-                    <a href="https://kadaster.nl" target="_blank" rel="noopener noreferrer">
-                        Powered by{" "}
-                        <span className={styles.logo}>
-                            <Image
-                                src="/solid-quest/images/kadaster.svg"
-                                alt="Kadaster Logo"
-                                width={72}
-                                height={16}
-                            />
-                        </span>
-                    </a>
-                </footer>
-
+                <Footer />
             </SessionProvider>
         </div>
     );
