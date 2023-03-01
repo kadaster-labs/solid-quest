@@ -1,10 +1,10 @@
 import { SessionProvider } from "@inrupt/solid-ui-react";
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from '../components/Image';
+import Image from './Image';
 import styles from '../styles/layout.module.css';
 import utilStyles from '../styles/utils.module.css';
-import ConnectSolid from "./connect";
+import ConnectSolid from "./ConnectSolid";
 
 const name = 'Kadaster';
 export const siteTitle = 'Koopovereenkomst Solid App';

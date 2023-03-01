@@ -1,5 +1,5 @@
 import { LogoutButton, useSession } from "@inrupt/solid-ui-react";
-import LoginForm from '../components/LoginForm';
+import LoginForm from './LoginForm';
 import styles from '../styles/connect.module.css';
 
 export default function ConnectSolid() {
