@@ -39,7 +39,7 @@ export default function Layout({ children, home, role }: {
     }, [role]);
 
     return (
-        <Container className={styles.backgroundLines}>
+        <Box className={styles.backgroundLines}>
             <SessionProvider>
 
                 <Box className={styles.kadasterLogo}>
@@ -79,13 +79,13 @@ export default function Layout({ children, home, role }: {
                             }}
                         >
                             <BottomNavigationAction label="Home" icon={<HomeIcon />} component={NextLinkComposed} to="/" />
-                            <BottomNavigationAction label="Verkoper" icon={<SellIcon />} component={NextLinkComposed} to="/Verkoper" />
+                            <BottomNavigationAction label="Verkoper" icon={<SellIcon />} component={NextLinkComposed} to="/verkoper" />
                             <BottomNavigationAction label="Koper" icon={<AddHomeIcon />} component={NextLinkComposed} to="/koper_oud" />
                         </BottomNavigation>
                     </Paper>
                 </Container>
 
             </SessionProvider>
-        </Container>
+        </Box>
     );
 }

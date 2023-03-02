@@ -1,16 +1,11 @@
-import * as React from "react";
-import Document, {
-  Html,
-  Head,
-  Main,
-  NextScript,
-  DocumentProps,
-  DocumentContext,
-} from "next/document";
-import createEmotionServer from "@emotion/server/create-instance";
 import { EmotionJSX } from "@emotion/react/types/jsx-namespace";
-import theme, { roboto } from "../src/theme";
+import createEmotionServer from "@emotion/server/create-instance";
+import Document, {
+  DocumentContext, DocumentProps, Head, Html, Main,
+  NextScript
+} from "next/document";
 import createEmotionCache from "../src/createEmotionCache";
+import { commonTokens, roboto } from "../src/theme";
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: EmotionJSX.Element[];
@@ -21,7 +16,7 @@ export default function MyDocument({ emotionStyleTags }: MyDocumentProps) {
     <Html lang="en" className={roboto.className}>
       <Head>
         {/* PWA primary color */}
-        <meta name="theme-color" content={theme.palette.primary.main} />
+        <meta name="theme-color" content={commonTokens.palette.primary.main} />
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="emotion-insertion-point" content="" />
         {emotionStyleTags}
