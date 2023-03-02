@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import KadasterKnowledgeGraph from '../components/kkg';
-import Layout from '../components/layout';
+import KadasterKnowledgeGraph from '../src/KadasterKnowledgeGraph';
+import Layout from '../src/Layout';
 
 export default function Koper() {
 

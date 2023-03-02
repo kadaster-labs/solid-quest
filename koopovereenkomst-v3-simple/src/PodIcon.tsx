@@ -6,7 +6,6 @@ export default function PodIcon(props: SvgIconProps) {
     <SvgIcon {...props}>
       <svg
         viewBox="0 -96.5 1217 1217"
-        class="icon"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         fill="#000000"

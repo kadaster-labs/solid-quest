@@ -1,12 +1,18 @@
 import { SessionProvider } from "@inrupt/solid-ui-react";
+import AddHomeIcon from '@mui/icons-material/AddHome';
+import HomeIcon from '@mui/icons-material/Home';
+import SellIcon from '@mui/icons-material/Sell';
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
 import Head from 'next/head';
-import Link from 'next/link';
-import Image from './Image';
+import { useEffect, useState } from "react";
 import styles from '../styles/layout.module.css';
-import utilStyles from '../styles/utils.module.css';
-import Footer from "./Footer";
+import Image from './Image';
+import Link, { NextLinkComposed } from "./Link";
 
-const name = 'Kadaster';
 export const siteTitle = 'Koopovereenkomst Solid App';
 
 export default function Layout({ children, home, role }: {
@@ -14,62 +20,72 @@ export default function Layout({ children, home, role }: {
     home?: boolean,
     role?: string,
 }) {
+    const [currentTab, setCurrentTab] = useState(0);
+
+    useEffect(() => {
+        switch (role) {
+            case 'verkoper':
+                setCurrentTab(1);
+                break;
+            case 'koper':
+                setCurrentTab(2);
+                break;
+
+            case 'home':
+            default:
+                setCurrentTab(0);
+                break;
+        }
+    }, [role]);
+
     return (
-        <div className={[styles.container, role].join(" ")}>
+        <Container className={styles.backgroundLines}>
             <SessionProvider>
 
-                <Head>
-                    <link rel="icon" href="/favicon.ico" />
-                    <meta
-                        name="description"
-                        content="Learn how to build a personal website using Next.js"
-                    />
-                    <meta
-                        property="og:image"
-                        content={`https://og-image.vercel.app/${encodeURI(
-                            siteTitle,
-                        )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
-                    />
-                    <meta name="og:title" content={siteTitle} />
-                    <meta name="twitter:card" content="summary_large_image" />
-                </Head>
-                <header className={styles.header}>
-                    {home ? (
-                        <>
-                            <Image
-                                priority
-                                src="/solid-quest/images/kadaster.svg"
-                                className={utilStyles.borderCircle}
-                                height={42}
-                                width={42}
-                                alt={name}
-                            />
-                            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/">
-                                    <Image
-                                        priority
-                                        src="/solid-quest/images/kadaster.svg"
-                                        className={utilStyles.borderCircle}
-                                        height={42}
-                                        width={42}
-                                        alt={name}
-                                    />
-                            </Link>
-                            <h2 className={utilStyles.headingLg}>
-                                <Link href="/" className={utilStyles.colorInherit}>
-                                    {name}
-                                </Link>
-                            </h2>
-                        </>
-                    )}
-                    <div className={styles.middle} />
-                </header>
-                <main>{children}</main>
-                <Footer />
+                <Box className={styles.kadasterLogo}>
+                    <Link href="https://www.kadaster.nl" target="blank">
+                        <Image
+                            src="/solid-quest/images/kadaster-logo-wit.webp"
+                            alt="Kadaster Logo"
+                            width={300}
+                            height={200}
+                        />
+                    </Link>
+                </Box>
+
+                <Container maxWidth="lg" className={[styles.container, role].join(" ")}>
+
+                    <Head>
+                        <link rel="icon" href="/solid-quest/favicon.ico" />
+                        <meta
+                            name="description"
+                            content="Discover what the SOLID specification contains and how it works by developing a working example with a 'Koopovereenkomst Solid App'"
+                        />
+                        <meta
+                            property="og:image"
+                            content={`/solid-quest/images/kadaster.svg`}
+                        />
+                        <meta name="og:title" content={siteTitle} />
+                        <meta name="twitter:card" content="summary_large_image" />
+                    </Head>
+                    <main>{children}</main>
+
+                    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+                        <BottomNavigation
+                            showLabels
+                            value={currentTab}
+                            onChange={(event, newValue) => {
+                                setCurrentTab(newValue);
+                            }}
+                        >
+                            <BottomNavigationAction label="Home" icon={<HomeIcon />} component={NextLinkComposed} to="/" />
+                            <BottomNavigationAction label="Verkoper" icon={<SellIcon />} component={NextLinkComposed} to="/Verkoper" />
+                            <BottomNavigationAction label="Koper" icon={<AddHomeIcon />} component={NextLinkComposed} to="/koper_oud" />
+                        </BottomNavigation>
+                    </Paper>
+                </Container>
+
             </SessionProvider>
-        </div>
+        </Container>
     );
 }

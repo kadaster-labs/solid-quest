@@ -72,8 +72,7 @@
 .card:hover,
 .card:focus,
 .card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+  background-color: rgb(30, 101, 146, 0.5);
 }
 
 .card h2 {
@@ -101,7 +100,7 @@
 
 @media (prefers-color-scheme: dark) {
   .card {
-    border-color: #222;
+    border-color: #ccc;
   }
   .code {
     background: #111;

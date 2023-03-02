@@ -21,6 +21,9 @@ const theme = createTheme({
         error: {
             main: red.A400,
         },
+        background: {
+            default: '#06588e',
+        }
     },
     typography: {
         fontFamily: roboto.style.fontFamily,
@@ -28,6 +31,21 @@ const theme = createTheme({
             fontSize: '3rem',
         }
     },
+    components: {
+        MuiCssBaseline: {
+          styleOverrides: `
+            body {
+                color: white;
+                background: linear-gradient(180deg, #64d4ef, #06588e);
+            }
+            @media (prefers-color-scheme: dark) {
+                body {
+                  background: linear-gradient(180deg, #06588e, black);
+                }
+              }
+          `,
+        },
+      },
 });
 
 export default theme;

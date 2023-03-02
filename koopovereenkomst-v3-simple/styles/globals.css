@@ -1,9 +1,12 @@
 html,
 body {
+  color: white;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #06588e;
+  background: linear-gradient(180deg, #64d4ef, #06588e);
 }
 
 a {
@@ -16,11 +19,11 @@ a {
 }
 
 .verkoper {
-  background-color: #aad2ff;
+  /* background-color: #aad2ff; */
 }
 
 .koper {
-  background-color: #e9fed3;
+  /* background-color: #e9fed3; */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,13 +31,13 @@ a {
     color-scheme: dark;
   }
   body {
-    color: white;
-    background: black;
+    /* color: #ddd; */
+    background: linear-gradient(180deg, #06588e, black);
   }
   .verkoper {
-    background-color: #1e3249;
+    /* background-color: #1e3249; */
   }
   .koper {
-    background-color: #48491e;
+    /* background-color: #48491e; */
   }
 }

@@ -1,7 +1,9 @@
 .container {
   max-width: 60rem;
-  padding: 0 1rem;
-  margin: 3rem auto 6rem;
+  padding: 1rem 0 3rem;
+  margin: 0 auto;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .header {
@@ -23,13 +25,37 @@
   margin: 3rem 0 1rem;
 }
 
+.backgroundLines {
+  resize: both;
+  background-size: cover;
+  overflow: hidden;
+  background-image: url(/solid-quest/images/background-lines.svg);
+  background-position: right top;
+}
+
+.kadasterLogo {
+  display:block;
+  position: absolute;
+  bottom: 5rem;
+  width: 15rem;
+  height: 15rem;
+  right: 5rem;
+}
+
 .footer {
   display: flex;
   flex: 1;
-  padding: 2rem 0;
+  padding: 1rem 0;
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: #06588e;
+  color: white;
+  text-align: center;
 }
 
 .footer a {
@@ -41,6 +67,19 @@
 
 @media (prefers-color-scheme: dark) {
   .footer {
-    border-color: #222;
+    background: black;
+    border-color: #ccc;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .kadasterLogo {
+      display: none;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .backgroundLines {
+      background-image: none;
   }
 }
