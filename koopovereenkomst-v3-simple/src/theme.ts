@@ -12,7 +12,7 @@ export const roboto = Roboto({
 export const commonTokens = {
   palette: {
     primary: {
-      main: "#00889e",
+      main: "#003F79",
     },
     secondary: {
       main: "#0f496f",
@@ -21,7 +21,7 @@ export const commonTokens = {
       main: red.A400,
     },
     background: {
-      default: "#06588e",
+      default: "#003F79",
     },
   },
   typography: {
@@ -34,13 +34,8 @@ export const commonTokens = {
     MuiCssBaseline: {
       styleOverrides: `
               body {
-                  background: linear-gradient(180deg, #64d4ef, #06588e);
+                  background: linear-gradient(180deg, #008BC7, rgb(0, 44, 84));
               }
-              @media (prefers-color-scheme: dark) {
-                  body {
-                    background: linear-gradient(180deg, #06588e, black);
-                  }
-                }
             `,
     },
   },

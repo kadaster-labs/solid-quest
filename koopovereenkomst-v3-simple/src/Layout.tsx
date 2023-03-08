@@ -43,14 +43,12 @@ export default function Layout({ children, home, role }: {
             <SessionProvider>
 
                 <Box className={styles.kadasterLogo}>
-                    <Link href="https://www.kadaster.nl" target="blank">
-                        <Image
-                            src="/solid-quest/images/kadaster-logo-wit.webp"
-                            alt="Kadaster Logo"
-                            width={300}
-                            height={200}
-                        />
-                    </Link>
+                    <Image
+                        src="/solid-quest/images/kadaster-logo-wit.webp"
+                        alt="Kadaster Logo"
+                        width={300}
+                        height={200}
+                    />
                 </Box>
 
                 <Container maxWidth="lg" className={[styles.container, role].join(" ")}>

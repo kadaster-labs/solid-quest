@@ -5,8 +5,8 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: #06588e;
-  background: linear-gradient(180deg, #64d4ef, #06588e);
+  background-color: #008BC7;
+  background: linear-gradient(180deg, #008BC7, #003F79);
 }
 
 a {
@@ -32,7 +32,7 @@ a {
   }
   body {
     /* color: #ddd; */
-    background: linear-gradient(180deg, #06588e, black);
+    background: linear-gradient(180deg, #003F79, black);
   }
   .verkoper {
     /* background-color: #1e3249; */
