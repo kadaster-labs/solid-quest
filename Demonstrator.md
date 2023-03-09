@@ -31,6 +31,12 @@ Bovenstaande is in detail uitgewerkt in een [Sequence Diagram](https://raw.githu
 
 ## Development
 
+Clone this repo which includes the [Mock Overheid Server](https://github.com/kadaster-labs/solid-quest-mock-overheid-server) and [VC API](https://github.com/kadaster-labs/solid-quest-vc-api) repos as [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+
+```bash
+git clone --recurse-submodules https://github.com/kadaster-labs/solid-quest.git
+```
+
 To start a 'verkoper' and 'koper' POD based on [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer) use `docker-compose`:
 
 ```bash
