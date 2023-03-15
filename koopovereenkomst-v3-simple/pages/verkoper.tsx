@@ -77,7 +77,7 @@ export default function Verkoper() {
         }}
       >
         <ActiveStep value={activeStep} />
-        <Stepper sx={{width: "100%"}} activeStep={activeStep}>
+        <Stepper sx={{width: "100%", minHeight: "4rem"}} activeStep={activeStep}>
           {steps.map((label, index) => {
             const stepProps: { completed?: boolean } = {};
             const labelProps: {

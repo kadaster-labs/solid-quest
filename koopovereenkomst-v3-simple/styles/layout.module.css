@@ -46,14 +46,14 @@
   display: flex;
   flex: 1;
   padding: 1rem 0;
-  border-top: 1px solid #eaeaea;
+  border-top: 1px solid #ccc;
   justify-content: center;
   align-items: center;
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
-  background: #06588e;
+  background: rgb(0, 44, 84);
   color: white;
   text-align: center;
 }
@@ -62,14 +62,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-}
-
-@media (prefers-color-scheme: dark) {
-  .footer {
-    background: black;
-    border-color: #ccc;
-  }
+  color: white;
+  margin: 0 1rem;
 }
 
 @media only screen and (max-width: 900px) {

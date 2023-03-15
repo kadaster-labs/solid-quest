@@ -5,7 +5,7 @@ import Document, {
   NextScript
 } from "next/document";
 import createEmotionCache from "../src/createEmotionCache";
-import { commonTokens, roboto } from "../src/theme";
+import { theme, roboto } from "../src/theme";
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: EmotionJSX.Element[];
@@ -16,7 +16,7 @@ export default function MyDocument({ emotionStyleTags }: MyDocumentProps) {
     <Html lang="en" className={roboto.className}>
       <Head>
         {/* PWA primary color */}
-        <meta name="theme-color" content={commonTokens.palette.primary.main} />
+        <meta name="theme-color" content={theme.palette.primary.main} />
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="emotion-insertion-point" content="" />
         {emotionStyleTags}
