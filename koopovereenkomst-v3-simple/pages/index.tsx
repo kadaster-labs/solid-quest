@@ -94,7 +94,7 @@ export default function Home() {
             <p>Verkoper start pagina.</p>
           </Link>
 
-          <Link href="/koper_oud" sx={cardStyle}>
+          <Link href="/koper" sx={cardStyle}>
             <h2>Koper &rarr;</h2>
             <p>Koper start pagina.</p>
           </Link>
