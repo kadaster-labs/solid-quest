@@ -37,15 +37,6 @@ export default function Layout({ children, home, role }: {
         <Box className={styles.backgroundLines}>
             <SessionProvider>
 
-                <Box className={styles.kadasterLogo}>
-                    <Image
-                        src="/solid-quest/images/kadaster-logo-wit.webp"
-                        alt="Kadaster Logo"
-                        width={300}
-                        height={200}
-                    />
-                </Box>
-
                 <Container maxWidth="lg" className={[styles.container, role].join(" ")}>
 
                     <Head>
