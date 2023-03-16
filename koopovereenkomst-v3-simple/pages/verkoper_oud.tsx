@@ -12,7 +12,7 @@ import styles from '../styles/verkoper.module.css';
 
 import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
 import KoopovereenkomstAggregate from '../src/aggregate/koopovereenkomst-aggregate';
-import HorizontalLinearStepper from './Verkoper';
+import HorizontalLinearStepper from './verkoper';
 
 const zvg_base = 'http://taxonomie.zorgeloosvastgoed.nl/def/zvg#'
 const zvg = {

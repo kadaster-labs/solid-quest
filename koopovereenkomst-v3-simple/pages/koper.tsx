@@ -1,24 +1,24 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
-import Step1 from "./steps_verkoper/Step1";
-import Step2 from "./steps_verkoper/Step2";
-import Layout from "../src/Layout";
 import Head from "next/head";
+import * as React from "react";
+import Layout from "../src/Layout";
+import Step1 from "./steps_koper/Step1";
+import Step2 from "./steps_koper/Step2";
 
 const steps = [
   "Datapod",
+  "Deelnemen Koop",
+  "Datapod toegang",
   "Persoonsgegevens",
-  "Eigendomsgegevens",
-  "Koopovereenkomst",
-  "Delen",
+  "Controleren",
   "Tekenen",
 ];
 
-export default function Verkoper() {
+export default function Koper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
@@ -30,7 +30,7 @@ export default function Verkoper() {
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
-  
+
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -41,11 +41,11 @@ export default function Verkoper() {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
-  
+
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
-        return <Step1 handleNext={handleNext}/>;
+        return <Step1 handleNext={handleNext} />;
       case 1:
         return <Step2 />;
       // case 2:
@@ -57,14 +57,14 @@ export default function Verkoper() {
       // case 5:
       //   return <Step6 />;
       default:
-        return <Step1 handleNext={handleNext}/>;
+        return <Step1 handleNext={handleNext} />;
     }
   }
 
   return (
-    <Layout role="verkoper">
+    <Layout role="koper">
       <Head>
-        <title>{"Verkoper"}</title>
+        <title>{"Koper"}</title>
       </Head>
       <Box
         sx={{
@@ -77,7 +77,7 @@ export default function Verkoper() {
         }}
       >
         <ActiveStep value={activeStep} />
-        <Stepper sx={{width: "100%"}} activeStep={activeStep}>
+        <Stepper sx={{ width: "100%", minHeight: "4rem" }} activeStep={activeStep}>
           {steps.map((label, index) => {
             const stepProps: { completed?: boolean } = {};
             const labelProps: {

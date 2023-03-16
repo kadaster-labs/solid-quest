@@ -1,12 +1,12 @@
 import { SessionProvider } from "@inrupt/solid-ui-react";
+import { Typography, useMediaQuery } from "@mui/material";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Head from 'next/head';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
 import Image from './Image';
-import styles from '../styles/layout.module.css';
-import utilStyles from '../styles/utils.module.css';
-import Footer from "./Footer";
+import Link from "./Link";
 
-const name = 'Kadaster';
 export const siteTitle = 'Koopovereenkomst Solid App';
 
 export default function Layout({ children, home, role }: {
@@ -14,62 +14,112 @@ export default function Layout({ children, home, role }: {
     home?: boolean,
     role?: string,
 }) {
-    return (
-        <div className={[styles.container, role].join(" ")}>
-            <SessionProvider>
+    const [currentTab, setCurrentTab] = useState(0);
 
-                <Head>
-                    <link rel="icon" href="/favicon.ico" />
-                    <meta
-                        name="description"
-                        content="Learn how to build a personal website using Next.js"
-                    />
-                    <meta
-                        property="og:image"
-                        content={`https://og-image.vercel.app/${encodeURI(
-                            siteTitle,
-                        )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
-                    />
-                    <meta name="og:title" content={siteTitle} />
-                    <meta name="twitter:card" content="summary_large_image" />
-                </Head>
-                <header className={styles.header}>
-                    {home ? (
-                        <>
+    const minimalWidth = useMediaQuery('only screen and (max-width: 1500px)');
+
+    const footerStyle = {
+        display: "flex",
+        flex: 1,
+        padding: "1rem 0",
+        borderTop: "1px solid #ccc",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "fixed",
+        left: 0,
+        bottom: 0,
+        width: "100%",
+        background: "rgb(0, 44, 84)",
+        color: "white",
+        textAlign: "center",
+        a: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "white",
+            margin: "0 1rem",
+            '&:hover': {
+                textDecoration: "none",
+            }
+        }
+    }
+
+    useEffect(() => {
+        switch (role) {
+            case 'verkoper':
+                setCurrentTab(1);
+                break;
+            case 'koper':
+                setCurrentTab(2);
+                break;
+
+            case 'home':
+            default:
+                setCurrentTab(0);
+                break;
+        }
+    }, [role]);
+
+    return (
+        <Box sx={{
+            resize: "both",
+            backgroundSize: "cover",
+            overflow: "hidden",
+            ...(!minimalWidth && {
+                backgroundImage: "url(/solid-quest/images/background-lines.svg)",
+                backgroundPosition: "right top",
+            })
+        }}>
+            <SessionProvider>
+                <Container maxWidth="lg" sx={{
+                    maxWidth: "60rem",
+                    padding: "1rem 0 3rem",
+                    margin: "0 auto",
+                    // minHeight: "97vh",
+                    width: "100%",
+                }}>
+                    <Head>
+                        <link rel="icon" href="/solid-quest/favicon.ico" />
+                        <meta
+                            name="description"
+                            content="Discover what the SOLID specification contains and how it works by developing a working example with a 'Koopovereenkomst Solid App'"
+                        />
+                        <meta
+                            property="og:image"
+                            content={`/solid-quest/images/kadaster.svg`}
+                        />
+                        <meta name="og:title" content={siteTitle} />
+                        <meta name="twitter:card" content="summary_large_image" />
+                    </Head>
+
+                    <Box sx={{
+                        minHeight: "90vh",
+                        padding: "4rem 0",
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+
+                    }}>{children}</Box>
+
+                    <Box sx={footerStyle}  >
+                        <Link href="/">Home</Link>
+                        <Typography> | </Typography>
+                        <Link href="https://labs.kadaster.nl/cases/Solid-Pods" target="_blank">
                             <Image
                                 priority
-                                src="/solid-quest/images/kadaster.svg"
-                                className={utilStyles.borderCircle}
-                                height={42}
-                                width={42}
-                                alt={name}
+                                src="/solid-quest/images/kadaster-wit.svg"
+                                height={22}
+                                width={22}
+                                alt="Kadaster Labs"
                             />
-                            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/">
-                                    <Image
-                                        priority
-                                        src="/solid-quest/images/kadaster.svg"
-                                        className={utilStyles.borderCircle}
-                                        height={42}
-                                        width={42}
-                                        alt={name}
-                                    />
-                            </Link>
-                            <h2 className={utilStyles.headingLg}>
-                                <Link href="/" className={utilStyles.colorInherit}>
-                                    {name}
-                                </Link>
-                            </h2>
-                        </>
-                    )}
-                    <div className={styles.middle} />
-                </header>
-                <main>{children}</main>
-                <Footer />
+                            Labs
+                        </Link>
+                    </Box>
+                </Container>
+
             </SessionProvider>
-        </div>
+        </Box >
     );
 }

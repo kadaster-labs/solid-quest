@@ -6,16 +6,15 @@ export default function PodIcon(props: SvgIconProps) {
     <SvgIcon {...props}>
       <svg
         viewBox="0 -96.5 1217 1217"
-        class="icon"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         fill="#000000"
       >
-        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
         <g
           id="SVGRepo_tracerCarrier"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></g>
         <g id="SVGRepo_iconCarrier">
           <path

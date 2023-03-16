@@ -1,46 +1,105 @@
+import { Box, Container, Typography, useMediaQuery } from "@mui/material";
 import Head from "next/head";
-import Link from "next/link";
 import Layout, { siteTitle } from "../src/Layout";
-import styles from "../styles/index.module.css";
-import utilStyles from "../styles/utils.module.css";
+import Link from "../src/Link";
 
 export default function Home() {
+
+  const minimalWidth = useMediaQuery('(max-width: 600px)');
+
+  const cardStyle = {
+    flex: 1,
+    margin: "1rem",
+    padding: "1.5rem",
+    textAlign: "left",
+    color: "inherit",
+    textDecoration: "none",
+    border: "1px solid #eaeaea",
+    borderRadius: "10px",
+    transition: "color 0.15s ease, border-color 0.15s ease",
+    maxWidth: "300px",
+    '&:hover': {
+      backgroundColor: "rgb(30, 101, 146, 0.5)",
+    },
+    '&:focus': {
+      backgroundColor: "rgb(30, 101, 146, 0.5)",
+    },
+    '&:active': {
+      backgroundColor: "rgb(30, 101, 146, 0.5)",
+    },
+    h2: {
+      margin: "0 0 1rem 0",
+      fontSize: "1.5rem",
+    },
+    p: {
+      margin: 0,
+      fontSize: "1.25rem",
+      lineHeight: 1.5,
+    }
+
+  }
+
   return (
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
 
-      <section className={utilStyles.headingMd}>
-        <h1 className={styles.title}>
+      <Box sx={{
+        fontSize: "1.2rem",
+        lineHeight: "1.5",
+      }}>
+        <Typography variant="h1" sx={{
+          lineHeight: 1.15,
+          fontSize: "4rem",
+          textAlign: "center",
+        }}>
           Welkom bij de Koopovereenkomst Solid App!
-        </h1>
+        </Typography>
 
-        <p className={styles.description}>
+        <Typography sx={{
+          textAlign: "center",
+          margin: "4rem 0",
+          lineHeight: 1.5,
+          fontSize: "1.5rem",
+        }}>
           Start pagina van de Koopovereenkomst Solid App! Vanaf deze pagina kan
           genavigeerd worden naar de verschillende &apos;ingangen&apos; voor de
           betreffende rollen.
-        </p>
+        </Typography>
 
-        <div className={styles.grid}>
-          <Link href="Verkoper" className={styles.card}>
+        <Container sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          maxWidth: "800px",
+          a: {
+            margin: "1rem",
+          },
+          ...(minimalWidth && {
+            width: "100%",
+            flexDirection: "column",
+          })
+        }}>
+          <Link href="/verkoper" sx={cardStyle}>
             <h2>Verkoper &rarr;</h2>
             <p>
               Verkoper <em>(Nieuw!)</em>
             </p>
           </Link>
 
-          <Link href="verkoper_oud" className={styles.card}>
+          <Link href="/verkoper_oud" sx={cardStyle}>
             <h2>Verkoper &rarr;</h2>
             <p>Verkoper start pagina.</p>
           </Link>
 
-          <Link href="koper_oud" className={styles.card}>
+          <Link href="/koper" sx={cardStyle}>
             <h2>Koper &rarr;</h2>
             <p>Koper start pagina.</p>
           </Link>
-        </div>
-      </section>
+        </Container>
+      </Box>
     </Layout>
   );
 }
