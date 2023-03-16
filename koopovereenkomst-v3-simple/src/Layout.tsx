@@ -93,7 +93,7 @@ export default function Layout({ children, home, role }: {
                     </Head>
 
                     <Box sx={{
-                        minHeight: "90vh",
+                        minHeight: "92vh",
                         padding: "4rem 0",
                         flex: 1,
                         display: "flex",
