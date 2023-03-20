@@ -1,6 +1,7 @@
 import { LogoutButton, useSession } from "@inrupt/solid-ui-react";
+import { Box, Button, Typography } from "@mui/material";
+import Link from "./Link";
 import LoginForm from './LoginForm';
-import styles from '../styles/connect.module.css';
 
 export default function ConnectSolid() {
 
@@ -8,17 +9,20 @@ export default function ConnectSolid() {
     const webId = session.info.webId;
 
     return (
-        <div className={styles.connectBox}>
-            <h2>Connect to Solid POD</h2>
+        <Box>
             {!sessionRequestInProgress && session.info.isLoggedIn && (
-                <span>
-                    <LogoutButton onError={console.error} onLogout={() => window.location.reload()}></LogoutButton>
-                    <a href={webId} target="_blank" rel="noreferrer">Open WebID</a>
-                </span>
+                <Box sx={{ p: "2rem", display: "flex", justifyContent: "center", button: { m: "2rem" } }}>
+                    <LogoutButton onError={console.error} onLogout={() => window.location.reload()}>
+                        <Button variant="contained">Log Out</Button>
+                    </LogoutButton>
+                    <Link href={webId} target="_blank" rel="noreferrer">
+                        <Button variant="contained">Open WebID</Button>
+                    </Link>
+                </Box>
             )}
 
             {!sessionRequestInProgress && !session.info.isLoggedIn && <LoginForm />}
-        </div>
+        </Box>
 
     );
 }
