@@ -85,13 +85,8 @@ export default function Home() {
           <Link href="/verkoper" sx={cardStyle}>
             <h2>Verkoper &rarr;</h2>
             <p>
-              Verkoper <em>(Nieuw!)</em>
+              Verkoper
             </p>
-          </Link>
-
-          <Link href="/verkoper_oud" sx={cardStyle}>
-            <h2>Verkoper &rarr;</h2>
-            <p>Verkoper start pagina.</p>
           </Link>
 
           <Link href="/koper" sx={cardStyle}>
