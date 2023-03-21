@@ -12,6 +12,10 @@ import {
     WithResourceInfo,
 } from '@inrupt/solid-client';
 import { useSession } from "@inrupt/solid-ui-react";
+import Button from "@mui/material/Button";
+import PodIcon from "./PodIcon";
+import { useEffect, useState } from "react";
+import { Box } from '@mui/material';
 
 
 export async function deleteRecursively(dataset) {
@@ -36,18 +40,22 @@ export async function deleteRecursively(dataset) {
   return await deleteSolidDataset(dataset, { fetch: solidFetch });
 }
 
-export default function VC() {
+export enum VCType {
+  BRP = 'Basisregistratie Personen',
+  BRK = 'Basisregistratie Kadaster',
+}
+
+export default function VC({ type = VCType.BRP, handleVCLoaded = () => { } }) {
 
     const { session } = useSession();
     const { webId } = session.info;
 
+    const [VCUrl, setVCUrl] = useState("");
+
     const SELECTED_POD = webId.split('profile/card#me')[0];
     const targetContainerURL = `${SELECTED_POD}credentials/`;
-    const labelCreateStatus = document.querySelector("#labelCreateStatus");
 
     const save_jsonld_file = async (filename: string, credential: any) => {
-      labelCreateStatus.textContent = "";
-
       // Create Container to place VC in
       try {
         const container = await getSolidDataset(targetContainerURL, { fetch: solidFetch });
@@ -69,8 +77,6 @@ export default function VC() {
           { contentType: "application/ld+json", fetch: solidFetch }
         );
         console.log(`File saved at ${getSourceUrl(savedFile)}`);
-
-        labelCreateStatus.textContent = "✅ Saved";
         return savedFile;
       } catch (error) {
         console.error(error);
@@ -86,7 +92,7 @@ export default function VC() {
       const fileBlob = await getFile(getSourceUrl(file), { fetch: solidFetch });
       const tekst = await fileBlob.text();
       const content = JSON.parse(tekst);
-      
+
       return content;
     }
 
@@ -100,75 +106,71 @@ export default function VC() {
         }
 
         console.log("Recieved response", result);
-        
+
         return result.verifiableCredential;
     }
-    
+
     const vcAPIBRP = async () => {
       const vc = await vcAPI('brp');
       const savedFile = await save_jsonld_file('brp-credential.jsonld', vc);
 
       console.log("Saved BRP credential");
 
-      
-      try {
-        const content = await readSolidVC(savedFile);
-
-        (document.getElementById("savedcredentialsbrp") as HTMLPreElement).textContent = JSON.stringify(content, null, 2);
-        (document.getElementById("labelTextareabrp") as HTMLAnchorElement).textContent = "POD Content ↪";
-        (document.getElementById("labelTextareabrp") as HTMLAnchorElement).href = savedFile.internal_resourceInfo.sourceIri;
-      } catch (error) {
-        console.log(error);
-        labelCreateStatus.textContent = "Error" + error;
-        labelCreateStatus.setAttribute("role", "alert");
-      }
+      console.log(savedFile.internal_resourceInfo.sourceIri);
+      setVCUrl(savedFile.internal_resourceInfo.sourceIri);
+      handleVCLoaded();
     }
-    
+
     const vcAPIBRK = async () => {
       const vc = await vcAPI('brk');
       const savedFile = await save_jsonld_file('brk-credential.jsonld', vc);
+
       console.log("Saved BRK credential");
 
-      try {
-        const content = await readSolidVC(savedFile);
-
-        (document.getElementById("savedcredentialsbrk") as HTMLPreElement).textContent = JSON.stringify(content, null, 2);
-        (document.getElementById("labelTextareabrk") as HTMLAnchorElement).textContent = "POD Content ↪";
-        (document.getElementById("labelTextareabrk") as HTMLAnchorElement).href = savedFile.internal_resourceInfo.sourceIri;
-      } catch (error) {
-        console.log(error);
-        labelCreateStatus.textContent = "Error" + error;
-        labelCreateStatus.setAttribute("role", "alert");
-      }
+      setVCUrl(savedFile.internal_resourceInfo.sourceIri);
+      handleVCLoaded();
     }
-
-    const loadVC = async () => {
-      const uri = `${targetContainerURL}kadasterVC.jsonld`;
-      const file = await getFile(uri, { fetch: solidFetch });
-      await readSolidVC(file);
-    }
-
-    // try {
-    //   loadVC();
-    // } catch (error) {
-    //   // Ignore
-    // }
 
     return (
-        <div>
-            <h2>Verifiable Credentials</h2>
-            <span id="labelCreateStatus"></span>
-            <h3>BRP</h3>
-            <button onClick={vcAPIBRP} title="VC API">Get BRP VC and store in POD</button>
-            <hr/>
-            <a id="labelTextareabrp"></a><br/>
-            <pre id="savedcredentialsbrp"></pre>
-            <hr/>
-            <h3>BRK</h3>
-            <button onClick={vcAPIBRK} title="VC API">Get BRK VC and store in POD</button>
-            <hr/>
-            <a id="labelTextareabrk"></a><br/>
-            <pre id="savedcredentialsbrk"></pre>
-        </div>
+        <Box sx={{textAlign: "center"}}>
+            {type === VCType.BRP &&
+            <div>
+              <p>
+                Deze verifiable credential is op basis van de Basisregistratie Personen (BRP).
+              </p>
+              { !VCUrl &&
+              <p>
+                <Button variant="contained" color="secondary" onClick={vcAPIBRP}>Persoonsgegevens ophalen</Button>
+              </p>
+              }
+              {VCUrl &&
+              <p>
+                <span>✅ Opgeslagen! ➡</span>
+                <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={VCUrl}/>
+                <em>👈 Tip: klik op het kluisje om de data in je kluis te bekijken!</em>
+              </p>
+              }
+            </div>
+            }
+
+            {type === VCType.BRK &&
+            <div>
+              <p>
+                Deze verifiable credential is op basis van de Basisregistratie Kadaster (BRK).
+              </p>
+              {!VCUrl &&
+              <p>
+                <Button variant="contained" color="secondary" onClick={vcAPIBRK}>Eigendomsgegevens ophalen</Button>
+              </p>
+              }
+              {VCUrl &&
+              <p>
+                <span>✅ Opgeslagen! ➡</span>
+                <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={VCUrl} />
+              </p>
+              }
+            </div>
+            }
+        </Box>
     );
 }
