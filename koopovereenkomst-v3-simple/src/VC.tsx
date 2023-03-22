@@ -72,7 +72,7 @@ export default function VC({ type = VCType.BRP, handleVCLoaded = () => { } }) {
 
       try {
         let savedFile = await overwriteFile(
-          `${targetContainerURL}/${filename}`,           // Container URL
+          `${targetContainerURL}${filename}`,           // Container URL
           blob,                         // File
           { contentType: "application/ld+json", fetch: solidFetch }
         );
@@ -146,7 +146,7 @@ export default function VC({ type = VCType.BRP, handleVCLoaded = () => { } }) {
               {VCUrl &&
               <p>
                 <span>✅ Opgeslagen! ➡</span>
-                <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={VCUrl}/>
+                <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={VCUrl} />
                 <em>👈 Tip: klik op het kluisje om de data in je kluis te bekijken!</em>
               </p>
               }

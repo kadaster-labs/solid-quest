@@ -35,9 +35,9 @@ export default function LoginForm() {
                 />
                 <Select value={idp} onChange={handleChange} sx={{ width: "25ch" }}>
                     <MenuItem value="">None</MenuItem>
+                    <MenuItem value="http://localhost:3001">localhost:3001</MenuItem>
                     <MenuItem value="https://solidcommunity.net">Solid Community</MenuItem>
                     <MenuItem value="https://broker.pod.inrupt.com">Inrupt</MenuItem>
-                    <MenuItem value="http://localhost:3001">localhost:3001</MenuItem>
                 </Select>
             </Box>
             <Box sx={{ p: "2rem 0" }}>

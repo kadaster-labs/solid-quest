@@ -3,7 +3,7 @@ import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 
 export default function PodIcon(props: SvgIconProps) {
   return (
-    <a href={props.href}>
+    <a href={props.href} target={props.target ? props.target : "_blank"}>
       <SvgIcon {...props}>
         <svg
           viewBox="0 -96.5 1217 1217"
