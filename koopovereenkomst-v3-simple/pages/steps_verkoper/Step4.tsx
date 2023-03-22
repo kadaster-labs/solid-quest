@@ -1,7 +1,6 @@
-import * as React from "react";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 
 import { getInteger, getSolidDataset, getThingAll } from '@inrupt/solid-client';
@@ -9,22 +8,23 @@ import { fetch } from '@inrupt/solid-client-authn-browser';
 import { useSession } from "@inrupt/solid-ui-react";
 import { useEffect, useState } from "react";
 import { SOLID_ZVG_CONTEXT } from '../../src/aggregate/context';
-import styles from '../../styles/verkoper.module.css';
 
+import { List, ListItem, ListItemText, TextField } from "@mui/material";
 import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
 import KoopovereenkomstAggregate from '../../src/aggregate/koopovereenkomst-aggregate';
+import Link from "../../src/Link";
 
 const zvg_base = 'http://taxonomie.zorgeloosvastgoed.nl/def/zvg#'
 const zvg = {
-    koopsom: zvg_base + 'koopsom',
+  koopsom: zvg_base + 'koopsom',
 }
 
 interface Case {
-    caseId?: string;
-    koopsom?: number;
+  caseId?: string;
+  koopsom?: number;
 }
 
-export default function Step4({ step = 4, handleNext, handleBack = () => {} }) {
+export default function Step4({ step = 4, handleNext, handleBack = () => { } }) {
   const title = "Verkoper Homepage";
 
   const { session } = useSession();
@@ -116,7 +116,7 @@ export default function Step4({ step = 4, handleNext, handleBack = () => {} }) {
         const thePodUrl = webId.split(url.pathname)[0] + "/";
         console.debug("The POD url is: ", thePodUrl);
         setPodUrl(thePodUrl);
-      } catch (error) {}
+      } catch (error) { }
 
       // https://github.com/LDflex/Query-Solid#adding-a-custom-json-ld-context
       data.context.extend(SOLID_ZVG_CONTEXT);
@@ -133,55 +133,90 @@ export default function Step4({ step = 4, handleNext, handleBack = () => {} }) {
       </Typography>
 
       <Box>
-        <p>logged in: {webId}</p>
-        <p>POD url: {podUrl}</p>
-        <label>Koopovereenkomst nummer:</label>
-        <input
-          id="caseId"
-          placeholder="Koopovereenkomst Case ID"
-          defaultValue={caseId}
-          onChange={(e) => setCaseId(e.target.value)}
-        />
-        <button onClick={openenKoopovereenkomstWithLDflex}>
-          Openen met LDflex (with console logging)
-        </button>
-        <button disabled onClick={openenKoopovereenkomstWithInruptSolidClient}>
-          Openen met Inrupt Solid Client
-        </button>
-        <div>
-          <ul>
-            {eventLabels.map((e, i) => (
-              <li key={i}>
-                <a href={e.id} target="_blank" rel="noreferrer">
-                  {e.newLabel}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        {errors !== "" && (
-          <div className={styles.errors}>
-            <p>{errors}</p>
-            <button onClick={() => setErrors("")}>clear</button>
-          </div>
-        )}
-        {curCase.caseId && (
-          <div className={styles.info}>
-            <p>Koopovereenkomst info (from {koopovereenkomstFile()}):</p>
-            <ul>
-              <li>Koopsom: {curCase.koopsom}</li>
-            </ul>
-          </div>
-        )}
+        <Box>
+          <p>logged in: {webId}</p>
+          <p>POD url: {podUrl}</p>
+          <TextField
+            id="caseId"
+            label="Koopovereenkomst nummer"
+            variant="outlined"
+            value={caseId}
+            defaultValue={caseId}
+            onChange={(e) => setCaseId(e.target.value)}
+            sx={{ width: "50ch" }}
+          />
+        </Box>
+        <Box sx={{ p: "2rem 0" }}>
+
+          <Button variant="contained" onClick={openenKoopovereenkomstWithLDflex}>
+            Openen met LDflex (with console logging)
+          </Button>
+        </Box>
+        <Box sx={{ p: "2rem 0" }}>
+          {false &&
+            <Button disabled onClick={openenKoopovereenkomstWithInruptSolidClient}>
+              Openen met Inrupt Solid Client
+            </Button>
+          }
+          <Box>
+            <List>
+              {eventLabels.map((e, i) => (
+                <ListItem key={i} sx={{
+                  ...(e.actor === "verkoper-vera" && {
+                    textAlign: "right",
+                  })
+                }}>
+                  <Link href={e.id} target="_blank" rel="noreferrer" style={{
+                    padding: "0 2rem",
+                    borderRadius: "0.5rem",
+                    color: "white",
+                    textDecoration: "none",
+                    width: "80%",
+                    ...(e.actor === "verkoper-vera" && {
+                      marginLeft: "auto",
+                    }),
+                    ...(e.actor === "verkoper-vera" && {
+                      backgroundColor: "rgb(106, 136, 165, 0.8)",
+                    }),
+                    ...(e.actor === "koper-koos" && {
+                      backgroundColor: "rgb(125, 122, 95, 0.8)",
+                    })
+                  }}>
+                    <ListItemText sx={{
+                    }}
+                      primary={e.newLabel}
+                      secondary={e.actor}
+                    />
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+          {errors !== "" && (
+            <Box sx={{
+              backgroundColor: "rgb(255, 223, 223)",
+              border: "1px solid rgb(114, 0, 0)",
+              m: "1rem",
+              p: "0.5rem",
+            }}>
+              <Typography>{errors}</Typography>
+              <Button onClick={() => setErrors("")}>clear</Button>
+            </Box>
+          )}
+          {curCase.caseId && (
+            <div>
+              <p>Koopovereenkomst info (from {koopovereenkomstFile()}):</p>
+              <ul>
+                <li>Koopsom: {curCase.koopsom}</li>
+              </ul>
+            </div>
+          )}
+        </Box>
       </Box>
 
-      <Stack direction="row" justifyContent="end">
-        <Button variant="contained" onClick={handleBack}>
-          Terug
-        </Button>
-        <Button variant="contained" onClick={handleNext}>
-          Doorgaan
-        </Button>
+      <Stack direction="row" justifyContent="space-between">
+        <Button variant="contained" onClick={handleBack}>Terug</Button>
+        <Button variant="contained" onClick={handleNext}>Doorgaan</Button>
       </Stack>
     </Box>
   );

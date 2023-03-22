@@ -7,7 +7,7 @@ import { siteTitle } from "./Layout";
 
 export default function LoginForm() {
 
-    const [idp, setIdp] = useState("");
+    const [idp, setIdp] = useState("http://localhost:3001");
     const [currentUrl, setCurrentUrl] = useState("");
 
     useEffect(() => {
