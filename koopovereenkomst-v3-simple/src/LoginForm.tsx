@@ -29,7 +29,6 @@ export default function LoginForm() {
                     label="Identity Provider"
                     variant="outlined"
                     value={idp}
-                    defaultValue={idp}
                     onChange={handleChange}
                     sx={{ width: "50ch" }}
                 />
