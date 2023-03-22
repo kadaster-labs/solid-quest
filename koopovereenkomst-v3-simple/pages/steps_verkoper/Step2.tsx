@@ -10,7 +10,7 @@ import { useState } from "react";
 export default function Step2({ step = 2, handleNext, handleBack = () => { } }) {
   const [vcLoaded, setvcLoaded] = useState(false);
 
-  const handleVCLoaded = () => {
+  const handleVC = (_vc) => {
     // get a trigger from <VC> to enable the "Doorgaan" button
     setvcLoaded(true);
   };
@@ -34,7 +34,7 @@ export default function Step2({ step = 2, handleNext, handleBack = () => { } }) 
 
       <hr/>
 
-      <VC type={VCType.BRP} handleVCLoaded={handleVCLoaded}/>
+      <VC type={VCType.BRP} handleVC={handleVC}/>
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>

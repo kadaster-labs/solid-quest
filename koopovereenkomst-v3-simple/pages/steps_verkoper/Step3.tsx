@@ -7,13 +7,14 @@ import VC, { VCType } from '../../src/VC';
 import { useState } from "react";
 
 import Image from "../../src/Image";
+import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
 
 export default function Step3({ step = 3, handleNext, handleBack = () => { } }) {
-  const [vcLoaded, setvcLoaded] = useState(false);
+  const [loadedBRKVC, setLoadedBRKVC] = useState({} as any);
 
-  const handleVCLoaded = () => {
+  const handleVC = (vc) => {
     // get a trigger from <VC> to enable the "Doorgaan" button
-    setvcLoaded(true);
+    setLoadedBRKVC(vc);
   };
 
   return (
@@ -37,13 +38,30 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
         style={{ display: "block", margin: "25px auto" }}
       />
 
-      <hr/>
+      <hr />
 
-      <VC type={VCType.BRK} handleVCLoaded={handleVCLoaded} />
+      <VC type={VCType.BRK} handleVC={handleVC} />
+
+      <hr />
+      {Object.keys(loadedBRKVC).length !== 0 ?
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <KadasterKnowledgeGraph objectId={(loadedBRKVC.credentialSubject.eigendom.perceel.identificatie as number)}/>
+          <Typography variant="body1" color="text.primary" align="center">
+            Het volgende object ID van het perceel is gevonden in de verifiable credential van het Kadaster.
+            Maak gebruik van de Kadaster Knowledge Graph om informatie op te halen over je perceel.
+          </Typography>
+        </Box>
+      :
+        <KadasterKnowledgeGraph objectId={0}/>
+      }
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {vcLoaded && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
+        {loadedBRKVC && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
       </Stack>
     </Box>
   );

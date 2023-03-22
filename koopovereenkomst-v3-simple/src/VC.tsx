@@ -45,7 +45,7 @@ export enum VCType {
   BRK = 'Basisregistratie Kadaster',
 }
 
-export default function VC({ type = VCType.BRP, handleVCLoaded = () => { } }) {
+export default function VC({ type = VCType.BRP, handleVC = (vc) => { } }) {
 
     const { session } = useSession();
     const { webId } = session.info;
@@ -118,7 +118,7 @@ export default function VC({ type = VCType.BRP, handleVCLoaded = () => { } }) {
 
       console.log(savedFile.internal_resourceInfo.sourceIri);
       setVCUrl(savedFile.internal_resourceInfo.sourceIri);
-      handleVCLoaded();
+      handleVC(vc);
     }
 
     const vcAPIBRK = async () => {
@@ -128,7 +128,7 @@ export default function VC({ type = VCType.BRP, handleVCLoaded = () => { } }) {
       console.log("Saved BRK credential");
 
       setVCUrl(savedFile.internal_resourceInfo.sourceIri);
-      handleVCLoaded();
+      handleVC(vc);
     }
 
     return (

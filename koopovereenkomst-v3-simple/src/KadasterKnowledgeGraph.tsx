@@ -5,6 +5,7 @@ import ComunicaEngine from "@ldflex/comunica";
 // @ts-ignore
 import { namedNode } from "@rdfjs/data-model";
 import { useState } from "react";
+import { Box, Button } from "@mui/material";
 
 const prefix = {
     gebouw: "https://data.kkg.kadaster.nl/id/gebouw/",
@@ -69,10 +70,10 @@ const context = {
     },
 };
 
-const KadasterKnowledgeGraph = function () {
-    const [perceelnummer, setPerceelnummer] = useState("undefined");
+const KadasterKnowledgeGraph = function (objectId) {
+    const [perceelnummer, setPerceelnummer] = useState("");
 
-    let [kadastraalObjectId, setKadastraalObjectId] = useState("10020263270000");
+    let [kadastraalObjectId, setKadastraalObjectId] = useState(objectId.objectId);
 
     const handleChange = (e) => {
         setKadastraalObjectId(e.target.value);
@@ -91,12 +92,18 @@ const KadasterKnowledgeGraph = function () {
     }
 
     return (
-        <div>
-            <h2>Kadaster Knowledge Graph</h2>
+        <Box sx={{
+            width: "100%",
+            my: 4,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+         }}>
             <input type="text" value={kadastraalObjectId} onChange={handleChange}></input>
-            <button onClick={callKadaster}>call KKG</button>
+            <Button variant="contained" color="warning" onClick={callKadaster}>call KKG</Button>
             <p>Perceelnummer: {perceelnummer}</p>
-        </div>
+        </Box>
     );
 }
 
