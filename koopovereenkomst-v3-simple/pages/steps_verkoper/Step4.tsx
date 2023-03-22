@@ -194,6 +194,7 @@ export default function Step4({ step = 4, handleNext, handleBack = () => { } }) 
           </Box>
           {errors !== "" && (
             <Box sx={{
+              color: "black",
               backgroundColor: "rgb(255, 223, 223)",
               border: "1px solid rgb(114, 0, 0)",
               m: "1rem",
@@ -204,12 +205,12 @@ export default function Step4({ step = 4, handleNext, handleBack = () => { } }) 
             </Box>
           )}
           {curCase.caseId && (
-            <div>
-              <p>Koopovereenkomst info (from {koopovereenkomstFile()}):</p>
-              <ul>
-                <li>Koopsom: {curCase.koopsom}</li>
-              </ul>
-            </div>
+            <Box>
+              <Typography>Koopovereenkomst info (from {koopovereenkomstFile()}):</Typography>
+              <List>
+                <ListItem>Koopsom: {curCase.koopsom}</ListItem>
+              </List>
+            </Box>
           )}
         </Box>
       </Box>
