@@ -9,6 +9,7 @@ import Step2 from "./steps_verkoper/Step2";
 import Step3 from "./steps_verkoper/Step3";
 import Step4 from "./steps_verkoper/Step4";
 import Step5 from "./steps_verkoper/Step5";
+import Step6 from "./steps_verkoper/Step6";
 import Layout from "../src/Layout";
 import Head from "next/head";
 
@@ -60,9 +61,9 @@ export default function Verkoper() {
       case 3:
         return <Step4 handleNext={handleNext} handleBack={handleBack} />;
       case 4:
-        return <Step5  handleNext={handleNext} handleBack={handleBack} />;
+        return <Step5 handleNext={handleNext} handleBack={handleBack} />;
       case 5:
-        return <Step5 handleNext={() => { }} handleBack={handleBack} />;
+        return <Step6 handleBack={handleBack} />;
       default:
         return <Step1 handleNext={handleNext} />;
     }
