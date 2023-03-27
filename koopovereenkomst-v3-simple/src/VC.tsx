@@ -52,7 +52,7 @@ export default function VC({ type = VCType.BRP, handleVC = (vc) => { } }) {
 
     const [VCUrl, setVCUrl] = useState("");
 
-    const SELECTED_POD = webId.split('profile/card#me')[0];
+    const SELECTED_POD = webId?.split('profile/card#me')[0];
     const targetContainerURL = `${SELECTED_POD}credentials/`;
 
     const save_jsonld_file = async (filename: string, credential: any) => {
