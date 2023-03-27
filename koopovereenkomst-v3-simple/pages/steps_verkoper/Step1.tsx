@@ -9,14 +9,8 @@ import ConnectSolid from "../../src/ConnectSolid";
 export default function Step1({ handleNext, handleBack = () => { } }) {
 
   const { session } = useSession();
-  // const webId = session.info.webId;
 
   let isLoggedIn = session.info.isLoggedIn;
-
-  useEffect(() => {
-    isLoggedIn = session.info.isLoggedIn
-  })
-
 
   return (
     <Box sx={{flex: 1}}>
