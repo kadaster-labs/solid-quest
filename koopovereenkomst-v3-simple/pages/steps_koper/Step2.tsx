@@ -1,6 +1,5 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import PodIcon from "../../src/PodIcon";
 import Button from "@mui/material/Button";
 
 export default function Step2() {
