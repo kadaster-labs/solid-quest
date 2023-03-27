@@ -64,7 +64,7 @@ export default class KoopovereenkomstAggregate {
     return this.events.sort((a, b) => a.seq - b.seq);
   }
 
-  public getData() : any {
+  public getData(): any {
     return this.data;
   }
 
@@ -108,9 +108,7 @@ export default class KoopovereenkomstAggregate {
     // add dynamic label
     try {
       Object.assign(e, {
-        newLabel: `${e.seq.padStart(2, "0")} | ${e.time} | ${
-          e.actor
-        } | ${beautifyCamelCase(e.type)} for ${e.aggregateId}`,
+        newLabel: `${e.seq.padStart(2, "0")} | ${e.time} | ${beautifyCamelCase(e.type)} for ${e.aggregateId}`,
       });
     } catch (error) {
       console.warn("building up label went wrong (somehow)", error);
@@ -130,7 +128,7 @@ export default class KoopovereenkomstAggregate {
       theType === "persoonsgegevensRefToegevoegd" ||
       theType === "conceptKoopovereenkomstKoperOpgeslagen" ||
       theType ===
-        "getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster" ||
+      "getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster" ||
       theType === "getekendeKoopovereenkomstVerkoperOpgeslagen" ||
       theType === "conceptKoopovereenkomstGetekend"
     ) {

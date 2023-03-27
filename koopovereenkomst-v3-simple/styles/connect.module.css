@@ -1,9 +1,0 @@
-.connectBox {
-  border: 1px grey solid;
-}
-
-@media (prefers-color-scheme: dark) {
-  .connectBox {
-    border-color: rgb(204, 204, 204);
-  }
-}
