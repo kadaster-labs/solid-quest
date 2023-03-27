@@ -13,8 +13,6 @@ import {
 } from '@inrupt/solid-client';
 import { useSession } from "@inrupt/solid-ui-react";
 import Button from "@mui/material/Button";
-import PodIcon from "./PodIcon";
-import { useEffect, useState } from "react";
 import { Box } from '@mui/material';
 
 
@@ -45,12 +43,10 @@ export enum VCType {
   BRK = 'Basisregistratie Kadaster',
 }
 
-export default function VC({ type = VCType.BRP, handleVC = (vc) => { } }) {
+export default function VC({ type = VCType.BRP, handleVC = (vc, url?) => { } }) {
 
     const { session } = useSession();
     const { webId } = session.info;
-
-    const [VCUrl, setVCUrl] = useState("");
 
     const SELECTED_POD = webId?.split('profile/card#me')[0];
     const targetContainerURL = `${SELECTED_POD}credentials/`;
@@ -116,9 +112,7 @@ export default function VC({ type = VCType.BRP, handleVC = (vc) => { } }) {
 
       console.log("Saved BRP credential");
 
-      console.log(savedFile.internal_resourceInfo.sourceIri);
-      setVCUrl(savedFile.internal_resourceInfo.sourceIri);
-      handleVC(vc);
+      handleVC(vc, savedFile.internal_resourceInfo.sourceIri);
     }
 
     const vcAPIBRK = async () => {
@@ -127,8 +121,7 @@ export default function VC({ type = VCType.BRP, handleVC = (vc) => { } }) {
 
       console.log("Saved BRK credential");
 
-      setVCUrl(savedFile.internal_resourceInfo.sourceIri);
-      handleVC(vc);
+      handleVC(vc, savedFile.internal_resourceInfo.sourceIri);
     }
 
     return (
@@ -138,18 +131,9 @@ export default function VC({ type = VCType.BRP, handleVC = (vc) => { } }) {
               <p>
                 Deze verifiable credential is op basis van de Basisregistratie Personen (BRP).
               </p>
-              { !VCUrl &&
               <p>
                 <Button variant="contained" color="secondary" onClick={vcAPIBRP}>Persoonsgegevens ophalen</Button>
               </p>
-              }
-              {VCUrl &&
-              <p>
-                <span>✅ Opgeslagen! ➡</span>
-                <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={VCUrl} />
-                <em>👈 Tip: klik op het kluisje om de data in je kluis te bekijken!</em>
-              </p>
-              }
             </div>
             }
 
@@ -158,17 +142,9 @@ export default function VC({ type = VCType.BRP, handleVC = (vc) => { } }) {
               <p>
                 Deze verifiable credential is op basis van de Basisregistratie Kadaster (BRK).
               </p>
-              {!VCUrl &&
               <p>
                 <Button variant="contained" color="secondary" onClick={vcAPIBRK}>Eigendomsgegevens ophalen</Button>
               </p>
-              }
-              {VCUrl &&
-              <p>
-                <span>✅ Opgeslagen! ➡</span>
-                <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={VCUrl} />
-              </p>
-              }
             </div>
             }
         </Box>
