@@ -3,9 +3,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
-import VC, { VCType } from '../../src/VC';
+import VC, { SolidVC, VCType } from '../../src/VC';
 import Image from "../../src/Image";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { verifyVC } from "../../src/verify";
 import PodIcon from "../../src/PodIcon";
 
@@ -24,28 +24,41 @@ function createData(
 }
 
 export default function Step2({ step = 2, handleNext, handleBack = () => { } }) {
-  const [loadedBRPVC, setLoadedBRPVC] = useState({} as object);
-  const [loadedBRPVCUrl, setLoadedBRPVCUrl] = useState("" as string);
-  const [loadedBRPVCVerification, setLoadedBRPVCVerification] = useState({} as object);
+  const [loadedBRPVC, setLoadedBRPVC] = useState({} as any);
 
   const [rows, setRows] = useState([] as Array<any>);
 
-  const handleVC = async (vc: any, url: string) => {
-    // get a trigger from <VC> to enable the "Doorgaan" button
-    const verificationResult = await verifyVC(vc);
+  const updateVCs = useCallback(async (vcs: SolidVC[]) => {
+    // useCallback is important here. With each update from vcs
+    // <VC> will be re-rendered, and this will cause a new updateVCs
+    // resulting in an infinite loop.
 
+    if (vcs.length === 0) {
+      setLoadedBRPVC({});
+      return;
+    }
+
+    const vc = vcs[0];
     setLoadedBRPVC(vc);
-    setLoadedBRPVCUrl(url);
-    setLoadedBRPVCVerification(verificationResult);
+
+    let certificateValidity;
+    // if type is string, it's a stringified JSON object
+    if (typeof vc.status === "string") {
+      certificateValidity = vc.status;
+    } else if (vc.status.verified) {
+      certificateValidity = "✅";
+    } else {
+      certificateValidity = "❌";
+    }
 
     setRows([
-      createData('Naam', vc.credentialSubject.naam),
-      createData('Geboortedatum', vc.credentialSubject.geboorte.geboortedatum),
-      createData('Geboorteplaats', vc.credentialSubject.geboorte.geboorteplaats),
-      createData('Geboorteland', vc.credentialSubject.geboorte.geboorteland),
-      createData('Certificaat geldig?', verificationResult.verified ? '✅' : '❌'),
+      createData('Naam', vc.vc.credentialSubject.naam),
+      createData('Geboortedatum', vc.vc.credentialSubject.geboorte.geboortedatum),
+      createData('Geboorteplaats', vc.vc.credentialSubject.geboorte.geboorteplaats),
+      createData('Geboorteland', vc.vc.credentialSubject.geboorte.geboorteland),
+      createData('Certificaat geldig?', certificateValidity),
     ]);
-  };
+  }, []);
 
   return (
     <Box sx={{flex: 1}}>
@@ -56,6 +69,9 @@ export default function Step2({ step = 2, handleNext, handleBack = () => { } }) 
         {step}. Koppel je persoonsgegevens aan deze koopovereenkomst
       </Typography>
 
+      <VC type={VCType.BRP} updateVCs={updateVCs}/>
+
+      <hr/>
       {Object.keys(loadedBRPVC).length === 0 ?
       <Box>
         <Image
@@ -65,18 +81,14 @@ export default function Step2({ step = 2, handleNext, handleBack = () => { } }) 
           height={180}
           style={{ display: "block", margin: "25px auto" }}
         />
-
-        <hr/>
-        <VC type={VCType.BRP} handleVC={handleVC}/>
       </Box>
       :
       <Box>
         <Typography variant="body1" color="text.primary" align="center">
-          Je hebt je persoonsgegevens opgeslagen in je datakluis. <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={loadedBRPVCUrl} />
-          <br/>Kloppen de gegevens?
+          Je hebt je persoonsgegevens opgeslagen in je datakluis. Kloppen de gegevens? <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={loadedBRPVC.url} />
         </Typography>
         {/* https://mui.com/material-ui/react-table/ */}
-        <TableContainer sx={{ marginY: '4rem' }} component={Paper}>
+        <TableContainer sx={{ marginY: '3rem' }} component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableBody>
               {rows.map((row) => (
