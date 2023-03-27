@@ -31,7 +31,7 @@ export default function Step4({ step = 4, handleNext, handleBack = () => { } }) 
   const webId = session.info.webId;
 
   const [podUrl, setPodUrl] = useState("");
-  const [caseId, setCaseId] = useState(345);
+  const [caseId, setCaseId] = useState("345");
   const [curCase, setCase] = useState<Case>({} as Case);
   const [errors, setErrors] = useState("");
   const [eventLabels, setEventLabels] = useState([]);
