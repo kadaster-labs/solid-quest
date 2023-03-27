@@ -61,7 +61,7 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {loadedBRKVC && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
+        {Object.keys(loadedBRKVC).length !== 0 && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
       </Stack>
     </Box>
   );
