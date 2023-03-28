@@ -18,6 +18,7 @@ import { useEffect, useCallback, useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
 import { Link, Typography } from "@mui/material";
 import { verifyVC } from "./verify";
 
@@ -74,6 +75,7 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
   const { webId } = session.info;
 
   const [vcs, setVcs] = useState([] as SolidVC[]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const SELECTED_POD = webId?.split("profile/card#me")[0];
   const targetContainerURL = `${SELECTED_POD}credentials/`;
@@ -190,6 +192,7 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
   };
 
   const downloadVC = async () => {
+    setIsLoading(true);
     const vc = await vcAPI(VCInfo[type].apiPath);
     const savedFile = await save_jsonld_file(VCInfo[type].filename, vc);
 
@@ -200,12 +203,16 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
     let vcUrls = [];
     while (vcUrls.length == 0) {
       vcUrls = await listVCs();
+      
       // wait 1 second before trying again
-      console.log("waiting for vc to be saved");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("waiting for vc to be saved", vcUrls);
+      if (vcUrls.length == 0) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
     }
 
     await initializeVCs();
+    setIsLoading(false);
   };
 
   const refreshVCs = async () => {
@@ -227,9 +234,7 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
         Verifiable Credential(s) voor {type}
       </Typography>
       {vcs.length == 0 ? (
-        <Button color="secondary" onClick={downloadVC}>
-          VC Downloaden
-        </Button>
+        isLoading ? <CircularProgress/> : <Button color="secondary" onClick={downloadVC}>VC Downloaden</Button>
       ) : (
         <ButtonGroup variant="text" aria-label="text button group">
           <Link href={vcs[0].url} target="_blank">
