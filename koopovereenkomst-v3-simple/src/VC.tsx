@@ -195,9 +195,19 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
 
     console.log(`File saved for ${VCInfo[type]} at ${getSourceUrl(savedFile)}`);
 
+    // keep running the listVCs loop until the file is found
+    // this is a workaround for the fact that the file is not immediately available
+    let vcUrls = [];
+    while (vcUrls.length == 0) {
+      vcUrls = await listVCs();
+      // wait 1 second before trying again
+      console.log("waiting for vc to be saved");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
     await initializeVCs();
   };
-  
+
   const refreshVCs = async () => {
     await initializeVCs();
   };
