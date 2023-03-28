@@ -6,7 +6,6 @@ import { Box } from "@mui/system";
 import VC, { SolidVC, VCType } from '../../src/VC';
 import { useCallback, useState } from "react";
 
-import PodIcon from "../../src/PodIcon";
 import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
 
@@ -36,7 +35,7 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
       {loadedBRKVC.length !== 0 ?
         <Box>
           <Typography variant="body1" color="text.primary" align="center">
-            Je hebt je eigendomsgegevens opgeslagen in je datakluis. Kloppen de gegevens? <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={loadedBRKVC[0].url} />
+            Je hebt je eigendomsgegevens opgeslagen in je datakluis. Kloppen de gegevens?
           </Typography>
           <Typography variant="body1" color="text.primary" align="center" fontWeight="bold" fontStyle="italic">
             Certificaat geldig? {loadedBRKVC[0].status.verified ? "✅" : "❌"}

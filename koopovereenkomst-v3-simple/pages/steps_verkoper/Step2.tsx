@@ -6,8 +6,6 @@ import { Box } from "@mui/system";
 import VC, { SolidVC, VCType } from '../../src/VC';
 import Image from "../../src/Image";
 import { useCallback, useState } from "react";
-import { verifyVC } from "../../src/verify";
-import PodIcon from "../../src/PodIcon";
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -85,7 +83,7 @@ export default function Step2({ step = 2, handleNext, handleBack = () => { } }) 
       :
       <Box>
         <Typography variant="body1" color="text.primary" align="center">
-          Je hebt je persoonsgegevens opgeslagen in je datakluis. Kloppen de gegevens? <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={loadedBRPVC.url} />
+          Je hebt je persoonsgegevens opgeslagen in je datakluis. Kloppen de gegevens?
         </Typography>
         {/* https://mui.com/material-ui/react-table/ */}
         <TableContainer sx={{ marginY: '3rem' }} component={Paper}>

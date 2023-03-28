@@ -18,7 +18,7 @@ import { useEffect, useCallback, useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 import { verifyVC } from "./verify";
 
 export async function deleteRecursively(dataset) {
@@ -222,6 +222,11 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
         </Button>
       ) : (
         <ButtonGroup variant="text" aria-label="text button group">
+          <Link href={vcs[0].url} target="_blank">
+              <Button color="secondary">
+              VC Bekijken
+            </Button>
+          </Link>
           <Button color="secondary" onClick={refreshVCs}>
             Status verversen
           </Button>
