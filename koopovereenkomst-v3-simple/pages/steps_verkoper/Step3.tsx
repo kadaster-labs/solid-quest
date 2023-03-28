@@ -3,19 +3,19 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
-import VC, { VCType } from '../../src/VC';
-import { useState } from "react";
+import VC, { SolidVC, VCType } from '../../src/VC';
+import { useCallback, useState } from "react";
 
+import PodIcon from "../../src/PodIcon";
 import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
 
 export default function Step3({ step = 3, handleNext, handleBack = () => { } }) {
-  const [loadedBRKVC, setLoadedBRKVC] = useState({} as any);
+  const [loadedBRKVC, setLoadedBRKVC] = useState([] as any);
 
-  const handleVC = (vc) => {
-    // get a trigger from <VC> to enable the "Doorgaan" button
-    setLoadedBRKVC(vc);
-  };
+  const updateVCs = useCallback(async (vcs: SolidVC[]) => {
+    setLoadedBRKVC(vcs);
+  }, []);
 
   return (
     <Box sx={{flex: 1}}>
@@ -30,38 +30,42 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
         Bij het Kadaster kan je jouw eigendomsbewijzen ophalen, zodat je vervolgens de woning kunt selecteren die je wilt verkopen.
       </Typography>
 
-      <Image
-        src="/solid-quest/images/mijnkadaster.png"
-        alt="Mijn Overheid Logo"
-        width={400}
-        height={180}
-        style={{ display: "block", margin: "25px auto" }}
-      />
+      <VC type={VCType.BRK} updateVCs={updateVCs} />
 
       <hr />
-
-      <VC type={VCType.BRK} handleVC={handleVC} />
-
-      <hr />
-      {Object.keys(loadedBRKVC).length !== 0 ?
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <KadasterKnowledgeGraph objectId={(loadedBRKVC.credentialSubject.eigendom.perceel.identificatie as number)}/>
+      {loadedBRKVC.length !== 0 ?
+        <Box>
           <Typography variant="body1" color="text.primary" align="center">
+            Je hebt je eigendomsgegevens opgeslagen in je datakluis. Kloppen de gegevens? <PodIcon sx={{ mx: "1rem", verticalAlign: "middle" }} href={loadedBRKVC[0].url} />
+          </Typography>
+          <Typography variant="body1" color="text.primary" align="center" fontWeight="bold" fontStyle="italic">
+            Certificaat geldig? {loadedBRKVC[0].status.verified ? "✅" : "❌"}
+          </Typography>
+          <Typography variant="body1" color="text.primary" align="center" sx={{
+            margin: "25px auto",
+            maxWidth: "600px",
+          }}>
             Het volgende object ID van het perceel is gevonden in de verifiable credential van het Kadaster.
             Maak gebruik van de Kadaster Knowledge Graph om informatie op te halen over je perceel.
           </Typography>
+          <KadasterKnowledgeGraph objectId={(loadedBRKVC[0].vc.credentialSubject.eigendom.perceel.identificatie as number)}/>
         </Box>
       :
+      <Box>
+        <Image
+          src="/solid-quest/images/mijnkadaster.png"
+          alt="Mijn Overheid Logo"
+          width={400}
+          height={180}
+          style={{ display: "block", margin: "25px auto" }}
+        />
         <KadasterKnowledgeGraph objectId={0}/>
+      </Box>
       }
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {Object.keys(loadedBRKVC).length !== 0 && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
+        {loadedBRKVC.length !== 0 && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
       </Stack>
     </Box>
   );
