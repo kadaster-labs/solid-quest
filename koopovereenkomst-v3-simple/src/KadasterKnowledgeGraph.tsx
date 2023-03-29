@@ -4,7 +4,7 @@ import { PathFactory } from "ldflex";
 import ComunicaEngine from "@ldflex/comunica";
 // @ts-ignore
 import { namedNode } from "@rdfjs/data-model";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button } from "@mui/material";
 
 const prefix = {
@@ -70,10 +70,10 @@ const context = {
     },
 };
 
-const KadasterKnowledgeGraph = function (objectId) {
+const KadasterKnowledgeGraph = function ({ objectId }) {
     const [perceelnummer, setPerceelnummer] = useState("");
 
-    let [kadastraalObjectId, setKadastraalObjectId] = useState(objectId.objectId);
+    let [kadastraalObjectId, setKadastraalObjectId] = useState(objectId);
 
     const handleChange = (e) => {
         setKadastraalObjectId(e.target.value);
@@ -91,6 +91,10 @@ const KadasterKnowledgeGraph = function (objectId) {
         setPerceelnummer(await perceel.perceelnummer.value);
     }
 
+    useEffect(() => {
+        setKadastraalObjectId(objectId);
+    }, [objectId]);
+
     return (
         <Box sx={{
             width: "100%",
@@ -99,7 +103,7 @@ const KadasterKnowledgeGraph = function (objectId) {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-         }}>
+        }}>
             <input type="text" value={kadastraalObjectId} onChange={handleChange}></input>
             <Button variant="contained" color="warning" onClick={callKadaster}>call KKG</Button>
             <p>Perceelnummer: {perceelnummer}</p>
