@@ -67,7 +67,7 @@ export default function Step2({ step = 2, handleNext, handleBack = () => { } }) 
         {step}. Koppel je persoonsgegevens aan deze koopovereenkomst
       </Typography>
 
-      <VC type={VCType.BRP} updateVCs={updateVCs}/>
+      <VC type={VCType.BRP} onChange={updateVCs}/>
 
       <hr/>
       {Object.keys(loadedBRPVC).length === 0 ?

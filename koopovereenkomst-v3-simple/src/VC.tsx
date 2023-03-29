@@ -70,21 +70,26 @@ export type SolidVC = {
   status: any;
 };
 
-export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => {} }) {
+export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {} }) {
+  // onChange lets us let the parent know the state of the VC
+  // this is not the best way to do this, but it works for now
+  // According to the React docs, we should use a state management library
+  // or 'lift the state up' to the parent component
+
   const { session } = useSession();
   const { webId } = session.info;
 
-  const [vcs, setVcs] = useState([] as SolidVC[]);
+  const [vcs, _setVcs] = useState([] as SolidVC[]);
   const [isLoading, setIsLoading] = useState(false);
 
   const SELECTED_POD = webId?.split("profile/card#me")[0];
   const targetContainerURL = `${SELECTED_POD}credentials/`;
 
-  const saveVCs = useCallback(async (vcs: any) => {
-      updateVCs(vcs);
-      setVcs(vcs);
+  const setVCs = useCallback(async (vcs: any) => {
+      onChange(vcs);
+      _setVcs(vcs);
     },
-    [updateVCs]
+    [onChange]
   );
 
   const refreshVCsStatus = useCallback(async (vcs) => {
@@ -95,8 +100,8 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
       console.log("refreshing status", verificationResult);
       updatedVcs.push({ ...vcs[i], status: verificationResult });
     }
-    saveVCs(updatedVcs);
-  }, [saveVCs]);
+    setVCs(updatedVcs);
+  }, [setVCs]);
 
   const listVCs = useCallback(async () => {
     const vcs = [];
@@ -121,10 +126,9 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
         const credential = JSON.parse(text);
         vcs.push({ url: urls[i], vc: credential, status: "❔" });
       }
-      await saveVCs(vcs);
       await refreshVCsStatus(vcs);
     },
-    [saveVCs, refreshVCsStatus]
+    [refreshVCsStatus]
   );
 
   const initializeVCs = useCallback(async () => {
@@ -225,7 +229,7 @@ export default function VC({ type = VCType.BRP, updateVCs = (vcs: SolidVC[]) => 
       console.log("delete", url);
       await deleteFile(url, { fetch: solidFetch });
     }
-    saveVCs([]);
+    setVCs([]);
   };
 
   return (

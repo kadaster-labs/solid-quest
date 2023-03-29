@@ -29,7 +29,7 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
         Bij het Kadaster kan je jouw eigendomsbewijzen ophalen, zodat je vervolgens de woning kunt selecteren die je wilt verkopen.
       </Typography>
 
-      <VC type={VCType.BRK} updateVCs={updateVCs} />
+      <VC type={VCType.BRK} onChange={updateVCs} />
 
       <hr />
       {loadedBRKVC.length !== 0 ?
