@@ -41,8 +41,7 @@ export default function Step1({ handleNext, handleBack = () => {} }) {
       const bday = getDate(profile, VCARD.bday);
 
       return { name, bday };
-    },
-    []
+    }, []
   );
 
   const getEigendomInfo: (profile: ThingPersisted) => Promise<SolidAddress> =
@@ -63,9 +62,7 @@ export default function Step1({ handleNext, handleBack = () => {} }) {
         const countryName = getStringNoLocale(address, VCARD.country_name);
 
         return { streetAddress, locality, region, postalCode, countryName };
-      },
-      [session.fetch]
-    );
+      }, [session.fetch]);
 
   // Na inloggen, check of het WebID bekend is in de database
   useEffect(() => {
