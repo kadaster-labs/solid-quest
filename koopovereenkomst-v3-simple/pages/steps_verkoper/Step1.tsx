@@ -118,7 +118,7 @@ export default function Step1({ handleNext, handleBack = () => {} }) {
       {isLoggedIn && (
         <Box>
           <Typography variant="body1" color="text.primary" align="center">
-            Welkom{person.name !== null && " " + person.name}!
+            Welkom{person && person.hasOwnProperty('name') && person.name !== null && " " + person.name}!
           </Typography>
           <pre>
             {JSON.stringify(person, null, 2)}
