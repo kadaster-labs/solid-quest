@@ -24,7 +24,7 @@ interface Case {
   koopsom?: number;
 }
 
-export default function Step4({ step = 4, handleNext, handleBack = () => { } }) {
+export function Step4({ step = 4, handleNext, handleBack = () => { } }) {
   const title = "Verkoper Homepage";
 
   const { session } = useSession();

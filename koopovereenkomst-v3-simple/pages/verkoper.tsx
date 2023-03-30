@@ -4,26 +4,22 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Typography from "@mui/material/Typography";
-import Step1 from "./steps_verkoper/Step1";
-import Step2 from "./steps_verkoper/Step2";
-import Step3 from "./steps_verkoper/Step3";
-import Step4 from "./steps_verkoper/Step4";
-import Step5 from "./steps_verkoper/Step5";
-import Step6 from "./steps_verkoper/Step6";
+import { Step1, Step1b, Step2, Step3, Step4, Step5, Step6 } from "./steps_verkoper";
 import Layout from "../src/Layout";
 import Head from "next/head";
 
 const steps = [
-  "Datapod",
+  "Datapod koppelen",
+  "Koopovereenkomst aanmaken",
   "Persoonsgegevens",
   "Eigendomsgegevens",
   "Koopovereenkomst",
-  "Delen",
   "Tekenen",
 ];
 
 export default function Verkoper() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [activeKoek, setActiveKoek] = React.useState(null);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const isStepOptional = (step: number) => {
@@ -49,19 +45,23 @@ export default function Verkoper() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+  
+  const selectKoek = (id: number) => {
+    setActiveKoek(id);
+  }
 
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
         return <Step1 handleNext={handleNext} />;
       case 1:
-        return <Step2  handleNext={handleNext} handleBack={handleBack} />;
+        return <Step1b handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} />;
       case 2:
-        return <Step3 handleNext={handleNext} handleBack={handleBack} />;
+        return <Step2 handleNext={handleNext} handleBack={handleBack} />;
       case 3:
-        return <Step4 handleNext={handleNext} handleBack={handleBack} />;
+        return <Step3 handleNext={handleNext} handleBack={handleBack} />;
       case 4:
-        return <Step5 handleNext={handleNext} handleBack={handleBack} />;
+        return <Step4 handleNext={handleNext} handleBack={handleBack} />;
       case 5:
         return <Step6 handleBack={handleBack} />;
       default:
@@ -75,17 +75,9 @@ export default function Verkoper() {
         <title>{"Verkoper"}</title>
       </Head>
       <Box
-        sx={{
-          width: "100%",
-          my: 4,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          flexGrow: 1,
-        }}
+        sx={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%', width: '100%', marginTop: 4 }}
       >
-        <ActiveStep sx={{flex: 1}} value={activeStep} />
+        <ActiveStep value={activeStep} />
         <Stepper
           sx={{
             width: "100%",

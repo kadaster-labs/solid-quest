@@ -9,7 +9,7 @@ import { useCallback, useState } from "react";
 import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
 
-export default function Step3({ step = 3, handleNext, handleBack = () => { } }) {
+export function Step3({ step = 3, handleNext, handleBack = () => { } }) {
   const [loadedBRKVC, setLoadedBRKVC] = useState([] as any);
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
