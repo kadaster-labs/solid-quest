@@ -1,4 +1,4 @@
-import { SolidAddress, SolidPerson } from "./SolidInterfaces";
+import { SolidAddress, SolidPerson } from "./Solid";
 
 
 export async function checkIfWebIDIsReady(
