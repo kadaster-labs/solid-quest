@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { createContext, useReducer } from 'react';
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { Step1, Step1b, Step2, Step3, Step4, Step5, Step6 } from "./steps_verkoper";
 import Layout from "../src/Layout";
 import Head from "next/head";
+import { VLBProvider } from '../src/verkooplogboek';
 
 const steps = [
   "Datapod koppelen",
@@ -55,8 +56,7 @@ export default function Verkoper() {
       case 0:
         return <Step1 handleNext={handleNext} />;
       case 1:
-        // Verkoper() holds the state of the activeKoek, so we can pass it down to the other steps
-        return <Step1b handleNext={handleNext} handleBack={handleBack} activeKoek={activeKoek} setActiveKoek={setActiveKoek} />;
+        return <Step1b handleNext={handleNext} handleBack={handleBack} />;
       case 2:
         return <Step2 handleNext={handleNext} handleBack={handleBack} />;
       case 3:

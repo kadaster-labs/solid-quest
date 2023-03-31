@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { useEffect, useState } from "react";
 import Image from './Image';
 import Link from "./Link";
+import { VLBProvider } from "./verkooplogboek";
 
 export const siteTitle = 'Koopovereenkomst Solid App';
 
@@ -71,6 +72,7 @@ export default function Layout({ children, home, role }: {
             })
         }}>
             <SessionProvider>
+              <VLBProvider>
                 <Container maxWidth="lg" sx={{
                     maxWidth: "60rem",
                     padding: "1rem 0 3rem",
@@ -118,7 +120,7 @@ export default function Layout({ children, home, role }: {
                         </Link>
                     </Box>
                 </Container>
-
+              </VLBProvider>
             </SessionProvider>
         </Box >
     );

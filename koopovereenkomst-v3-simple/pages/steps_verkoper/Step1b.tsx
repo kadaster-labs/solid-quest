@@ -5,7 +5,7 @@ import Select from '@mui/material/Select';
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useContext } from "react";
 import { getAllFileUrls, getRootContainerURL, saveTurtle } from "../../src/Solid";
 
 import Table from '@mui/material/Table';
@@ -18,10 +18,9 @@ import Paper from '@mui/material/Paper';
 import Radio from "@mui/material/Radio";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const VerkoopLogboekContainer = `${getRootContainerURL()}/koopovereenkomst/temp3`;
+const VerkoopLogboekContainer = `${getRootContainerURL()}/koopovereenkomst/id`;
 
-export function Step1b({ handleNext, handleBack, activeKoek, setActiveKoek }) {
-
+export function Step1b({ handleNext, handleBack }) {
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -52,8 +51,8 @@ export function Step1b({ handleNext, handleBack, activeKoek, setActiveKoek }) {
 
   useEffect(() => {
     // This function will run when the component mounts
-    loadKoeks(activeKoek);
-  }, [loadKoeks, activeKoek]);
+    loadKoeks();
+  }, [loadKoeks]);
 
   const handleConfirm = async () => {
     setIsLoading(true);
@@ -68,7 +67,6 @@ export function Step1b({ handleNext, handleBack, activeKoek, setActiveKoek }) {
     `);
 
     loadKoeks(randomId);
-    setActiveKoek(randomId);
     setIsLoading(false);
   };
 
@@ -78,7 +76,6 @@ export function Step1b({ handleNext, handleBack, activeKoek, setActiveKoek }) {
 
   const handleRowSelect = (event, row) => {
     setSelectedRowId(row.id);
-    setActiveKoek(row.id);
   };
 
   return (

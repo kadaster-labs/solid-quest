@@ -31,7 +31,7 @@ export function getRootContainerURL() {
   const session = getDefaultSession();
   const webId = session.info.webId;
   let rootUrl = webId?.split("profile/card#me")[0];
-  if (rootUrl.endsWith("/")) {
+  if (rootUrl && rootUrl.endsWith("/")) {
     rootUrl = rootUrl.slice(0, -1);
   }
   return rootUrl;
