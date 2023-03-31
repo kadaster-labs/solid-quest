@@ -64,7 +64,7 @@ export function Step3({ step = 3, handleNext, handleBack = () => { } }) {
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {loadedBRKVC.length !== 0 && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
+        {loadedBRKVC.length !== 0 && <Button variant="contained" onClick={handleNext}>Akkoord</Button>}
       </Stack>
     </Box>
   );

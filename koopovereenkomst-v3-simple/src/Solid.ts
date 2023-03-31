@@ -10,6 +10,7 @@ import {
   saveFileInContainer,
   overwriteFile,
   WithResourceInfo,
+  WithServerResourceInfo,
 } from "@inrupt/solid-client";
 
 
@@ -26,14 +27,16 @@ export interface SolidAddress {
   countryName: string | null;
 }
 
-export function getTargetContainerURL() {
+export function getRootContainerURL() {
   const session = getDefaultSession();
   const webId = session.info.webId;
-  const SELECTED_POD = webId?.split("profile/card#me")[0];
-  return `${SELECTED_POD}`;
+  let rootUrl = webId?.split("profile/card#me")[0];
+  if (rootUrl.endsWith("/")) {
+    rootUrl = rootUrl.slice(0, -1);
+  }
+  return rootUrl;
 }
 
-// Hier komt de overige Solid functionaliteit
 export async function deleteRecursively(dataset) {
   console.log(dataset);
   const containedResourceUrls = getContainedResourceUrlAll(dataset);
@@ -60,105 +63,113 @@ export async function deleteRecursively(dataset) {
   return await deleteSolidDataset(dataset, { fetch });
 }
 
-export async function getFile(url) {
+export async function getFile(url: string): Promise<any> {
   return getFileSolid(url, { fetch })
 }
 
-export async function saveJson(filename: string, json: any, waitUntilAvailable = false) {
-  await createContainerIfNotExists();
+/**
+ * Wait until the file is accessible. This is needed because the file is not
+ * immediately available after saving. Even though saveFile was succesful, it
+ * might take several seconds before the file can be found. I'm not sure why
+ * this is the case. Another option would be to return the savedFile content
+ * and process that. But that would require more changes to the code.
+ */
+async function watchFileAccessible(savedFileUrl: string): Promise<void> {
 
-  // Upload file into the targetContainer.
+  let fileFound = false;
+  let maxTries = 30;
+
+  const container = savedFileUrl.split('/').slice(0, -1).join('/') + '/';
+
+  while (!fileFound && maxTries > 0) {
+    await getSolidDataset(container, { fetch })
+      .then((dataset) => {
+        const containedResourceUrls = getContainedResourceUrlAll(dataset);
+
+        containedResourceUrls.findIndex((resourceUrl) => {
+          if (resourceUrl === savedFileUrl) {
+            fileFound = true;
+          }
+        });
+      })
+
+    maxTries--;
+    if (!fileFound) {
+      console.log("File not available yet, waiting a bit...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+}
+
+async function saveFile(filepath: string, blob: Blob, contentType: string, waitUntilAvailable = false): Promise<string> {
+  await createContainerIfNotExistsForFile(filepath);
+
+  let savedFile: WithResourceInfo;
+  try {
+    savedFile = await overwriteFile(filepath, blob, { contentType, fetch });
+    console.log(`File saved at ${getSourceUrl(savedFile)}`);
+  } catch (error) {
+    console.error(error);
+  }
+
+  return getSourceUrl(savedFile);
+}
+
+export async function saveJson(filepath: string, json: any, waitUntilAvailable = false): Promise<string> {
   console.log("json stringify credential", json);
   const blob = new Blob([JSON.stringify(json, null, 2)], {
     type: "application/json;charset=utf-8",
   });
 
-  let savedFile: WithResourceInfo;
-  try {
-    savedFile = await overwriteFile(
-      `${getTargetContainerURL()}${filename}`, // Container URL
-      blob, // File
-      { contentType: "application/ld+json", fetch }
-    );
-    console.log(`File saved at ${getSourceUrl(savedFile)}`);
-  } catch (error) {
-    console.error(error);
-  }
-
+  const savedFile = await saveFile(filepath, blob, "application/ld+json", waitUntilAvailable);
   if (savedFile && waitUntilAvailable) {
-    let available = false;
-    let maxTries = 20;
-    while (!available && maxTries > 0) {
-      try {
-        await getFileSolid(getSourceUrl(savedFile), { fetch });
-        available = true;
-        maxTries--;
-      } catch (error) {
-        console.log("File not available yet");
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    }
+    await watchFileAccessible(savedFile);
   }
 
   return savedFile;
 };
 
-export async function saveText(filename: string, text: string, waitUntilAvailable = false) {
-  await createContainerIfNotExists();
-
-  // Upload file into the targetContainer.
-  console.log("json stringify credential", text);
+export async function saveTurtle(filepath: string, text: string, waitUntilAvailable = true): Promise<string> {
+  console.log("turtle file", text);
   const blob = new Blob([text], { type: "plain/turtle" });
 
-  let savedFile: WithResourceInfo;
-  try {
-    savedFile = await overwriteFile(
-      `${getTargetContainerURL()}${filename}`, // Container URL
-      blob, // File
-      { contentType: "text/turtle", fetch }
-    );
-    console.log(`File saved at ${getSourceUrl(savedFile)}`);
-  } catch (error) {
-    console.error(error);
-  }
-
+  const savedFile = await saveFile(filepath, blob, "plain/turtle", waitUntilAvailable);
   if (savedFile && waitUntilAvailable) {
-    let available = false;
-    let maxTries = 20;
-    while (!available && maxTries > 0) {
-      try {
-        await getFileSolid(getSourceUrl(savedFile), { fetch });
-        available = true;
-        maxTries--;
-      } catch (error) {
-        console.log("File not available yet");
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    }
+    await watchFileAccessible(savedFile);
   }
 
   return savedFile;
 };
 
-export async function deleteFile(url) {
+export async function deleteFile(url: string): Promise<void> {
   return deleteFileSolid(url, { fetch })
 }
 
-export async function getAllFileUrls(containerUrl) {
-  const url = `${getTargetContainerURL()}${containerUrl}/`;
-  console.log("url", url);
-  const container = await getSolidDataset(url, { fetch });
-  const things = getContainedResourceUrlAll(container);
+export async function getAllFileUrls(containerUrl: string): Promise<string[]> {
+  if (!containerUrl.endsWith("/")) {
+    containerUrl = containerUrl + "/";
+  }
+
+  let things: string[] = [];
+  try {
+    const container = await getSolidDataset(containerUrl, { fetch });
+    things = getContainedResourceUrlAll(container);
+  } catch (error) {
+    // getSolidDataset throws an error if the container does not exist
+    return [];
+  }
+
   return things;
 }
 
-async function createContainerIfNotExists() {
+async function createContainerIfNotExistsForFile(filepath: string): Promise<void> {
+  // FIX: Dit klopt nu niet
+  const containerUrl = filepath.split('/').slice(0, -1).join('/') + '/';
+  console.log("containerUrl", containerUrl);
   // Create Container to place Things in
   try {
-    await getSolidDataset(getTargetContainerURL(), { fetch });
+    await getSolidDataset(containerUrl, { fetch });
   } catch (error) {
-    await createContainerAt(getTargetContainerURL(), { fetch });
+    await createContainerAt(containerUrl, { fetch });
   }
 }

@@ -19,7 +19,7 @@ const steps = [
 
 export default function Verkoper() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [activeKoek, setActiveKoek] = React.useState(null);
+  const [activeKoek, _setActiveKoek] = React.useState(null);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const isStepOptional = (step: number) => {
@@ -46,8 +46,8 @@ export default function Verkoper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
   
-  const selectKoek = (id: number) => {
-    setActiveKoek(id);
+  const setActiveKoek = (id: number) => {
+    _setActiveKoek(id);
   }
 
   function ActiveStep(props) {
@@ -55,7 +55,8 @@ export default function Verkoper() {
       case 0:
         return <Step1 handleNext={handleNext} />;
       case 1:
-        return <Step1b handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} />;
+        // Verkoper() holds the state of the activeKoek, so we can pass it down to the other steps
+        return <Step1b handleNext={handleNext} handleBack={handleBack} activeKoek={activeKoek} setActiveKoek={setActiveKoek} />;
       case 2:
         return <Step2 handleNext={handleNext} handleBack={handleBack} />;
       case 3:

@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link, Typography } from "@mui/material";
 import { verifyVC } from "./verify";
-import { deleteFile, getAllFileUrls, getFile, saveJson } from "./Solid";
+import { deleteFile, getAllFileUrls, getFile, getRootContainerURL, saveJson } from "./Solid";
 
 
 export enum VCType {
@@ -34,7 +34,7 @@ export type SolidVC = {
   status: any;
 };
 
-const CredentialsContainer = 'credentials';
+const CredentialsContainer = `${getRootContainerURL()}/credentials`;
 
 export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {} }) {
   // onChange lets us let the parent know the state of the VC

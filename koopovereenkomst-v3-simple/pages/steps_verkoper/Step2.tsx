@@ -111,7 +111,7 @@ export function Step2({ step = 2, handleNext, handleBack = () => { } }) {
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleNext}>Doorgaan</Button> }
+        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleNext}>Akkoord</Button> }
       </Stack>
     </Box>
   );
