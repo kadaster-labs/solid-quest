@@ -131,9 +131,9 @@ export async function saveJson(filepath: string, json: any, waitUntilAvailable =
 
 export async function saveTurtle(filepath: string, text: string, waitUntilAvailable = true): Promise<string> {
   console.log("turtle file", text);
-  const blob = new Blob([text], { type: "plain/turtle" });
+  const blob = new Blob([text], { type: "text/turtle" });
 
-  const savedFile = await saveFile(filepath, blob, "plain/turtle", waitUntilAvailable);
+  const savedFile = await saveFile(filepath, blob, "text/turtle", waitUntilAvailable);
   if (savedFile && waitUntilAvailable) {
     await watchFileAccessible(savedFile);
   }

@@ -1,36 +1,65 @@
+import Link from "next/link";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Radio from "@mui/material/Radio";
 import Select from '@mui/material/Select';
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Link from "next/link";
-import { useEffect, useCallback, useState, useContext } from "react";
-import { getAllFileUrls, getRootContainerURL, saveTurtle } from "../../src/Solid";
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Radio from "@mui/material/Radio";
-import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
 
-const VerkoopLogboekContainer = `${getRootContainerURL()}/koopovereenkomst/id`;
+import { getAllFileUrls, getRootContainerURL, saveTurtle } from "../../src/Solid";
+import { VLB2RDF, createRDFEvent } from "../../src/events";
+import { VLBContext } from "../../src/verkooplogboek";
+
+const VerkoopLogboekContainer = function() {
+  return `${getRootContainerURL()}/koopovereenkomst/id`;
+}
+
+const EventContainer = function() {
+  return `${getRootContainerURL()}/koopovereenkomst/events/id`;
+}
+
+/**
+ * Wat is het opbouwen van de koopovereenkomst precies?
+ *
+ * - Verkooplogboek
+ *  - Bij verkoper
+ *  - Verwijzingen naar events
+ * - Lijst van events
+ *  - Verspreid over verkoper en koper
+ *
+ * Functionaliteit:
+ * - Verkoper kan een nieuwe koopovereenkomst aanmaken ✅
+ * - Verkoper kan een bestaande koopovereenkomst openen
+ * - Verkoper kan een bestaande koopovereenkomst opslaan
+ * - Verkoper kan events toevoegen aan een bestaande koopovereenkomst
+ *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1
+ */
 
 export function Step1b({ handleNext, handleBack }) {
+  const { state, dispatch } = useContext(VLBContext);
+  
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
   const [selectedRowId, setSelectedRowId] = useState(null);
 
-  // Creating a new koopovereenkomst
+  // Creating a new koopovereenkomst 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(1);
 
   const loadKoeks = useCallback(async (id = undefined) => {
-    const files = await getAllFileUrls(VerkoopLogboekContainer);
+    const files = await getAllFileUrls(VerkoopLogboekContainer());
     const ids = files.map((file) => file.split('/').pop());
 
     const rows = ids.map((id) => ({
@@ -38,12 +67,12 @@ export function Step1b({ handleNext, handleBack }) {
       koper: 'Koos Kadastersen', // TODO: get from turtle
       koopdatum: new Date().toLocaleDateString(), // TODO: get from turtle
       koopprijs: `€ ${Math.floor(Math.random() * 5) + 1 }.${Math.floor(Math.random() * 10)}00.000`, // TODO: get from turtle
-      url: `${VerkoopLogboekContainer}/${id}`,
+      url: `${VerkoopLogboekContainer()}/${id}`,
     }));
 
     setTableRows(rows);
 
-    const selected = rows.findIndex((row) => row.id == id);
+    const selected = rows.findIndex((row) => row.id === id);
     if (selected > -1) {
       setSelectedRowId(rows[selected].id);
     }
@@ -51,20 +80,12 @@ export function Step1b({ handleNext, handleBack }) {
 
   useEffect(() => {
     // This function will run when the component mounts
-    loadKoeks();
-  }, [loadKoeks]);
+    loadKoeks(state.activeKoek);
+  }, [loadKoeks, state.activeKoek]);
 
   const handleConfirm = async () => {
     setIsLoading(true);
     const randomId = Math.floor(Math.random() * 100000) + 1000;
-    const filepath = `${VerkoopLogboekContainer}/${randomId}`;
-    await saveTurtle(filepath, `
-      @prefix koopovereenkomst: <> .
-      @prefix zvg: <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
-
-      koopovereenkomst:
-        a zvg:Koop .
-    `);
 
     loadKoeks(randomId);
     setIsLoading(false);
@@ -76,7 +97,43 @@ export function Step1b({ handleNext, handleBack }) {
 
   const handleRowSelect = (event, row) => {
     setSelectedRowId(row.id);
+    dispatch({ type: 'setActiveKoek', payload: row.id });
   };
+  
+  const createEvents = async () => {
+    const seq = 1;
+    const id = uuidv4();
+    const type = 'koopovereenkomstGeinitieerd';
+    const event = createRDFEvent({
+      aggregateId: state.activeKoek,
+      id,
+      type,
+      seq,
+      actor: 'Verkoper',
+      label: `${seq}-Verkoper-${type}`,
+      time: new Date().toISOString(),
+    });
+    
+    const fileUrl = await saveTurtle(`${EventContainer()}/${id}`, event);
+    
+    console.log('event saved!', fileUrl);
+    
+    dispatch({ type: 'addEvent', payload: `http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/${id}` });
+
+    // await saveTurtle(filepath, `
+    //   @prefix koopovereenkomst: <> .
+    //   @prefix zvg: <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
+      
+    //   koopovereenkomst:
+    //   a zvg:Koop .
+    // `);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    const rdf = VLB2RDF(state);
+    const filepath = `${VerkoopLogboekContainer()}/${state.activeKoek}`;
+    await saveTurtle(filepath, rdf);
+  }
 
   return (
     <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
@@ -155,6 +212,7 @@ export function Step1b({ handleNext, handleBack }) {
 
       <Stack sx={{ width: "50vw", marginBottom: '2rem' }} direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
+        { selectedRowId && <Button variant="contained" onClick={createEvents}>Create events (debug)</Button> }
         { selectedRowId && <Button variant="contained" onClick={handleNext}>Doorgaan</Button> }
       </Stack>
     </Box>

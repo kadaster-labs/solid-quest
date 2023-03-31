@@ -34,7 +34,9 @@ export type SolidVC = {
   status: any;
 };
 
-const CredentialsContainer = `${getRootContainerURL()}/credentials`;
+const CredentialsContainer = function() {
+  return `${getRootContainerURL()}/credentials`;
+}
 
 export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {} }) {
   // onChange lets us let the parent know the state of the VC
@@ -67,7 +69,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   }, [setVCs]);
 
   const listVCs = useCallback(async () => {
-    const resources = await getAllFileUrls(CredentialsContainer);
+    const resources = await getAllFileUrls(CredentialsContainer());
     const vcs = [];
     for (let i = 0; i < resources.length; i++) {
       if (resources[i].endsWith(VCInfo[type].filename)) {
@@ -127,7 +129,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   const downloadVC = async () => {
     setIsLoading(true);
     const vc = await vcAPI(VCInfo[type].apiPath);
-    await saveJson(`${CredentialsContainer}/${VCInfo[type].filename}`, vc, true);
+    await saveJson(`${CredentialsContainer()}/${VCInfo[type].filename}`, vc, true);
 
     await initializeVCs();
 

@@ -8,7 +8,7 @@ import { namedNode } from "@rdfjs/data-model";
 import * as jsonld from "jsonld";
 import { GENERAL_CONTEXT, KADASTER_KKG_CONTEXT } from "./context";
 
-interface Event {
+export interface Event {
   aggregateId: string;
   id: string;
   seq: number;

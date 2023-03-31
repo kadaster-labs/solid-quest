@@ -6,13 +6,14 @@ import { Box } from "@mui/system";
 import { getInteger, getSolidDataset, getThingAll } from '@inrupt/solid-client';
 import { fetch } from '@inrupt/solid-client-authn-browser';
 import { useSession } from "@inrupt/solid-ui-react";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { SOLID_ZVG_CONTEXT } from '../../src/aggregate/context';
 
 import { List, ListItem, ListItemText, TextField } from "@mui/material";
 import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
 import KoopovereenkomstAggregate from '../../src/aggregate/koopovereenkomst-aggregate';
 import Link from "../../src/Link";
+import { VLBContext } from "../../src/verkooplogboek";
 
 const zvg_base = 'http://taxonomie.zorgeloosvastgoed.nl/def/zvg#'
 const zvg = {
@@ -30,8 +31,10 @@ export function Step4({ step = 4, handleNext, handleBack = () => { } }) {
   const { session } = useSession();
   const webId = session.info.webId;
 
+  const { state, dispatch } = useContext(VLBContext);
+
   const [podUrl, setPodUrl] = useState("");
-  const [caseId, setCaseId] = useState("345");
+  const [caseId, setCaseId] = useState(state.activeKoek);
   const [curCase, setCase] = useState<Case>({} as Case);
   const [errors, setErrors] = useState("");
   const [eventLabels, setEventLabels] = useState([]);
@@ -72,7 +75,7 @@ export function Step4({ step = 4, handleNext, handleBack = () => { } }) {
     }
   };
 
-  const openenKoopovereenkomstWithLDflex = async function () {
+  const openenKoopovereenkomstWithLDflex = useCallback(async function () {
     try {
       console.log(`Openen van Koopovereenkomst [caseId: ${caseId}]`);
 
@@ -107,7 +110,7 @@ export function Step4({ step = 4, handleNext, handleBack = () => { } }) {
       setErrors("Error opening koopovereenkomst! " + error);
       throw error;
     }
-  };
+  }, [caseId, webId]);
 
   useEffect(() => {
     if (webId !== "") {
@@ -121,7 +124,11 @@ export function Step4({ step = 4, handleNext, handleBack = () => { } }) {
       // https://github.com/LDflex/Query-Solid#adding-a-custom-json-ld-context
       data.context.extend(SOLID_ZVG_CONTEXT);
     }
-  }, [podUrl, webId]);
+
+    if (caseId) {
+      openenKoopovereenkomstWithLDflex();
+    }
+  }, [podUrl, webId, openenKoopovereenkomstWithLDflex, caseId]);
 
   return (
     <Box sx={{ flex: 1 }}>

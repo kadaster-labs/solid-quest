@@ -49,6 +49,10 @@ export function Step1({ handleNext, handleBack = () => {} }) {
       async (profile) => {
         // Get the URL of the address, it is a different dataset than the profile (#me)
         const addressUrl = getUrl(profile, VCARD.hasAddress);
+        
+        if (!addressUrl) {
+          return null;
+        }
 
         const addressDataset = await getSolidDataset(addressUrl, {
           fetch: session.fetch,
@@ -116,6 +120,8 @@ export function Step1({ handleNext, handleBack = () => {} }) {
         <Box>
           <Typography variant="body1" color="text.primary" align="center">
             Welkom{person && person.hasOwnProperty('name') && person.name !== null && " " + person.name}!
+            <br /><br />
+            Hieronder zie je je publieke data in je pod.
           </Typography>
           <pre>
             {JSON.stringify(person, null, 2)}

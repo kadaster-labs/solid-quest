@@ -21,19 +21,19 @@ import React, { createContext, useReducer } from "react";
  * } });
  * ```
  */
-interface VLB {
-  name: string;
-  age: number;
+export interface VLB {
+  activeKoek: string;
   graph: string[];
+  events: string[];
 }
 
 type VLBAction =
-  | { type: "updateName"; payload: string }
-  | { type: "updateAge"; payload: number }
+  | { type: "setActiveKoek"; payload: string }
   | {
       type: "addTriple";
       payload: { subject: string; predicate: string; object: string };
-    };
+    }
+  | { type: 'addEvent'; payload: string };
 
 interface VLBContextProps {
   state: VLB;
@@ -41,9 +41,9 @@ interface VLBContextProps {
 };
 
 const initialState: VLB = {
-  name: '',
-  age: 0,
+  activeKoek: "345",
   graph: [],
+  events: [],
 };
 
 const VLBContext = createContext<VLBContextProps>({
@@ -54,10 +54,8 @@ const VLBContext = createContext<VLBContextProps>({
 function reducer(state: VLB, action: VLBAction): VLB {
   // FIXME: reducer is run twice on every action. I'm not sure why.
   switch (action.type) {
-    case "updateName":
-      return { ...state, name: action.payload };
-    case "updateAge":
-      return { ...state, age: action.payload };
+    case "setActiveKoek":
+      return { ...state, activeKoek: action.payload };
     case "addTriple":
       const triple = `${action.payload.subject} ${action.payload.predicate} ${action.payload.object} .`;
       const newGraph = state.graph;
@@ -67,6 +65,8 @@ function reducer(state: VLB, action: VLBAction): VLB {
       }
 
       return { ...state, graph: newGraph };
+    case 'addEvent':
+      return { ...state, events: [...state.events, action.payload] };
     default:
       throw new Error(`Unhandled action type: ${action}`);
   }
