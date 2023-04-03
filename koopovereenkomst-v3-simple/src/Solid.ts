@@ -27,9 +27,13 @@ export interface SolidAddress {
   countryName: string | null;
 }
 
-export function getRootContainerURL() {
+export function getWebId() {
   const session = getDefaultSession();
-  const webId = session.info.webId;
+  return session.info.webId;
+}
+
+export function getRootContainerURL() {
+  const webId = getWebId();
   let rootUrl = webId?.split("profile/card#me")[0];
   if (rootUrl && rootUrl.endsWith("/")) {
     rootUrl = rootUrl.slice(0, -1);
@@ -163,10 +167,7 @@ export async function getAllFileUrls(containerUrl: string): Promise<string[]> {
 }
 
 async function createContainerIfNotExistsForFile(filepath: string): Promise<void> {
-  // FIX: Dit klopt nu niet
   const containerUrl = filepath.split('/').slice(0, -1).join('/') + '/';
-  console.log("containerUrl", containerUrl);
-  // Create Container to place Things in
   try {
     await getSolidDataset(containerUrl, { fetch });
   } catch (error) {

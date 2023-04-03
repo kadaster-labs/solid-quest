@@ -2,13 +2,14 @@ import * as $rdf from 'rdflib';
 
 import { Event } from './aggregate/koopovereenkomst-aggregate';
 import { VLB } from './verkooplogboek';
+import { getWebId } from './Solid';
 
-export function VLB2RDF(vlb: VLB): string {
+export function VLB2RDF(vlb: VLB, options): string {
   const store = $rdf.graph();
 
   const ns = {
-    koopovereenkomst: $rdf.namedNode(`http://localhost:3001/verkoper-vera/koopovereenkomst/id/${vlb.activeKoek}`),
-    event: $rdf.namedNode(`http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/`),
+    koopovereenkomst: $rdf.namedNode(`${options.vlbContainer}/${vlb.activeKoek}`),
+    event: $rdf.namedNode(options.eventContainer),
     koperEvent: $rdf.namedNode(`http://localhost:3001/koper-koos/koopovereenkomst/events/id/`),
     prov: $rdf.Namespace('https://www.w3.org/TR/prov-o/#'),
     rdf: $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
@@ -22,27 +23,27 @@ export function VLB2RDF(vlb: VLB): string {
 
   const serializer = new $rdf.Serializer(store);
   const string = serializer.toN3(store);
-  console.log("string", string);
+  console.log("vlb string", string);
 
   return string;
 }
 
-export function createRDFEvent(eventData: Event): string {
+export function createRDFEvent(eventData: Event, options): string {
   // TODO: Can now only create events for Vera. Not yet for Koos.
   const store = $rdf.graph();
 
   const ns = {
-    event: $rdf.namedNode(`http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/${eventData.id}`),
+    event: $rdf.namedNode(`${options.eventContainer}/${eventData.id}`),
     rdfs: $rdf.Namespace('http://www.w3.org/2000/01/rdf-schema#'),
     rdf: $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
     xsd: $rdf.Namespace('http://www.w3.org/2001/XMLSchema#'),
     zvg: $rdf.Namespace('http://taxonomie.zorgeloosvastgoed.nl/def/zvg#'),
     cloudevents: $rdf.Namespace('https://cloudevents.io/def/'),
-    koopovereenkomst: $rdf.namedNode('http://localhost:3001/verkoper-vera/koopovereenkomst/id/'),
-    me: $rdf.namedNode('http://localhost:3001/verkoper-vera/profile/card#me'),
+    koopovereenkomst: $rdf.namedNode(options.vlbContainer),
+    me: $rdf.namedNode(getWebId()),
   };
-  
-  const eventNode = ns.event;  
+
+  const eventNode = ns.event;
   const dataNode = $rdf.namedNode(ns.event.uri + '#data');
 
   const labelNode = $rdf.literal(

@@ -121,17 +121,24 @@ export function Step1b({ handleNext, handleBack }) {
       actor: 'Verkoper',
       label: `${seq}-Verkoper-${type}`,
       time: new Date().toISOString(),
+    }, {
+      vlbContainer: VerkoopLogboekContainer(),
+      eventContainer: EventContainer(),
     });
 
     const fileUrl = await saveTurtle(`${EventContainer()}/${id}`, event);
 
     console.log('event saved!', fileUrl);
 
-    dispatch({ type: 'addEvent', payload: `http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/${id}` });
+    dispatch({ type: 'addEvent', payload: `${EventContainer()}/${id}` });
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // state takes a while to update, so we wait a bit
+    await new Promise((resolve) => setTimeout(resolve, 2500));
 
-    const rdf = VLB2RDF(state);
+    const rdf = VLB2RDF(state, {
+      vlbContainer: VerkoopLogboekContainer(),
+      eventContainer: EventContainer(),
+    });
     const filepath = `${VerkoopLogboekContainer()}/${state.activeKoek}`;
     await saveTurtle(filepath, rdf);
   }
