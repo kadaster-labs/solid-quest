@@ -77,7 +77,7 @@ export async function getFile(url: string): Promise<any> {
 async function watchFileAccessible(savedFileUrl: string): Promise<void> {
 
   let fileFound = false;
-  let maxTries = 30;
+  let maxTries = 60;
 
   const container = savedFileUrl.split('/').slice(0, -1).join('/') + '/';
 

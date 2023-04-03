@@ -13,25 +13,12 @@ export function VLB2RDF(vlb: VLB): string {
     prov: $rdf.Namespace('https://www.w3.org/TR/prov-o/#'),
     rdf: $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
   };
-  
-  console.log("vlb.events", vlb.events);
 
-  const collection = new $rdf.Collection();
-  for (const event of vlb.events) {
-    collection.append($rdf.sym(event));
+  const eventList = vlb.events.map(event => event);
+
+  for (const event of eventList) {
+    store.add(ns.koopovereenkomst, ns.prov('wasGeneratedBy'), $rdf.sym(event), ns.koopovereenkomst);
   }
-  
-  console.log("events", collection);
-  
-  // Create a linked list of events
-  // const list = events.reduceRight((rest, node) => {
-  //   const listNode = $rdf.blankNode();
-  //   store.add(listNode, ns.rdf('first'), node);
-  //   store.add(listNode, ns.rdf('rest'), rest);
-  //   return listNode;
-  // }, $rdf.nil);
-
-  store.add(ns.koopovereenkomst, ns.prov('wasGeneratedBy'), collection, ns.koopovereenkomst);
 
   const serializer = new $rdf.Serializer(store);
   const string = serializer.toN3(store);
@@ -54,8 +41,10 @@ export function createRDFEvent(eventData: Event): string {
     koopovereenkomst: $rdf.namedNode('http://localhost:3001/verkoper-vera/koopovereenkomst/id/'),
     me: $rdf.namedNode('http://localhost:3001/verkoper-vera/profile/card#me'),
   };
+  
+  const eventNode = ns.event;  
+  const dataNode = $rdf.namedNode(ns.event.uri + '#data');
 
-  const eventNode = ns.event;
   const labelNode = $rdf.literal(
     `${eventData.seq} | ${eventData.actor} | ${eventData.type} voor ${eventData.aggregateId}`
   );
@@ -70,8 +59,11 @@ export function createRDFEvent(eventData: Event): string {
   store.add(eventNode, ns.cloudevents('time'), timeNode, eventNode);
   store.add(eventNode, ns.cloudevents('source'), ns.me, eventNode);
   store.add(eventNode, ns.rdfs('label'), labelNode, eventNode);
+  store.add(eventNode, ns.cloudevents('data'), dataNode, eventNode);
+  store.add(dataNode, ns.rdf('type'), ns.zvg('eventData'), dataNode);
+  store.add(dataNode, ns.zvg('koopovereenkomstTemplate'), $rdf.literal('NVM Simple Default Koophuis'), dataNode);
 
-  const turtleString = $rdf.serialize(eventNode.doc(), store, eventNode.doc().uri, 'text/turtle');
+  const turtleString = $rdf.serialize(null, store, eventNode.doc().uri, 'text/turtle');
 
   return turtleString;
 }

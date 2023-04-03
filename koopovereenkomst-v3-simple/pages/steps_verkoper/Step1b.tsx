@@ -49,12 +49,12 @@ const EventContainer = function() {
 
 export function Step1b({ handleNext, handleBack }) {
   const { state, dispatch } = useContext(VLBContext);
-  
+
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
   const [selectedRowId, setSelectedRowId] = useState(null);
 
-  // Creating a new koopovereenkomst 
+  // Creating a new koopovereenkomst
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(1);
 
@@ -87,6 +87,15 @@ export function Step1b({ handleNext, handleBack }) {
     setIsLoading(true);
     const randomId = Math.floor(Math.random() * 100000) + 1000;
 
+    const filepath = `${VerkoopLogboekContainer()}/${randomId}`;
+    await saveTurtle(filepath, `
+      @prefix koopovereenkomst: <> .
+      @prefix zvg: <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
+
+      koopovereenkomst:
+        a zvg:Koop .
+    `);
+
     loadKoeks(randomId);
     setIsLoading(false);
   };
@@ -99,7 +108,7 @@ export function Step1b({ handleNext, handleBack }) {
     setSelectedRowId(row.id);
     dispatch({ type: 'setActiveKoek', payload: row.id });
   };
-  
+
   const createEvents = async () => {
     const seq = 1;
     const id = uuidv4();
@@ -113,23 +122,15 @@ export function Step1b({ handleNext, handleBack }) {
       label: `${seq}-Verkoper-${type}`,
       time: new Date().toISOString(),
     });
-    
+
     const fileUrl = await saveTurtle(`${EventContainer()}/${id}`, event);
-    
+
     console.log('event saved!', fileUrl);
-    
+
     dispatch({ type: 'addEvent', payload: `http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/${id}` });
 
-    // await saveTurtle(filepath, `
-    //   @prefix koopovereenkomst: <> .
-    //   @prefix zvg: <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
-      
-    //   koopovereenkomst:
-    //   a zvg:Koop .
-    // `);
-
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    
+
     const rdf = VLB2RDF(state);
     const filepath = `${VerkoopLogboekContainer()}/${state.activeKoek}`;
     await saveTurtle(filepath, rdf);
