@@ -80,6 +80,8 @@ export function Step4({ step = 4, handleNext, handleBack = () => { } }) {
       console.log(`Openen van Koopovereenkomst [caseId: ${caseId}]`);
 
       const pod = webId.split("/profile/card#me")[0];
+      // TODO: this only works for public data
+      // for private data we need to use the authenticated fetch
       const ko = data[`${pod}/koopovereenkomst/id/${caseId}`];
 
       const aggregate = new KoopovereenkomstAggregate(ko, pod);

@@ -5,6 +5,10 @@ import { VLB } from './verkooplogboek';
 import { getWebId } from './Solid';
 
 export function VLB2RDF(vlb: VLB, options): string {
+  if (!vlb || !vlb.events || vlb.events.length === 0) {
+    return '';
+  }
+
   const store = $rdf.graph();
 
   const ns = {
@@ -47,7 +51,7 @@ export function createRDFEvent(eventData: Event, options): string {
   const dataNode = $rdf.namedNode(ns.event.uri + '#data');
 
   const labelNode = $rdf.literal(
-    `${eventData.seq} | ${eventData.actor} | ${eventData.type} voor ${eventData.aggregateId}`
+    `${eventData.seq.toString().padStart(2, "0")} | ${eventData.actor} | ${eventData.type} voor ${eventData.aggregateId}`
   );
   const timeNode = $rdf.literal(eventData.time, ns.xsd('dateTime'));
   const sequenceNode = $rdf.literal(eventData.seq, ns.xsd('integer'));

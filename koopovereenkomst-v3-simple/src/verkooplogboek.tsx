@@ -55,7 +55,7 @@ function reducer(state: VLB, action: VLBAction): VLB {
   // FIXME: reducer is run twice on every action. I'm not sure why.
   switch (action.type) {
     case "setActiveKoek":
-      return { ...state, activeKoek: action.payload };
+      return { ...state, activeKoek: action.payload, graph: [], events: [] };
     case "addTriple":
       const triple = `${action.payload.subject} ${action.payload.predicate} ${action.payload.object} .`;
       const newGraph = state.graph;

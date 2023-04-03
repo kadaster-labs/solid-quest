@@ -20,7 +20,6 @@ const steps = [
 
 export default function Verkoper() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [activeKoek, _setActiveKoek] = React.useState(null);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const isStepOptional = (step: number) => {
@@ -46,10 +45,6 @@ export default function Verkoper() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-  
-  const setActiveKoek = (id: number) => {
-    _setActiveKoek(id);
-  }
 
   function ActiveStep(props) {
     switch (props.value) {

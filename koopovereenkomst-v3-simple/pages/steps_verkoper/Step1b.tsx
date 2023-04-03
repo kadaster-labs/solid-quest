@@ -57,6 +57,8 @@ export function Step1b({ handleNext, handleBack }) {
   // Creating a new koopovereenkomst
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(1);
+  
+  const [doUpdate, setDoUpdate] = useState(false);
 
   const loadKoeks = useCallback(async (id = undefined) => {
     const files = await getAllFileUrls(VerkoopLogboekContainer());
@@ -72,7 +74,7 @@ export function Step1b({ handleNext, handleBack }) {
 
     setTableRows(rows);
 
-    const selected = rows.findIndex((row) => row.id === id);
+    const selected = rows.findIndex((row) => row.id == id);
     if (selected > -1) {
       setSelectedRowId(rows[selected].id);
     }
@@ -96,6 +98,8 @@ export function Step1b({ handleNext, handleBack }) {
         a zvg:Koop .
     `);
 
+    dispatch({ type: 'setActiveKoek', payload: randomId.toString() });
+
     loadKoeks(randomId);
     setIsLoading(false);
   };
@@ -109,10 +113,25 @@ export function Step1b({ handleNext, handleBack }) {
     dispatch({ type: 'setActiveKoek', payload: row.id });
   };
 
-  const createEvents = async () => {
-    const seq = 1;
+  useEffect(() => {
+    async function saveVLB() {
+      const rdf = VLB2RDF(state, {
+        vlbContainer: VerkoopLogboekContainer(),
+        eventContainer: EventContainer(),
+      });
+      const filepath = `${VerkoopLogboekContainer()}/${state.activeKoek}`;
+      await saveTurtle(filepath, rdf);
+    }
+
+    if (doUpdate) {
+      saveVLB();
+      setDoUpdate(false);
+    }
+  }, [state, doUpdate]);
+
+  const createEvent = async (seq: number, type: string) => {
     const id = uuidv4();
-    const type = 'koopovereenkomstGeinitieerd';
+    const filepath = `${EventContainer()}/${id}`;
     const event = createRDFEvent({
       aggregateId: state.activeKoek,
       id,
@@ -125,22 +144,28 @@ export function Step1b({ handleNext, handleBack }) {
       vlbContainer: VerkoopLogboekContainer(),
       eventContainer: EventContainer(),
     });
+    await saveTurtle(filepath, event);
+    return filepath;
+  };
 
-    const fileUrl = await saveTurtle(`${EventContainer()}/${id}`, event);
+  const createEvents = async () => {
+    let seq = 0;
+    const types = [
+      'koopovereenkomstGeinitieerd',
+      'kadastraalObjectIdToegevoegd',
+      'koopprijsToegevoegd',
+      'persoonsgegevensRefToegevoegd',
+    ];
 
-    console.log('event saved!', fileUrl);
-
-    dispatch({ type: 'addEvent', payload: `${EventContainer()}/${id}` });
-
-    // state takes a while to update, so we wait a bit
-    await new Promise((resolve) => setTimeout(resolve, 2500));
-
-    const rdf = VLB2RDF(state, {
-      vlbContainer: VerkoopLogboekContainer(),
-      eventContainer: EventContainer(),
-    });
-    const filepath = `${VerkoopLogboekContainer()}/${state.activeKoek}`;
-    await saveTurtle(filepath, rdf);
+    for (let i = 0; i < types.length; i++) {
+      const filepath = await createEvent(seq, types[i]);
+      dispatch({ type: 'addEvent', payload: filepath });
+      if (i === types.length - 1) {
+        console.log('Setting doUpdate to true');
+        setDoUpdate(true);
+      }
+      seq++;
+    }
   }
 
   return (
