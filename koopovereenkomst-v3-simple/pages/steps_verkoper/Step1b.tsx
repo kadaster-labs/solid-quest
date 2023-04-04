@@ -18,7 +18,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from "@mui/material/Typography";
 
+import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
 import { getAllFileUrls, getRootContainerURL, saveTurtle } from "../../src/Solid";
+import { SOLID_ZVG_CONTEXT } from "../../src/aggregate/context";
 import KoopovereenkomstAggregate, { Event } from "../../src/aggregate/koopovereenkomst-aggregate";
 
 /**
@@ -59,27 +61,50 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(1);
 
-  const loadKoeks = useCallback(async (id: string = undefined) => {
-    const files = await getAllFileUrls(VerkoopLogboekContainer());
-    const ids = files.map((file) => file.split('/').pop());
+  const loadKoeks = useCallback(async (selectedKoekId: string = undefined) => {
+    const koekUrls = await getAllFileUrls(VerkoopLogboekContainer());
+    console.log(koekUrls);
+    const ids = koekUrls.map((file) => file.split('/').pop());
 
-    const rows = ids.map((id) => ({
-      id,
-      koper: 'Koos Kadastersen', // TODO: get from turtle
-      koopdatum: new Date().toLocaleDateString(), // TODO: get from turtle
-      koopprijs: `€ ${Math.floor(Math.random() * 5) + 1 }.${Math.floor(Math.random() * 10)}00.000`, // TODO: get from turtle
-      url: `${VerkoopLogboekContainer()}/${id}`,
+    // Create aggregates
+    const koeks: KoopovereenkomstAggregate[] = [];
+    for (let i = 0; i < ids.length; i++) {
+      const ko = data[koekUrls[i]];
+      const aggregate = new KoopovereenkomstAggregate(koekUrls[i], ids[i]);
+      console.log(aggregate)
+
+      try {
+        for await (const eventUri of ko.wasGeneratedBy) {
+          await aggregate.handleEvent(eventUri);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      koeks.push(aggregate);
+    }
+
+    // Create table rows
+    const rows = koeks.map((koek) => ({
+      id: koek.id,
+      object: Object.hasOwnProperty.call(koek.getData(), 'kadastraalObject') ? koek.getData().kadastraalObject.perceelNummer : "...",
+      koopdatum: koek.getData().datumVanLevering || "...",
+      koopprijs: koek.getData().koopprijs || "...",
+      url: koek.getData().iri,
     }));
 
     setTableRows(rows);
 
-    const selected = rows.findIndex((row) => row.id == id);
+    // Select the row if one was selected
+    const selected = rows.findIndex((row) => row.id === selectedKoekId);
     if (selected > -1) {
       setSelectedRowId(rows[selected].id);
     }
   }, []);
 
   useEffect(() => {
+    data.context.extend(SOLID_ZVG_CONTEXT);
+
     // This function will run when the component mounts
     if (koek) {
       loadKoeks(koek.id);
@@ -156,10 +181,10 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
         ...events[seq].data
       }
 
-      
+
       await koek.addEvent(event);
     }
-    
+
     await koek.save();
   }
 
@@ -204,7 +229,7 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
                 <TableRow>
                   <TableCell padding="checkbox"/>
                   <TableCell>Id</TableCell>
-                  <TableCell>Koper</TableCell>
+                  <TableCell>Object</TableCell>
                   <TableCell>Datum</TableCell>
                   <TableCell>Prijs</TableCell>
                   <TableCell>Link</TableCell>
@@ -223,7 +248,7 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
                       <Radio checked={selectedRowId === row.id} />
                     </TableCell>
                     <TableCell component="th" scope="row">{row.id}</TableCell>
-                    <TableCell>{row.koper}</TableCell>
+                    <TableCell>{row.object}</TableCell>
                     <TableCell>{row.koopdatum}</TableCell>
                     <TableCell>{row.koopprijs}</TableCell>
                     <TableCell>
