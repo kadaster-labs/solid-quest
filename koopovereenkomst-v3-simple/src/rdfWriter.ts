@@ -44,7 +44,6 @@ export function event2RDF(eventData: Event, options): string {
     xsd: $rdf.Namespace('http://www.w3.org/2001/XMLSchema#'),
     zvg: $rdf.Namespace('http://taxonomie.zorgeloosvastgoed.nl/def/zvg#'),
     cloudevents: $rdf.Namespace('https://cloudevents.io/def/'),
-    koopovereenkomst: $rdf.namedNode(options.vlbContainer),
     me: $rdf.namedNode(getWebId()),
   };
 
@@ -55,12 +54,13 @@ export function event2RDF(eventData: Event, options): string {
   );
   const timeNode = $rdf.literal(eventData.time, ns.xsd('dateTime'));
   const sequenceNode = $rdf.literal(eventData.seq, ns.xsd('integer'));
+  const aggregateId = $rdf.namedNode(`${options.vlbContainer}/${eventData.aggregateId}`);
 
   store.add(eventNode, ns.rdf('type'), ns.zvg(eventData.type), eventNode);
-  store.add(eventNode, ns.zvg('aggregateIdentifier'), eventData.aggregateId, eventNode);
+  store.add(eventNode, ns.zvg('aggregateIdentifier'), aggregateId, eventNode);
   store.add(eventNode, ns.cloudevents('sequence'), sequenceNode, eventNode);
   store.add(eventNode, ns.cloudevents('specversion'), $rdf.literal('1.0'), eventNode);
-  store.add(eventNode, ns.cloudevents('subject'), eventData.aggregateId, eventNode);
+  store.add(eventNode, ns.cloudevents('subject'), aggregateId, eventNode);
   store.add(eventNode, ns.cloudevents('time'), timeNode, eventNode);
   store.add(eventNode, ns.cloudevents('source'), ns.me, eventNode);
   store.add(eventNode, ns.rdfs('label'), labelNode, eventNode);
