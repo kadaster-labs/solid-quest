@@ -34,10 +34,10 @@ import KoopovereenkomstAggregate, { Event } from "../../src/aggregate/koopoveree
  *
  * Functionaliteit:
  * - Verkoper kan een nieuwe koopovereenkomst aanmaken ✅
- * - Verkoper kan een bestaande koopovereenkomst openen
- * - Verkoper kan een bestaande koopovereenkomst opslaan
- * - Verkoper kan events toevoegen aan een bestaande koopovereenkomst
- *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1
+ * - Verkoper kan een bestaande koopovereenkomst openen ✅
+ * - Verkoper kan een bestaande koopovereenkomst opslaan ✅
+ * - Verkoper kan events toevoegen aan een bestaande koopovereenkomst ✅
+ *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1 ✅
  */
 
 const VerkoopLogboekContainer = function() {
@@ -160,14 +160,15 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
       {
         type: 'koopprijsToegevoegd',
         data: {
-          koopprijs: 425000,
+          // random price between 100k and 1m
+          koopprijs: Math.floor(Math.random() * 900000) + 100000,
         },
         actor: 'verkoper',
       },
       {
         type: 'datumVanLeveringToegevoegd',
         data: {
-          datumVanLevering: new Date(),
+          datumVanLevering: new Date().toISOString(),
         },
         actor: 'verkoper',
       },
