@@ -148,22 +148,66 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
         data: {
           template: 'NVM Simple Default Koophuis',
         },
+        actor: 'verkoper',
       },
       {
         type: 'kadastraalObjectIdToegevoegd',
         data: {
           kadastraalObjectId: "10020263270000",
         },
+        actor: 'verkoper',
       },
       {
         type: 'koopprijsToegevoegd',
         data: {
           koopprijs: 425000,
         },
+        actor: 'verkoper',
       },
       {
         type: 'persoonsgegevensRefToegevoegd',
         data: {},
+        actor: 'verkoper',
+      },
+      {
+        type: 'persoonsgegevensRefToegevoegd',
+        data: {},
+        actor: 'koper-koos',
+      },
+      {
+        type: 'conceptKoopovereenkomstKoperOpgeslagen',
+        data: {},
+        actor: 'koper-koos',
+      },
+      {
+        type: 'conceptKoopovereenkomstKoperOpgeslagen',
+        data: {},
+        actor: 'verkoper',
+      },
+      {
+        type: 'conceptKoopovereenkomstGetekend',
+        data: {},
+        actor: 'verkoper',
+      },
+      {
+        type: 'conceptKoopovereenkomstGetekend',
+        data: {},
+        actor: 'koper-koos',
+      },
+      {
+        type: 'getekendeKoopovereenkomstVerkoperOpgeslagen',
+        data: {},
+        actor: 'verkoper',
+      },
+      {
+        type: 'getekendeKoopovereenkomstVerkoperOpgeslagen',
+        data: {},
+        actor: 'koper-koos',
+      },
+      {
+        type: 'getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster',
+        data: {},
+        actor: 'koper-koos',
       },
     ];
 
@@ -175,12 +219,11 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
         id,
         type: events[seq].type,
         seq: seq,
-        actor: 'Verkoper',
-        label: `${seq}-Verkoper-${events[seq].type}`,
+        actor: events[seq].actor,
+        label: `${seq}-${events[seq].actor}-${events[seq].type}`,
         time: new Date().toISOString(),
         ...events[seq].data
       }
-
 
       await koek.addEvent(event);
     }

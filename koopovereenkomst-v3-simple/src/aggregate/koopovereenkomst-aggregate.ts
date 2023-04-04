@@ -96,12 +96,14 @@ export default class KoopovereenkomstAggregate {
   }
 
   private async saveEvent(event: Event): Promise<string> {
+    const eventContainer = event.actor === "koper-koos" ? `http://localhost:3001/koper-koos/koopovereenkomst/events/id` : EventContainer();
+
     const rdfEvent = event2RDF(event, {
       vlbContainer: VerkoopLogboekContainer(),
-      eventContainer: EventContainer(),
+      eventContainer,
     });
 
-    const filepath = `${EventContainer()}/${event.id}`;
+    const filepath = `${eventContainer}/${event.id}`;
     await saveTurtle(filepath, rdfEvent);
 
     return filepath;

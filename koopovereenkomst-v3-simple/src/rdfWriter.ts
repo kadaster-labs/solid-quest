@@ -18,8 +18,10 @@ export function Aggregate2RDF(id: string, events: Event[], options): string {
     rdf: $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
   };
 
-  const eventList = events.map(event => `${options.eventContainer}/${event.id}`);
-  console.log(eventList);
+  const eventList = events.map(event => { 
+    const eventContainer = event.actor === "koper-koos" ? `http://localhost:3001/koper-koos/koopovereenkomst/events/id` : options.eventContainer;
+    return `${eventContainer}/${event.id}`
+  });
 
   for (const event of eventList) {
     store.add(ns.koopovereenkomst, ns.prov('wasGeneratedBy'), $rdf.sym(event), ns.koopovereenkomst);
@@ -33,7 +35,6 @@ export function Aggregate2RDF(id: string, events: Event[], options): string {
 }
 
 export function event2RDF(eventData: Event, options): string {
-  // TODO: Can now only create events for Vera. Not yet for Koos.
   const store = $rdf.graph();
 
   const ns = {
