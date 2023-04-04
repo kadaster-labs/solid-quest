@@ -165,6 +165,13 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
         actor: 'verkoper',
       },
       {
+        type: 'datumVanLeveringToegevoegd',
+        data: {
+          datumVanLevering: new Date(),
+        },
+        actor: 'verkoper',
+      },
+      {
         type: 'persoonsgegevensRefToegevoegd',
         data: {},
         actor: 'verkoper',
@@ -229,6 +236,7 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
     }
 
     await koek.save();
+    loadKoeks(koek.id);
   }
 
   return (
