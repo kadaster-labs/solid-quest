@@ -20,7 +20,7 @@ export default function BRPersonen() {
     useEffect(() => {
         refreshState();
         console.log("useEffect. isLoggedOn: ", isLoggedOn);
-    }, [])
+    }, [isLoggedOn, refreshState])
 
     return (
         <Layout role="brp">
