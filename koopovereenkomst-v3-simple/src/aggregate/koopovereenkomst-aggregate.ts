@@ -8,7 +8,6 @@ import { namedNode } from "@rdfjs/data-model";
 import * as jsonld from "jsonld";
 import { GENERAL_CONTEXT, KADASTER_KKG_CONTEXT } from "./context";
 
-import { default as rdflib } from "@solid/query-ldflex/lib/exports/rdflib";
 import { Aggregate2RDF, event2RDF } from "../rdfWriter";
 import { getRootContainerURL, saveTurtle } from "../Solid";
 
@@ -69,7 +68,7 @@ export default class KoopovereenkomstAggregate {
 
   constructor(koekUri: string, id: string) {
     this._id = id;
-    const ko: solidQuery = rdflib[koekUri];
+    const ko: solidQuery = solidQuery[koekUri];
     this.dataAppend(
       {
         iri: "zvg:koopovereenkomst-iri",
