@@ -51,7 +51,7 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
         </Box>
         :
         <Box>
-          <Link href="/brk" target="_blank">
+          <Link href="/brkadaster" target="_blank">
             <Image
               src="/solid-quest/images/mijnkadaster.png"
               alt="Mijn Overheid Logo"

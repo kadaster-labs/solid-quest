@@ -7,7 +7,7 @@ import ConnectSolid from "../src/ConnectSolid";
 import Layout from "../src/Layout";
 import VC, { VCType } from "../src/VC";
 
-export default function Brk() {
+export default function BRPersonen() {
 
     const { session } = useSession();
     const [isLoggedOn, setIsLoggedOn] = useState(false);
@@ -23,12 +23,12 @@ export default function Brk() {
     }, [])
 
     return (
-        <Layout role="brk">
+        <Layout role="brp">
             <Head>
-                <title>{"BRK"}</title>
+                <title>{"BRP"}</title>
             </Head>
             <Box sx={{
-                backgroundImage: "url('/solid-quest/images/mijnkadaster.png')",
+                backgroundImage: "url('/solid-quest/images/mijnoverheid.png')",
                 backgroundRepeat: "no-repeat",
                 width: "100%",
                 height: "98rem",
@@ -44,7 +44,7 @@ export default function Brk() {
                     </Box>
                     <Box>
                         {isLoggedOn &&
-                            <VC type={VCType.BRK} enableDownload={true} />
+                            <VC type={VCType.BRP} enableDownload={true} />
                         }
                     </Box>
                 </Box>

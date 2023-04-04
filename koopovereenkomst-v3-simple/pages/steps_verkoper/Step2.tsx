@@ -13,6 +13,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Link from "../../src/Link";
 
 function createData(
   name: string,
@@ -59,7 +60,7 @@ export default function Step2({ step = 2, handleNext, handleBack = () => { } }) 
   }, []);
 
   return (
-    <Box sx={{flex: 1}}>
+    <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
         Start een nieuwe koopovereenkomst
       </Typography>
@@ -67,51 +68,55 @@ export default function Step2({ step = 2, handleNext, handleBack = () => { } }) 
         {step}. Koppel je persoonsgegevens aan deze koopovereenkomst
       </Typography>
 
-      <VC type={VCType.BRP} onChange={updateVCs}/>
+      <VC type={VCType.BRP} onChange={updateVCs} />
 
-      <hr/>
+      <hr />
       {Object.keys(loadedBRPVC).length === 0 ?
-      <Box>
-        <Image
-          src="/solid-quest/images/mijnoverheid.png"
-          alt="Mijn Overheid Logo"
-          width={400}
-          height={180}
-          style={{ display: "block", margin: "25px auto" }}
-        />
-      </Box>
-      :
-      <Box>
-        <Typography variant="body1" color="text.primary" align="center">
-          Je hebt je persoonsgegevens opgeslagen in je datakluis. Kloppen de gegevens?
-        </Typography>
-        {/* https://mui.com/material-ui/react-table/ */}
-        <TableContainer sx={{ marginY: '3rem' }} component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ '&:last-child td, &:last-child th': {
-                    border: 0,
-                    fontStyle: 'italic',
-                    fontWeight: 'bold',
-                    height: '4rem',
-                  } }}
-                >
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.value}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+        <Box>
+          <Link href="/brpersonen" target="_blank">
+            <Image
+              src="/solid-quest/images/mijnoverheid.png"
+              alt="Mijn Overheid Logo"
+              width={400}
+              height={180}
+              style={{ display: "block", margin: "25px auto" }}
+            />
+          </Link>
+        </Box>
+        :
+        <Box>
+          <Typography variant="body1" color="text.primary" align="center">
+            Je hebt je persoonsgegevens opgeslagen in je datakluis. Kloppen de gegevens?
+          </Typography>
+          {/* https://mui.com/material-ui/react-table/ */}
+          <TableContainer sx={{ marginY: '3rem' }} component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableBody>
+                {rows.map((row) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{
+                      '&:last-child td, &:last-child th': {
+                        border: 0,
+                        fontStyle: 'italic',
+                        fontWeight: 'bold',
+                        height: '4rem',
+                      }
+                    }}
+                  >
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.value}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       }
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleNext}>Doorgaan</Button> }
+        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
       </Stack>
     </Box>
   );
