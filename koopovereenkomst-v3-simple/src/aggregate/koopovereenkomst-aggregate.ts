@@ -8,6 +8,10 @@ import { namedNode } from "@rdfjs/data-model";
 import * as jsonld from "jsonld";
 import { GENERAL_CONTEXT, KADASTER_KKG_CONTEXT } from "./context";
 
+import { default as rdflib } from "@solid/query-ldflex/lib/exports/rdflib";
+import { Aggregate2RDF, event2RDF } from "../rdfWriter";
+import { getRootContainerURL, saveTurtle } from "../Solid";
+
 export interface Event {
   aggregateId: string;
   id: string;
@@ -28,6 +32,14 @@ interface Perceel {
   perceelNummer: string;
 }
 
+const VerkoopLogboekContainer = function() {
+  return `${getRootContainerURL()}/koopovereenkomst/id`;
+}
+
+const EventContainer = function() {
+  return `${getRootContainerURL()}/koopovereenkomst/events/id`;
+}
+
 export default class KoopovereenkomstAggregate {
   private data: any = {
     "@context": {
@@ -37,6 +49,16 @@ export default class KoopovereenkomstAggregate {
   };
   private events: Event[] = [];
 
+  private _id: string;
+
+  public get id() : string {
+    return this._id;
+  }
+
+  public set id(v : string) {
+    this._id = v;
+  }
+
   private queryEngine = new ComunicaEngine(
     "https://api.labs.kadaster.nl/datasets/dst/kkg/services/default/sparql"
   );
@@ -45,7 +67,9 @@ export default class KoopovereenkomstAggregate {
     queryEngine: this.queryEngine,
   });
 
-  constructor(ko: solidQuery, pod: solidQuery) {
+  constructor(koekUri: string, id: string) {
+    this._id = id;
+    const ko: solidQuery = rdflib[koekUri];
     this.dataAppend(
       {
         iri: "zvg:koopovereenkomst-iri",
@@ -62,6 +86,34 @@ export default class KoopovereenkomstAggregate {
 
   public getEvents(): Event[] {
     return this.events.sort((a, b) => a.seq - b.seq);
+  }
+
+  public async addEvent(event: Event, save = true): Promise<void> {
+    this.events.push(event);
+    if (save) {
+      await this.saveEvent(event);
+    }
+  }
+
+  private async saveEvent(event: Event): Promise<string> {
+    const rdfEvent = event2RDF(event, {
+      vlbContainer: VerkoopLogboekContainer(),
+      eventContainer: EventContainer(),
+    });
+
+    const filepath = `${EventContainer()}/${event.id}`;
+    await saveTurtle(filepath, rdfEvent);
+
+    return filepath;
+  }
+  
+  public async save(): Promise<void> {
+    const rdf = Aggregate2RDF(this.id, this.events, {
+      vlbContainer: VerkoopLogboekContainer(),
+      eventContainer: EventContainer(),
+    });
+    const filepath = `${VerkoopLogboekContainer()}/${this.id}`;
+    await saveTurtle(filepath, rdf);
   }
 
   public getData(): any {

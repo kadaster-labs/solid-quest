@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import Box from "@mui/material/Box";
@@ -19,16 +19,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from "@mui/material/Typography";
 
 import { getAllFileUrls, getRootContainerURL, saveTurtle } from "../../src/Solid";
-import { VLB2RDF, createRDFEvent } from "../../src/events";
-import { VLBContext } from "../../src/verkooplogboek";
-
-const VerkoopLogboekContainer = function() {
-  return `${getRootContainerURL()}/koopovereenkomst/id`;
-}
-
-const EventContainer = function() {
-  return `${getRootContainerURL()}/koopovereenkomst/events/id`;
-}
+import KoopovereenkomstAggregate, { Event } from "../../src/aggregate/koopovereenkomst-aggregate";
 
 /**
  * Wat is het opbouwen van de koopovereenkomst precies?
@@ -47,8 +38,18 @@ const EventContainer = function() {
  *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1
  */
 
-export function Step1b({ handleNext, handleBack }) {
-  const { state, dispatch } = useContext(VLBContext);
+const VerkoopLogboekContainer = function() {
+  return `${getRootContainerURL()}/koopovereenkomst/id`;
+}
+
+interface Step1bProps {
+  handleNext: () => void;
+  handleBack: () => void;
+  selectKoek: (koek: string) => void;
+  koek: KoopovereenkomstAggregate;
+}
+
+export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps) {
 
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
@@ -57,10 +58,8 @@ export function Step1b({ handleNext, handleBack }) {
   // Creating a new koopovereenkomst
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(1);
-  
-  const [doUpdate, setDoUpdate] = useState(false);
 
-  const loadKoeks = useCallback(async (id = undefined) => {
+  const loadKoeks = useCallback(async (id: string = undefined) => {
     const files = await getAllFileUrls(VerkoopLogboekContainer());
     const ids = files.map((file) => file.split('/').pop());
 
@@ -82,12 +81,16 @@ export function Step1b({ handleNext, handleBack }) {
 
   useEffect(() => {
     // This function will run when the component mounts
-    loadKoeks(state.activeKoek);
-  }, [loadKoeks, state.activeKoek]);
+    if (koek) {
+      loadKoeks(koek.id);
+    } else {
+      loadKoeks();
+    }
+  }, [loadKoeks, koek]);
 
   const handleConfirm = async () => {
     setIsLoading(true);
-    const randomId = Math.floor(Math.random() * 100000) + 1000;
+    const randomId = (Math.floor(Math.random() * 100000) + 1000).toString();
 
     const filepath = `${VerkoopLogboekContainer()}/${randomId}`;
     await saveTurtle(filepath, `
@@ -98,7 +101,7 @@ export function Step1b({ handleNext, handleBack }) {
         a zvg:Koop .
     `);
 
-    dispatch({ type: 'setActiveKoek', payload: randomId.toString() });
+    selectKoek(randomId);
 
     loadKoeks(randomId);
     setIsLoading(false);
@@ -110,62 +113,54 @@ export function Step1b({ handleNext, handleBack }) {
 
   const handleRowSelect = (event, row) => {
     setSelectedRowId(row.id);
-    dispatch({ type: 'setActiveKoek', payload: row.id });
-  };
-
-  useEffect(() => {
-    async function saveVLB() {
-      const rdf = VLB2RDF(state, {
-        vlbContainer: VerkoopLogboekContainer(),
-        eventContainer: EventContainer(),
-      });
-      const filepath = `${VerkoopLogboekContainer()}/${state.activeKoek}`;
-      await saveTurtle(filepath, rdf);
-    }
-
-    if (doUpdate) {
-      saveVLB();
-      setDoUpdate(false);
-    }
-  }, [state, doUpdate]);
-
-  const createEvent = async (seq: number, type: string) => {
-    const id = uuidv4();
-    const filepath = `${EventContainer()}/${id}`;
-    const event = createRDFEvent({
-      aggregateId: state.activeKoek,
-      id,
-      type,
-      seq,
-      actor: 'Verkoper',
-      label: `${seq}-Verkoper-${type}`,
-      time: new Date().toISOString(),
-    }, {
-      vlbContainer: VerkoopLogboekContainer(),
-      eventContainer: EventContainer(),
-    });
-    await saveTurtle(filepath, event);
-    return filepath;
+    selectKoek(row.id);
   };
 
   const createEvents = async () => {
-    let seq = 0;
-    const types = [
-      'koopovereenkomstGeinitieerd',
-      'kadastraalObjectIdToegevoegd',
-      'koopprijsToegevoegd',
-      'persoonsgegevensRefToegevoegd',
+    const events = [
+      {
+        type: 'koopovereenkomstGeinitieerd',
+        data: {
+          template: 'NVM Simple Default Koophuis',
+        },
+      },
+      {
+        type: 'kadastraalObjectIdToegevoegd',
+        data: {
+          kadastraalObjectId: "10020263270000",
+        },
+      },
+      {
+        type: 'koopprijsToegevoegd',
+        data: {
+          koopprijs: 425000,
+        },
+      },
+      {
+        type: 'persoonsgegevensRefToegevoegd',
+        data: {},
+      },
     ];
 
-    for (let i = 0; i < types.length; i++) {
-      const filepath = await createEvent(seq, types[i]);
-      dispatch({ type: 'addEvent', payload: filepath });
-      if (i === types.length - 1) {
-        console.log('Setting doUpdate to true');
-        setDoUpdate(true);
+    for (let seq = 0; seq < events.length; seq++) {
+      const id = uuidv4();
+
+      const event: Event = {
+        aggregateId: koek.id,
+        id,
+        type: events[seq].type,
+        seq: seq,
+        actor: 'Verkoper',
+        label: `${seq}-Verkoper-${events[seq].type}`,
+        time: new Date().toISOString(),
+        ...events[seq].data
       }
-      seq++;
+
+      
+      await koek.addEvent(event);
     }
+    
+    await koek.save();
   }
 
   return (

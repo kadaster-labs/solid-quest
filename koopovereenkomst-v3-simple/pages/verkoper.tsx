@@ -1,13 +1,16 @@
-import React, { createContext, useReducer } from 'react';
+import Head from "next/head";
+import React from 'react';
+
 import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
-import { Step1, Step1b, Step2, Step3, Step4, Step5, Step6 } from "./steps_verkoper";
+
 import Layout from "../src/Layout";
-import Head from "next/head";
-import { VLBProvider } from '../src/verkooplogboek';
+import { getRootContainerURL } from "../src/Solid";
+import KoopovereenkomstAggregate from '../src/aggregate/koopovereenkomst-aggregate';
+import { Step1, Step1b, Step2, Step3, Step4, Step6 } from "./steps_verkoper";
 
 const steps = [
   "Datapod koppelen",
@@ -21,6 +24,8 @@ const steps = [
 export default function Verkoper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
+  
+  const [koek, setActiveKoek] = React.useState(null as KoopovereenkomstAggregate);
 
   const isStepOptional = (step: number) => {
     // return step === 1;
@@ -45,19 +50,24 @@ export default function Verkoper() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+  
+  const selectKoek = (id) => {
+    const ko = `${getRootContainerURL()}/koopovereenkomst/id/${id}`;
+    setActiveKoek(new KoopovereenkomstAggregate(ko, id));
+  }
 
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
         return <Step1 handleNext={handleNext} />;
       case 1:
-        return <Step1b handleNext={handleNext} handleBack={handleBack} />;
+        return <Step1b handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} />;
       case 2:
         return <Step2 handleNext={handleNext} handleBack={handleBack} />;
       case 3:
         return <Step3 handleNext={handleNext} handleBack={handleBack} />;
       case 4:
-        return <Step4 handleNext={handleNext} handleBack={handleBack} />;
+        return <Step4 handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 5:
         return <Step6 handleBack={handleBack} />;
       default:

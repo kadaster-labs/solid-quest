@@ -1,25 +1,25 @@
 import * as $rdf from 'rdflib';
 
 import { Event } from './aggregate/koopovereenkomst-aggregate';
-import { VLB } from './verkooplogboek';
 import { getWebId } from './Solid';
 
-export function VLB2RDF(vlb: VLB, options): string {
-  if (!vlb || !vlb.events || vlb.events.length === 0) {
+export function Aggregate2RDF(id: string, events: Event[], options): string {
+  if (events.length === 0) {
     return '';
   }
 
   const store = $rdf.graph();
 
   const ns = {
-    koopovereenkomst: $rdf.namedNode(`${options.vlbContainer}/${vlb.activeKoek}`),
+    koopovereenkomst: $rdf.namedNode(`${options.vlbContainer}/${id}`),
     event: $rdf.namedNode(options.eventContainer),
     koperEvent: $rdf.namedNode(`http://localhost:3001/koper-koos/koopovereenkomst/events/id/`),
     prov: $rdf.Namespace('https://www.w3.org/TR/prov-o/#'),
     rdf: $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
   };
 
-  const eventList = vlb.events.map(event => event);
+  const eventList = events.map(event => `${options.eventContainer}/${event.id}`);
+  console.log(eventList);
 
   for (const event of eventList) {
     store.add(ns.koopovereenkomst, ns.prov('wasGeneratedBy'), $rdf.sym(event), ns.koopovereenkomst);
@@ -32,7 +32,7 @@ export function VLB2RDF(vlb: VLB, options): string {
   return string;
 }
 
-export function createRDFEvent(eventData: Event, options): string {
+export function event2RDF(eventData: Event, options): string {
   // TODO: Can now only create events for Vera. Not yet for Koos.
   const store = $rdf.graph();
 
@@ -48,7 +48,6 @@ export function createRDFEvent(eventData: Event, options): string {
   };
 
   const eventNode = ns.event;
-  const dataNode = $rdf.namedNode(ns.event.uri + '#data');
 
   const labelNode = $rdf.literal(
     `${eventData.seq.toString().padStart(2, "0")} | ${eventData.actor} | ${eventData.type} voor ${eventData.aggregateId}`
@@ -64,9 +63,26 @@ export function createRDFEvent(eventData: Event, options): string {
   store.add(eventNode, ns.cloudevents('time'), timeNode, eventNode);
   store.add(eventNode, ns.cloudevents('source'), ns.me, eventNode);
   store.add(eventNode, ns.rdfs('label'), labelNode, eventNode);
-  store.add(eventNode, ns.cloudevents('data'), dataNode, eventNode);
-  store.add(dataNode, ns.rdf('type'), ns.zvg('eventData'), dataNode);
-  store.add(dataNode, ns.zvg('koopovereenkomstTemplate'), $rdf.literal('NVM Simple Default Koophuis'), dataNode);
+
+  if (eventData.template || eventData.kadastraalObjectId || eventData.koopprijs || eventData.datumVanLevering) {
+    const dataNode = $rdf.namedNode(ns.event.uri + '#data');
+
+    store.add(eventNode, ns.cloudevents('data'), dataNode, eventNode);
+    store.add(dataNode, ns.rdf('type'), ns.zvg('eventData'), dataNode);
+
+    if (eventData.template) {
+      store.add(dataNode, ns.zvg('koopovereenkomstTemplate'), $rdf.literal(eventData.template), dataNode);
+    }
+    if (eventData.kadastraalObjectId) {
+      store.add(dataNode, ns.zvg('kadastraalObjectId'), $rdf.namedNode(`https://data.kkg.kadaster.nl/id/perceel/${eventData.kadastraalObjectId}`), dataNode);
+    }
+    if (eventData.koopprijs) {
+      store.add(dataNode, ns.zvg('koopprijs'), $rdf.literal(eventData.koopprijs, ns.xsd('integer')), dataNode);
+    }
+    if (eventData.datumVanLevering) {
+      store.add(dataNode, ns.zvg('datumVanLevering'), $rdf.literal(eventData.datumVanLevering, ns.xsd('date')), dataNode);
+    }
+  }
 
   const turtleString = $rdf.serialize(null, store, eventNode.doc().uri, 'text/turtle');
 
