@@ -39,7 +39,7 @@ export default function LoginForm() {
                     <MenuItem value="https://broker.pod.inrupt.com">Inrupt</MenuItem>
                 </Select>
             </Box>
-            <Box sx={{ p: "2rem 0" }}>
+            <Box sx={{ p: "1rem", display: "flex", justifyContent: "left", button: { m: "1rem" } }}>
                 <LoginButton
                     authOptions={{ clientName: siteTitle }}
                     oidcIssuer={idp}

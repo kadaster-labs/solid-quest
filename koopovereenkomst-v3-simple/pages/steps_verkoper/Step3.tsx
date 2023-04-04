@@ -1,4 +1,3 @@
-import * as React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -8,6 +7,7 @@ import { useCallback, useState } from "react";
 
 import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
+import Link from "../../src/Link";
 
 export default function Step3({ step = 3, handleNext, handleBack = () => { } }) {
   const [loadedBRKVC, setLoadedBRKVC] = useState([] as any);
@@ -17,7 +17,7 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
   }, []);
 
   return (
-    <Box sx={{flex: 1}}>
+    <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
         Start een nieuwe koopovereenkomst
       </Typography>
@@ -47,19 +47,21 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
             Het volgende object ID van het perceel is gevonden in de verifiable credential van het Kadaster.
             Maak gebruik van de Kadaster Knowledge Graph om informatie op te halen over je perceel.
           </Typography>
-          <KadasterKnowledgeGraph objectId={(loadedBRKVC[0].vc.credentialSubject.eigendom.perceel.identificatie as number)}/>
+          <KadasterKnowledgeGraph objectId={(loadedBRKVC[0].vc.credentialSubject.eigendom.perceel.identificatie as number)} />
         </Box>
-      :
-      <Box>
-        <Image
-          src="/solid-quest/images/mijnkadaster.png"
-          alt="Mijn Overheid Logo"
-          width={400}
-          height={180}
-          style={{ display: "block", margin: "25px auto" }}
-        />
-        <KadasterKnowledgeGraph objectId={0}/>
-      </Box>
+        :
+        <Box>
+          <Link href="/brk" target="_blank">
+            <Image
+              src="/solid-quest/images/mijnkadaster.png"
+              alt="Mijn Overheid Logo"
+              width={400}
+              height={180}
+              style={{ display: "block", margin: "25px auto" }}
+            />
+          </Link>
+          {/* <KadasterKnowledgeGraph objectId={0} /> */}
+        </Box>
       }
 
       <Stack direction="row" justifyContent="space-between">

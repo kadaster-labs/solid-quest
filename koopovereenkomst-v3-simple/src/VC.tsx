@@ -1,4 +1,3 @@
-import { fetch as solidFetch } from "@inrupt/solid-client-authn-browser";
 import {
   createContainerAt,
   deleteFile,
@@ -6,20 +5,18 @@ import {
   getContainedResourceUrlAll,
   getFile,
   getSolidDataset,
-  getSourceUrl,
-  saveFileInContainer,
-  overwriteFile,
-  WithResourceInfo,
+  getSourceUrl, overwriteFile
 } from "@inrupt/solid-client";
+import { fetch as solidFetch } from "@inrupt/solid-client-authn-browser";
 import { useSession } from "@inrupt/solid-ui-react";
 
-import { useEffect, useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
+import { Link, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Link, Typography } from "@mui/material";
 import { verifyVC } from "./verify";
 
 export async function deleteRecursively(dataset) {
@@ -70,7 +67,7 @@ export type SolidVC = {
   status: any;
 };
 
-export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {} }) {
+export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => { }, enableDownload = false }) {
   // onChange lets us let the parent know the state of the VC
   // this is not the best way to do this, but it works for now
   // According to the React docs, we should use a state management library
@@ -86,9 +83,9 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   const targetContainerURL = `${SELECTED_POD}credentials/`;
 
   const setVCs = useCallback(async (vcs: any) => {
-      onChange(vcs);
-      _setVcs(vcs);
-    },
+    onChange(vcs);
+    _setVcs(vcs);
+  },
     [onChange]
   );
 
@@ -119,16 +116,16 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   }, [targetContainerURL, type]);
 
   const loadVCs = useCallback(async (urls: string[]) => {
-      const vcs = [];
-      for (let i = 0; i < urls.length; i++) {
-        const file = await getFile(urls[i], { fetch: solidFetch });
-        const text = await file.text();
-        const credential = JSON.parse(text);
-        vcs.push({ url: urls[i], vc: credential, status: "❔" });
-      }
-      await refreshVCsStatus(vcs);
-    },
-    [refreshVCsStatus]
+    const vcs = [];
+    for (let i = 0; i < urls.length; i++) {
+      const file = await getFile(urls[i], { fetch: solidFetch });
+      const text = await file.text();
+      const credential = JSON.parse(text);
+      vcs.push({ url: urls[i], vc: credential, status: "❔" });
+    }
+    await refreshVCsStatus(vcs);
+  },
+    []
   );
 
   const initializeVCs = useCallback(async () => {
@@ -207,7 +204,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
     let vcUrls = [];
     while (vcUrls.length == 0) {
       vcUrls = await listVCs();
-      
+
       // wait 1 second before trying again
       console.log("waiting for vc to be saved", vcUrls);
       if (vcUrls.length == 0) {
@@ -238,11 +235,20 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
         Verifiable Credential(s) voor {type}
       </Typography>
       {vcs.length == 0 ? (
-        isLoading ? <CircularProgress/> : <Button color="secondary" onClick={downloadVC}>VC Downloaden</Button>
+        isLoading ? <CircularProgress /> : (
+          enableDownload ? <Button color="secondary" onClick={downloadVC}>VC Downloaden</Button> :
+            <Box>
+              <Typography>Geen VC gevonden!</Typography>
+              <ButtonGroup variant="text" aria-label="text button group">
+                <Button color="secondary" onClick={refreshVCs}>
+                  Status verversen
+                </Button>
+              </ButtonGroup>
+            </Box>)
       ) : (
         <ButtonGroup variant="text" aria-label="text button group">
           <Link href={vcs[0].url} target="_blank">
-              <Button color="secondary">
+            <Button color="secondary">
               VC Bekijken
             </Button>
           </Link>
