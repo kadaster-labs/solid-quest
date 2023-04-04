@@ -60,7 +60,6 @@ export default function Step3({ step = 3, handleNext, handleBack = () => { } }) 
               style={{ display: "block", margin: "25px auto" }}
             />
           </Link>
-          {/* <KadasterKnowledgeGraph objectId={0} /> */}
         </Box>
       }
 
