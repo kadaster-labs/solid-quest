@@ -46,5 +46,34 @@ export const theme = createTheme({
               }
             `,
     },
+    MuiStepIcon: {
+      styleOverrides: {
+        root: {
+          color: "rgba(255,255,255,0.2)",
+          "&.Mui-completed": {
+            color: "rgba(255,255,255,0.5)",
+            text: {
+              fill: "#003F79",
+            },
+          },
+          "&.Mui-active": {
+            color: "rgba(255,255,255,0.5)",
+            text: {
+              fill: "#003F79",
+              fontWeight: 1000,
+            },
+              },
+        },
+      }
+    },
+    MuiStepLabel: {
+      styleOverrides: {
+        label: {
+          "&.Mui-completed": {
+            color: "#80bcd8",
+          },
+        }
+      }
+    }
   },
 });
