@@ -1,13 +1,28 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix solid: <http://www.w3.org/ns/solid/terms#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix pro: <http://localhost:3001/verkoper-vera/profile/>.
+@prefix c: <http://localhost:3001/koper-koos/profile/card#>.
 
-<http://localhost:3001/verkoper-vera/profile/card> a foaf:PersonalProfileDocument;
+pro:card a foaf:PersonalProfileDocument;
     foaf:maker <#me>;
     foaf:primaryTopic <#me>.
 <#me> a foaf:Person;
-    solid:oidcIssuer <http://localhost:3001/>;
-    foaf:name "Verkoper Vera";
     rdfs:label "Verkoper Vera";
+    vcard:bday "2022-08-19"^^xsd:date;
+    vcard:fn "Vera Veranda";
+    vcard:hasAddress <#id1680106718588>;
+    vcard:hasEmail <#id1680182536910>;
+    solid:oidcIssuer <http://localhost:3001/>;
     foaf:givenName "Vera";
-    foaf:knows <http://localhost:3001/koper-koos/profile/card#me>.
+    foaf:knows c:me;
+    foaf:name "Verkoper Vera".
+<#id1680106718588> vcard:country-name "Nederland";
+    vcard:locality "Apeldoorn";
+    vcard:postal-code "7334 DP";
+    vcard:region "Gelderland";
+    vcard:street-address "Laan van Westenenk 701".
+<#id1680182536910> a vcard:Home;
+    vcard:value <mailto:vera@world.com>.
