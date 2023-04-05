@@ -9,7 +9,7 @@ import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
 import Link from "../../src/Link";
 
-export function Step3({ step = 3, handleNext, handleBack = () => { } }) {
+export function Step3({ stepNr = 3, handleNext, handleBack = () => { } }) {
   const [loadedBRKVC, setLoadedBRKVC] = useState([] as any);
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
@@ -22,7 +22,7 @@ export function Step3({ step = 3, handleNext, handleBack = () => { } }) {
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {step}. Koppel de woning die je wilt verkopen
+        {stepNr}. Koppel de woning die je wilt verkopen
       </Typography>
 
       <Typography variant="body1" color="text.primary" align="center">

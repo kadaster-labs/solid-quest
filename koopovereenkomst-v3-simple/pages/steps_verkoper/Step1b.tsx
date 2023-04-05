@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -19,6 +18,8 @@ import TableRow from '@mui/material/TableRow';
 import Typography from "@mui/material/Typography";
 
 import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
+import Link from "../../src/Link";
+import PodIcon from "../../src/PodIcon";
 import { getAllFileUrls, getRootContainerURL, saveTurtle } from "../../src/Solid";
 import { SOLID_ZVG_CONTEXT } from "../../src/aggregate/context";
 import KoopovereenkomstAggregate, { Event } from "../../src/aggregate/koopovereenkomst-aggregate";
@@ -40,18 +41,19 @@ import KoopovereenkomstAggregate, { Event } from "../../src/aggregate/koopoveree
  *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1 ✅
  */
 
-const VerkoopLogboekContainer = function() {
+const VerkoopLogboekContainer = function () {
   return `${getRootContainerURL()}/koopovereenkomst/id`;
 }
 
 interface Step1bProps {
+  stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
   selectKoek: (koek: string) => void;
   koek: KoopovereenkomstAggregate;
 }
 
-export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps) {
+export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: Step1bProps) {
 
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
@@ -246,7 +248,7 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        4. Aanmaken koopovereenkomst
+        {stepNr}. Aanmaken koopovereenkomst
       </Typography>
 
       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginBottom: '2rem' }}>
@@ -254,7 +256,7 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
           margin: "25px auto 0px auto",
           maxWidth: "600px",
         }}>
-          Voor het aanmaken van de koopovereenkomst, kun je kiezen uit <Link href="">verschillende standaard koopovereenkomsten</Link>. Kies hieronder welke voor jou van toepassing is.
+          Voor het aanmaken van de koopovereenkomst, kun je kiezen uit <Link href="" color="text.secondary">verschillende standaard koopovereenkomsten</Link>. Kies hieronder welke voor jou van toepassing is.
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
           <Box sx={{ minWidth: 120, my: '2rem' }}>
@@ -264,61 +266,63 @@ export function Step1b({ handleNext, handleBack, selectKoek, koek }: Step1bProps
               <MenuItem value={3}>Die ene koopovereenkomst</MenuItem>
             </Select>
           </Box>
-          { isLoading ? <CircularProgress/> : <Button variant="contained" onClick={handleConfirm}>Create</Button> }
+          {isLoading ? <CircularProgress /> : <Button variant="contained" onClick={handleConfirm}>Create</Button>}
         </Box>
         {/* Onderste helft */}
-        { tableRows.length > 0 && (
-        <Box>
-          <Typography variant="body1" color="text.primary" align="center" sx={{
-            marginX: "auto",
-            maxWidth: "600px",
-          }}>
-            Kies hieronder de koopovereenkomst om (verder) op te stellen.
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650, '& .MuiRadio-root.Mui-checked': {color: 'rgba(255, 255, 255, 0.9)'} }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox"/>
-                  <TableCell>Id</TableCell>
-                  <TableCell>Object</TableCell>
-                  <TableCell>Datum</TableCell>
-                  <TableCell>Prijs</TableCell>
-                  <TableCell>Link</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {tableRows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    hover
-                    onClick={(event) => handleRowSelect(event, row)}
-                    selected={selectedRowId === row.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Radio checked={selectedRowId === row.id} />
-                    </TableCell>
-                    <TableCell component="th" scope="row">{row.id}</TableCell>
-                    <TableCell>{row.object}</TableCell>
-                    <TableCell>{row.koopdatum}</TableCell>
-                    <TableCell>{row.koopprijs}</TableCell>
-                    <TableCell>
-                      <Link href={row.url} target="_blank">Link</Link>
-                    </TableCell>
+        {tableRows.length > 0 && (
+          <Box>
+            <Typography variant="body1" color="text.primary" align="center" sx={{
+              marginX: "auto",
+              maxWidth: "600px",
+            }}>
+              Kies hieronder de koopovereenkomst om (verder) op te stellen.
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650, '& .MuiRadio-root.Mui-checked': { color: 'rgba(255, 255, 255, 0.9)' } }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox" />
+                    <TableCell>Id</TableCell>
+                    <TableCell>Object</TableCell>
+                    <TableCell>Datum</TableCell>
+                    <TableCell>Prijs</TableCell>
+                    <TableCell>Link</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      )}
+                </TableHead>
+                <TableBody>
+                  {tableRows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      hover
+                      onClick={(event) => handleRowSelect(event, row)}
+                      selected={selectedRowId === row.id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Radio checked={selectedRowId === row.id} />
+                      </TableCell>
+                      <TableCell component="th" scope="row">{row.id}</TableCell>
+                      <TableCell>{row.object}</TableCell>
+                      <TableCell>{row.koopdatum}</TableCell>
+                      <TableCell>{row.koopprijs}</TableCell>
+                      <TableCell>
+                        <Link href={row.url} target="_blank">
+                          <PodIcon />
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        )}
       </Box>
 
       <Stack sx={{ width: "50vw", marginBottom: '2rem' }} direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        { selectedRowId && <Button variant="contained" onClick={createEvents}>Create events (debug)</Button> }
-        { selectedRowId && <Button variant="contained" onClick={handleNext}>Doorgaan</Button> }
+        {selectedRowId && <Button variant="contained" onClick={createEvents}>Create events (debug)</Button>}
+        {selectedRowId && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
       </Stack>
     </Box>
   );

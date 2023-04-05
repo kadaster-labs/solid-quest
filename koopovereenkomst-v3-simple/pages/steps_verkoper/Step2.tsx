@@ -22,7 +22,7 @@ function createData(
   return { name, value };
 }
 
-export function Step2({ step = 2, handleNext, handleBack = () => { } }) {
+export function Step2({ stepNr = 2, handleNext, handleBack = () => { } }) {
   const [loadedBRPVC, setLoadedBRPVC] = useState({} as any);
 
   const [rows, setRows] = useState([] as Array<any>);
@@ -65,7 +65,7 @@ export function Step2({ step = 2, handleNext, handleBack = () => { } }) {
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {step}. Koppel je persoonsgegevens aan deze koopovereenkomst
+        {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst
       </Typography>
 
       <VC type={VCType.BRP} onChange={updateVCs} />

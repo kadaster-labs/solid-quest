@@ -18,7 +18,7 @@ import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 import { VCARD } from "@inrupt/vocab-common-rdf";
 import { SolidPerson, SolidAddress } from "../../src/Solid";
 
-export function Step1({ handleNext, handleBack = () => {} }) {
+export function Step1({ handleNext, handleBack = () => { } }) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);
@@ -49,7 +49,7 @@ export function Step1({ handleNext, handleBack = () => {} }) {
       async (profile) => {
         // Get the URL of the address, it is a different dataset than the profile (#me)
         const addressUrl = getUrl(profile, VCARD.hasAddress);
-        
+
         if (!addressUrl) {
           return null;
         }
@@ -105,13 +105,11 @@ export function Step1({ handleNext, handleBack = () => {} }) {
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="body1" color="text.primary" align="center">
-        {
-          "Om een koopovereenkomst te starten als verkoper, doorloop je verschillende stappen."
-        }
+        Om een koopovereenkomst te starten als verkoper, doorloop je verschillende stappen.
       </Typography>
       <Box>
         <Typography variant="body1" color="text.primary" align="center">
-          {"1. Log in met je WebID of mailadres"}
+          Log in met je WebID of mailadres
         </Typography>
         <ConnectSolid />
       </Box>

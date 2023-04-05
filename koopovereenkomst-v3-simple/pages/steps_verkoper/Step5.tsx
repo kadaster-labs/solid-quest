@@ -25,13 +25,13 @@ interface Case {
 }
 
 interface Step5Props {
-  step?: number;
+  stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
   koek: KoopovereenkomstAggregate;
 }
 
-export function Step5({ step = 5, handleNext, handleBack, koek }: Step5Props) {
+export function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) {
   const title = "Verkoper Homepage";
 
   const { session } = useSession();
@@ -148,7 +148,7 @@ export function Step5({ step = 5, handleNext, handleBack, koek }: Step5Props) {
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {step}. Aanmaken koopovereenkomst
+        {stepNr}. Aanmaken koopovereenkomst
       </Typography>
 
       <Box>

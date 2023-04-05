@@ -62,17 +62,17 @@ export default function Verkoper() {
       case 0:
         return <Step1 handleNext={handleNext} />;
       case 1:
-        return <Step1b handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} />;
+        return <Step1b stepNr={props.value} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} />;
       case 2:
-        return <Step2 handleNext={handleNext} handleBack={handleBack} />;
+        return <Step2 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} />;
       case 3:
-        return <Step3 handleNext={handleNext} handleBack={handleBack} />;
+        return <Step3 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} />;
       case 4:
-        return <Step4 handleNext={handleNext} handleBack={handleBack} />;
+        return <Step4 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} />;
       case 5:
-        return <Step5 handleNext={handleNext} handleBack={handleBack} koek={koek} />;
+        return <Step5 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 6:
-        return <Step6 handleBack={handleBack} />;
+        return <Step6 stepNr={props.value} handleBack={handleBack} />;
       default:
         return <Step1 handleNext={handleNext} />;
     }
