@@ -1,15 +1,14 @@
-import { useEffect, useCallback, useState } from "react";
-
-import { fetch } from "@inrupt/solid-client-authn-browser";
 import { useSession } from "@inrupt/solid-ui-react";
+import { useCallback, useEffect, useState } from "react";
 
+import { Link, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Link, Typography } from "@mui/material";
-import { verifyVC } from "./verify";
+
 import { deleteFile, getAllFileUrls, getFile, getRootContainerURL, saveJson } from "./Solid";
+import { verifyVC } from "./verify";
 
 
 export enum VCType {
@@ -38,7 +37,7 @@ const CredentialsContainer = function() {
   return `${getRootContainerURL()}/credentials`;
 }
 
-export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {} }) {
+export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false }) {
   // onChange lets us let the parent know the state of the VC
   // this is not the best way to do this, but it works for now
   // According to the React docs, we should use a state management library
@@ -51,9 +50,9 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const setVCs = useCallback(async (vcs: any) => {
-      onChange(vcs);
-      _setVcs(vcs);
-    },
+    onChange(vcs);
+    _setVcs(vcs);
+  },
     [onChange]
   );
 
@@ -154,11 +153,20 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
         Verifiable Credential(s) voor {type}
       </Typography>
       {vcs.length == 0 ? (
-        isLoading ? <CircularProgress/> : <Button color="secondary" onClick={downloadVC}>VC Downloaden</Button>
+        isLoading ? <CircularProgress /> : (
+          enableDownload ? <Button color="secondary" onClick={downloadVC}>VC Downloaden</Button> :
+            <Box>
+              <Typography>Geen VC gevonden!</Typography>
+              <ButtonGroup variant="text" aria-label="text button group">
+                <Button color="secondary" onClick={refreshVCs}>
+                  Status verversen
+                </Button>
+              </ButtonGroup>
+            </Box>)
       ) : (
         <ButtonGroup variant="text" aria-label="text button group">
           <Link href={vcs[0].url} target="_blank">
-              <Button color="secondary">
+            <Button color="secondary">
               VC Bekijken
             </Button>
           </Link>
