@@ -10,13 +10,14 @@ import Typography from "@mui/material/Typography";
 import Layout from "../src/Layout";
 import { getRootContainerURL } from "../src/Solid";
 import KoopovereenkomstAggregate from '../src/aggregate/koopovereenkomst-aggregate';
-import { Step1, Step1b, Step2, Step3, Step4, Step6 } from "./steps_verkoper";
+import { Step1, Step1b, Step2, Step3, Step4, Step5, Step6 } from "./steps_verkoper";
 
 const steps = [
   "Datapod koppelen",
-  "Koopovereenkomst aanmaken",
+  "Koopovereenkomst aanmaken (debug)",
   "Persoonsgegevens",
   "Eigendomsgegevens",
+  "Koopovereenkomst aanmaken",
   "Koopovereenkomst",
   "Tekenen",
 ];
@@ -67,8 +68,10 @@ export default function Verkoper() {
       case 3:
         return <Step3 handleNext={handleNext} handleBack={handleBack} />;
       case 4:
-        return <Step4 handleNext={handleNext} handleBack={handleBack} koek={koek} />;
+        return <Step4 handleNext={handleNext} handleBack={handleBack} />;
       case 5:
+        return <Step5 handleNext={handleNext} handleBack={handleBack} koek={koek} />;
+      case 6:
         return <Step6 handleBack={handleBack} />;
       default:
         return <Step1 handleNext={handleNext} />;

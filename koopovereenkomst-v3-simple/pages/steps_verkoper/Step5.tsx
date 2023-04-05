@@ -24,14 +24,14 @@ interface Case {
   koopsom?: number;
 }
 
-interface Step4Props {
+interface Step5Props {
   step?: number;
   handleNext: () => void;
   handleBack: () => void;
   koek: KoopovereenkomstAggregate;
 }
 
-export function Step4({ step = 4, handleNext, handleBack, koek }: Step4Props) {
+export function Step5({ step = 5, handleNext, handleBack, koek }: Step5Props) {
   const title = "Verkoper Homepage";
 
   const { session } = useSession();
