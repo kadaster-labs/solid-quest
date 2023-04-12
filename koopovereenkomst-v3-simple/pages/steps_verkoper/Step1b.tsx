@@ -65,10 +65,7 @@ export function createPathUsingFactory(factory: any) {
     console.log(namespace)
     
     // Try and use the original nodes namespace for the vocab if no context is provided
-    const context = _options.context ?? { "@context": {
-      "@vocab": "http://xmlns.com/foaf/0.1/",
-      "friends": "knows",
-    } }
+    const context = _options.context ?? { "@context": { '@vocab': namespace } };
   
     return factory(sources ?? namespace, { ..._options, context }).create({ subject });
   }
