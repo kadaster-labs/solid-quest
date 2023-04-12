@@ -41,6 +41,81 @@ import KoopovereenkomstAggregate, { Event } from "../../src/aggregate/koopoveree
  *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1 ✅
  */
 
+// @ts-ignore
+import { PathFactory } from 'ldflex';
+// @ts-ignore
+import ComunicaEngine from '@ldflex/comunica'
+import { namedNode } from '@rdfjs/data-model'
+
+export function pathFactory(sources: any, options?: any) {
+  console.log('pathFactory', sources, options)
+  const queryEngine = options?.queryEngine ?? new ComunicaEngine(sources, options);
+  const context = options?.context ?? {};
+  return new PathFactory({ queryEngine, context });
+}
+
+const NAMESPACE = /^[^]*[#/]/;
+
+export function createPathUsingFactory(factory: any) {
+  return function createPath(node: any, sources?: any, options?: any) {
+    const _options = options ?? {}
+    const subject = typeof node === 'string' ? namedNode(node) : node;
+    
+    const namespace = NAMESPACE.exec(subject.value)?.[0] ?? ''
+    console.log(namespace)
+    
+    // Try and use the original nodes namespace for the vocab if no context is provided
+    const context = _options.context ?? { "@context": {
+      "@vocab": "http://xmlns.com/foaf/0.1/",
+      "friends": "knows",
+    } }
+  
+    return factory(sources ?? namespace, { ..._options, context }).create({ subject });
+  }
+}
+
+
+// const context = {
+  // "@context": {
+  //   "@vocab": "http://xmlns.com/foaf/0.1/",
+  //   "friends": "knows",
+  // }
+// };
+// // The query engine and its source
+// const queryEngine = new ComunicaEngine('https://ruben.verborgh.org/profile/');
+// // The object that can create new paths
+// const paths = new PathFactory({ context, queryEngine });
+
+export const createPath = createPathUsingFactory(pathFactory)
+const path = pathFactory('https://ruben.verborgh.org/profile/#me', { context: { "@context": {
+  "@vocab": "http://xmlns.com/foaf/0.1/",
+  "friends": "knows",
+} } });
+const ruben = path.create('https://ruben.verborgh.org/profile/#me');
+// const ruben = createPath('https://ruben.verborgh.org/profile/#me');
+
+const path2 = pathFactory('http://localhost:3001/verkoper-vera/koopovereenkomst/id/22067', { context: { "@context": {
+  '@vocab': 'https://www.w3.org/TR/prov-o/#',
+  'i': 'http://localhost:3001/koper-koos/koopovereenkomst/events/id/',
+  'id0': 'http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/',
+} } });
+const ruben2 = path2.create('http://localhost:3001/verkoper-vera/koopovereenkomst/id/22067');
+
+async function showPerson(person) {
+  console.log(`This person is ${await person.name}`);
+
+  console.log(`${await person.givenName} is friends with:`);
+  for await (const name of person.friends.givenName)
+    console.log(`- ${name}`)
+}
+
+async function showKoek(koek) {
+  console.log(`This koek is ${await koek.wasGeneratedBy.values}`);
+}
+
+// showPerson(ruben);
+showKoek(ruben2);
+
 const VerkoopLogboekContainer = function () {
   return `${getRootContainerURL()}/koopovereenkomst/id`;
 }
@@ -73,15 +148,15 @@ export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: 
     for (let i = 0; i < ids.length; i++) {
       const ko = data[koekUrls[i]];
       const aggregate = new KoopovereenkomstAggregate(koekUrls[i], ids[i]);
-      console.log(aggregate)
+      // console.log(aggregate)
 
-      try {
-        for await (const eventUri of ko.wasGeneratedBy) {
-          await aggregate.handleEvent(eventUri);
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      // try {
+      //   for await (const eventUri of ko.wasGeneratedBy) {
+      //     await aggregate.handleEvent(eventUri);
+      //   }
+      // } catch (e) {
+      //   console.error(e);
+      // }
 
       koeks.push(aggregate);
     }
