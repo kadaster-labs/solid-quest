@@ -8,8 +8,8 @@ import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 
 import Layout from "../src/Layout";
-import { getRootContainerURL } from "../src/Solid";
-import KoopovereenkomstAggregate from '../src/aggregate/koopovereenkomst-aggregate';
+import KoekAggregate from '../src/koek/KoekAggregate';
+import KoekRepository from "../src/koek/KoekRepository";
 import { Step1, Step1b, Step2, Step3, Step4, Step5, Step6 } from "./steps_verkoper";
 
 const steps = [
@@ -23,10 +23,12 @@ const steps = [
 ];
 
 export default function Verkoper() {
+  let koekRepo = new KoekRepository();
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
-  
-  const [koek, setActiveKoek] = React.useState(null as KoopovereenkomstAggregate);
+
+  const [koek, setActiveKoek] = React.useState(null as KoekAggregate);
 
   const isStepOptional = (step: number) => {
     // return step === 1;
@@ -51,10 +53,9 @@ export default function Verkoper() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-  
-  const selectKoek = (id) => {
-    const ko = `${getRootContainerURL()}/koopovereenkomst/id/${id}`;
-    setActiveKoek(new KoopovereenkomstAggregate(ko, id));
+
+  const selectKoek = async (id) => {
+    setActiveKoek(await koekRepo.load(id));
   }
 
   function ActiveStep(props) {
@@ -62,7 +63,7 @@ export default function Verkoper() {
       case 0:
         return <Step1 handleNext={handleNext} />;
       case 1:
-        return <Step1b stepNr={props.value} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} />;
+        return <Step1b stepNr={props.value} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} repo={koekRepo} />;
       case 2:
         return <Step2 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} />;
       case 3:
