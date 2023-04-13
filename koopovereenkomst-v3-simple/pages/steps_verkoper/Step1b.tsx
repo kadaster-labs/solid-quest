@@ -191,9 +191,7 @@ export function Step1b({ stepNr = 0, handleNext, handleBack, selectKoek, koek, r
                       <TableCell>{row.koopdatum}</TableCell>
                       <TableCell>{row.koopprijs}</TableCell>
                       <TableCell>
-                        <Link href={row.url} target="_blank">
-                          <PodIcon />
-                        </Link>
+                        <PodIcon href={row.url} target="_blank" />
                       </TableCell>
                     </TableRow>
                   ))}
