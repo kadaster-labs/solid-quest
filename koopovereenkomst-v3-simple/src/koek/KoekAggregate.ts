@@ -33,16 +33,15 @@ export default class KoekAggregate {
     this.evntHdlr = new KoekEventHandler(this._id, this.stateAppend);
     this.cmdHdlr = new KoekCommandHandler(this._id, repo, this.evntHdlr);
 
-    const ko: solidQuery = solidQuery[koekUri];
     this.stateAppend(
       {
         iri: "zvg:koopovereenkomst-iri",
         koopovereenkomst: "zvg:koopovereenkomst",
       },
       {
-        iri: ko.value,
+        iri: koekUri,
         koopovereenkomst: {
-          "@id": ko.value.split("/").pop(),
+          "@id": koekUri.split("/").pop(),
         },
       }
     );

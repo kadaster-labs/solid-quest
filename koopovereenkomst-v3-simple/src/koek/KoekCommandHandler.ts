@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Event } from "../../src/koek/Event";
 import KoekEventHandler from "./KoekEventHandler";
 import KoekRepository from "./KoekRepository";
+import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 
 
 export default class KoekCommandHandler {
@@ -117,7 +118,7 @@ export default class KoekCommandHandler {
         if (save) {
             let filePath = await this.repo.saveEvent(event);
             try {
-                this.evntHdlr.handleEvent(filePath);
+                this.evntHdlr.handleEvent(solidQuery[filePath]);
             } catch (error) {
                 this.repo.deleteEvent(event);
             }

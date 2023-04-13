@@ -22,10 +22,10 @@ export default class KoekEventHandler {
         return this.events.sort((a, b) => a.seq - b.seq);
     }
 
-    public async handleEvent(eventUri: string) {
+    public async handleEvent(eventUri: solidQuery) {
         let thePod: string;
         try {
-            thePod = eventUri.split("3001")[1].split("/")[1];
+            thePod = eventUri.value.split("3001")[1].split("/")[1];
         } catch (error) {
             console.log(`error extracting POD path`, error);
         }
@@ -40,8 +40,7 @@ export default class KoekEventHandler {
         const curLabel = await eventQuery.label.value;
         const event = {
             aggregateId: this.aggregateId,
-            id: eventUri.split("#")[1],
-            uri: eventUri,
+            id: eventUri.value,
             seq: await eventQuery.sequence.value,
             type: theType,
             actor: thePod,
@@ -52,19 +51,23 @@ export default class KoekEventHandler {
         // add dynamic label
         try {
             Object.assign(event, {
-                newLabel: `${event.seq.padStart(2, "0")} | ${event.time} | ${beautifyCamelCase(event.type)} for ${event.aggregateId}`,
+                newLabel: `${event.seq.toString().padStart(2, "0")} | ${event.time} | ${beautifyCamelCase(event.type)} for ${event.aggregateId}`,
             });
         } catch (error) {
             console.warn("building up label went wrong (somehow)", error);
         }
 
         if (theType === "koopovereenkomstGeinitieerd") {
+            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
             await this.processKoopovereenkomstGeinitieerd(event, eventQuery);
         } else if (theType === "kadastraalObjectIdToegevoegd") {
+            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
             await this.processKadastraalObjectIdToegevoegd(event, eventQuery);
         } else if (theType === "koopprijsToegevoegd") {
+            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
             await this.processKoopprijsToegevoegd(event, eventQuery);
         } else if (theType === "datumVanLeveringToegevoegd") {
+            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
             await this.processDatumVanLeveringToegevoegd(event, eventQuery);
         } else if (
             theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
@@ -76,7 +79,7 @@ export default class KoekEventHandler {
             theType === "getekendeKoopovereenkomstVerkoperOpgeslagen" ||
             theType === "conceptKoopovereenkomstGetekend"
         ) {
-            console.log(`extract data from [${theType}] event`);
+            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
         } else {
             console.warn(`unsupported event in handler: [${theType}]`);
         }

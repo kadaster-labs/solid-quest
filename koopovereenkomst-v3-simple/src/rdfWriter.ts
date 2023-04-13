@@ -19,9 +19,7 @@ export function Aggregate2RDF(id: string, events: Event[], options): string {
   };
 
   const eventList = events.map(event => { 
-    const eventContainer = event.actor === "koper-koos" ? `http://localhost:3001/koper-koos/koopovereenkomst/events/id` : options.eventContainer;
-    console.log(`event.id [${event.id}] converted to `, eventContainer);
-    return `${eventContainer}/${event.id}`
+    return `${event.id}`
   });
 
   for (const event of eventList) {
