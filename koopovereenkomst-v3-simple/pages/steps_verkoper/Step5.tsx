@@ -3,14 +3,9 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 
-import { getInteger, getSolidDataset, getThingAll } from '@inrupt/solid-client';
-import { fetch } from '@inrupt/solid-client-authn-browser';
-import { useSession } from "@inrupt/solid-ui-react";
-import { useCallback, useEffect, useState } from "react";
-import { SOLID_ZVG_CONTEXT } from '../../src/koek/Context';
+import { useEffect, useState } from "react";
 
-import { List, ListItem, ListItemText, TextField } from "@mui/material";
-import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
+import { List, ListItem, ListItemText } from "@mui/material";
 import Link from "../../src/Link";
 import KoekAggregate from '../../src/koek/KoekAggregate';
 
@@ -32,97 +27,21 @@ interface Step5Props {
 }
 
 export function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) {
-  const title = "Verkoper Homepage";
 
-  const { session } = useSession();
-  const webId = session.info.webId;
-
-  const [podUrl, setPodUrl] = useState("");
-  const [caseId, setCaseId] = useState("");
-  const [curCase, setCase] = useState<Case>({} as Case);
   const [errors, setErrors] = useState("");
   const [eventLabels, setEventLabels] = useState([]);
 
   useEffect(() => {
     if (koek) {
-      setCaseId(koek.id);
-    }
-  }, [koek]);
-
-  const koopovereenkomstFile = () => {
-    return `${podUrl}koopovereenkomst-${caseId}.ttl`;
-  };
-
-  const openenKoopovereenkomstWithInruptSolidClient = async function () {
-    try {
-      console.log(`Openen van Koopovereenkomst [caseId: ${caseId}]`);
-
-      const theKO = await getSolidDataset(koopovereenkomstFile(), {
-        fetch: fetch,
-      });
-
-      for (const thing of getThingAll(theKO)) {
-        // De koper vraagt specifiek de koopsom op.
-        const koopsom = getInteger(thing, zvg.koopsom);
-        if (koopsom) {
-          console.log(`Koopsom: ${koopsom}`);
-          // alert(`Koopsom: ${koopsom}`);
-          setCase((prevState) => ({
-            ...prevState,
-            koopsom: koopsom,
-          }));
-        }
-      }
-    } catch (error) {
-      setErrors("Error opening koopovereenkomst! " + error);
-      throw error;
-    }
-  };
-
-  const openenKoopovereenkomstWithLDflex = useCallback(async function () {
-    try {
-      console.log(`Openen van Koopovereenkomst [caseId: ${caseId}]`);
-
-      const aggregate = koek;
 
       try {
-        setEventLabels(aggregate.getEvents());
+        setEventLabels(koek.getEvents());
       } catch (error) {
         setErrors("Error handling events of koopovereenkomst! " + error);
         console.error("Error handling events of koopovereenkomst!", error);
       }
-
-      console.log(
-        `\nAANGEBODEN DOOR: ${await aggregate.getData().aangebodenDoor}`
-      );
-      console.log(`\nAAN: ${await aggregate.getData().aan}`);
-      console.log(`\nKOOPPRIJS: ${await aggregate.getData().koopprijs}`);
-
-      console.log("dump JSON+LD", await aggregate.dumpJsonLD());
-      console.log("dump NQuads", await aggregate.dumpNQuads());
-    } catch (error) {
-      setErrors("Error opening koopovereenkomst! " + error);
-      throw error;
     }
-  }, [caseId, webId]);
-
-  useEffect(() => {
-    if (webId !== "") {
-      try {
-        const url = new URL(webId);
-        const thePodUrl = webId.split(url.pathname)[0] + "/";
-        console.debug("The POD url is: ", thePodUrl);
-        setPodUrl(thePodUrl);
-      } catch (error) { }
-
-      // https://github.com/LDflex/Query-Solid#adding-a-custom-json-ld-context
-      data.context.extend(SOLID_ZVG_CONTEXT);
-    }
-
-    if (caseId) {
-      openenKoopovereenkomstWithLDflex();
-    }
-  }, [podUrl, webId, openenKoopovereenkomstWithLDflex, caseId]);
+  }, [koek]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -135,29 +54,17 @@ export function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) 
 
       <Box>
         <Box>
-          <p>logged in: {webId}</p>
-          <p>POD url: {podUrl}</p>
-          <TextField
-            id="caseId"
-            label="Koopovereenkomst nummer"
-            variant="outlined"
-            value={caseId}
-            onChange={(e) => setCaseId(e.target.value)}
-            sx={{ width: "50ch" }}
-          />
+          <Typography>Koopovereenkomst #{koek.id}</Typography>
+          <List>
+            <ListItem>Type: {koek.data.typeKoopovereenkomst}</ListItem>
+            <ListItem>Perceelnr: {koek.data.kadastraalObject?.perceelNummer}</ListItem>
+            <ListItem>Aangeboden door: {koek.data.aangebodenDoor}</ListItem>
+            <ListItem>Aan: {koek.data.aan}</ListItem>
+            <ListItem>Koopprijs: {koek.data.koopprijs}</ListItem>
+            <ListItem>Datum levering: {koek.data.datumVanLevering}</ListItem>
+          </List>
         </Box>
         <Box sx={{ p: "2rem 0" }}>
-
-          <Button variant="contained" onClick={openenKoopovereenkomstWithLDflex}>
-            Openen met LDflex (with console logging)
-          </Button>
-        </Box>
-        <Box sx={{ p: "2rem 0" }}>
-          {false &&
-            <Button disabled onClick={openenKoopovereenkomstWithInruptSolidClient}>
-              Openen met Inrupt Solid Client
-            </Button>
-          }
           <Box>
             <List>
               {eventLabels.map((e, i) => (
@@ -202,14 +109,6 @@ export function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) 
             }}>
               <Typography>{errors}</Typography>
               <Button onClick={() => setErrors("")}>clear</Button>
-            </Box>
-          )}
-          {curCase.caseId && (
-            <Box>
-              <Typography>Koopovereenkomst info (from {koopovereenkomstFile()}):</Typography>
-              <List>
-                <ListItem>Koopsom: {curCase.koopsom}</ListItem>
-              </List>
             </Box>
           )}
         </Box>

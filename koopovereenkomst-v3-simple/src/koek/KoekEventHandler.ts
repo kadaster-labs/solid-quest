@@ -1,150 +1,134 @@
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import { callKadasterKnowledgeGraph } from "../kkg/kkgService";
 import { Event } from "./Event";
+import KoekState, { initState } from "./KoekState";
 
-export default class KoekEventHandler {
-    private aggregateId: string;
-    private events: Event[] = [];
-
-    private stateAppend: (context: object, value: object) => void;
-
-    /**
-     * Constructor.
-     * @param aggregateId the id of the aggregate this event listener belongs to
-     * @param stateAppend internal state append method hook on aggregate
-     */
-    constructor(aggregateId: string, stateAppend: (context: object, value: object) => void) {
-        this.aggregateId = aggregateId;
-        this.stateAppend = stateAppend;
+export async function loadEvent(eventUri: solidQuery): Promise<[solidQuery, Event]> {
+    let thePod: string;
+    try {
+        thePod = eventUri.value.split("3001")[1].split("/")[1];
+    } catch (error) {
+        console.log(`error extracting POD path`, error);
     }
 
-    public getProcessedEvents(): Event[] {
-        return this.events.sort((a, b) => a.seq - b.seq);
-    }
-
-    public async handleEvent(eventUri: solidQuery) {
-        let thePod: string;
-        try {
-            thePod = eventUri.value.split("3001")[1].split("/")[1];
-        } catch (error) {
-            console.log(`error extracting POD path`, error);
+    let eventQuery = solidQuery[`${eventUri}`];
+    // eventQuery.context.extend(SOLID_ZVG_CONTEXT);
+    let theType: string;
+    for await (let t of eventQuery.type) {
+        if (t.value.includes("taxonomie.zorgeloosvastgoed.nl")) {
+            theType = t.value.split("#")[1];
         }
-
-        const eventQuery = solidQuery[`${eventUri}`];
-        let theType: string;
-        for await (const t of eventQuery.type) {
-            if (t.value.includes("taxonomie.zorgeloosvastgoed.nl")) {
-                theType = t.value.split("#")[1];
-            }
-        }
-        const curLabel = await eventQuery.label.value;
-        const event = {
-            aggregateId: this.aggregateId,
-            id: eventUri.value,
-            seq: await eventQuery.sequence.value,
-            type: theType,
-            actor: thePod,
-            label: curLabel,
-            time: await eventQuery.time.value,
-        };
-
-        // add dynamic label
-        try {
-            Object.assign(event, {
-                newLabel: `${event.seq.toString().padStart(2, "0")} | ${event.time} | ${beautifyCamelCase(event.type)} for ${event.aggregateId}`,
-            });
-        } catch (error) {
-            console.warn("building up label went wrong (somehow)", error);
-        }
-
-        if (theType === "koopovereenkomstGeinitieerd") {
-            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
-            await this.processKoopovereenkomstGeinitieerd(event, eventQuery);
-        } else if (theType === "kadastraalObjectIdToegevoegd") {
-            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
-            await this.processKadastraalObjectIdToegevoegd(event, eventQuery);
-        } else if (theType === "koopprijsToegevoegd") {
-            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
-            await this.processKoopprijsToegevoegd(event, eventQuery);
-        } else if (theType === "datumVanLeveringToegevoegd") {
-            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
-            await this.processDatumVanLeveringToegevoegd(event, eventQuery);
-        } else if (
-            theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
-            theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
-            theType === "persoonsgegevensRefToegevoegd" ||
-            theType === "conceptKoopovereenkomstKoperOpgeslagen" ||
-            theType ===
-            "getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster" ||
-            theType === "getekendeKoopovereenkomstVerkoperOpgeslagen" ||
-            theType === "conceptKoopovereenkomstGetekend"
-        ) {
-            console.log(`[aggregate: ${this.aggregateId}] extract data from [${theType}] event`);
-        } else {
-            console.warn(`unsupported event in handler: [${theType}]`);
-        }
-
-        this.events.push(event);
     }
+    let aggregateId = await eventQuery.aggregateIdentifier.value;
+    let curLabel = await eventQuery.label.value;
+    let event = {
+        aggregateId: aggregateId.split("/").pop(),
+        id: eventUri.value,
+        iri: eventUri,
+        seq: await eventQuery.sequence.value,
+        type: theType,
+        actor: thePod,
+        label: curLabel,
+        time: await eventQuery.time.value,
+    };
 
-    private async processKoopprijsToegevoegd(event: Event, eventQuery: solidQuery) {
-        Object.assign(event, { koopprijs: await eventQuery.eventData.koopprijs.value });
-
-        this.stateAppend({ koopprijs: "zvg:koopprijs" }, { koopprijs: event.koopprijs });
-    }
-
-    private async processDatumVanLeveringToegevoegd(e: Event, event: solidQuery) {
-        Object.assign(e, {
-            datumVanLevering: await event.eventData.datumVanLevering.value,
-        });
-
-        this.stateAppend(
-            { datumVanLevering: "zvg:datumVanLevering" },
-            { datumVanLevering: e.datumVanLevering }
-        );
-    }
-
-    private async processKadastraalObjectIdToegevoegd(event: Event, eventQuery: solidQuery) {
+    // add dynamic label
+    try {
         Object.assign(event, {
-            kadastraalObjectId: await eventQuery.eventData.kadastraalObjectId.value,
+            newLabel: `${event.seq.toString().padStart(2, "0")} | ${event.time} | ${beautifyCamelCase(event.type)} for ${event.aggregateId}`,
         });
+    } catch (error) {
+        console.warn("building up label went wrong (somehow)", error);
+    }
+    return [eventQuery, event];
+}
 
-        this.stateAppend(
-            {
-                sor: "https://data.kkg.kadaster.nl/sor/model/def/",
-                perceel: "https://data.kkg.kadaster.nl/id/perceel/",
-                perceelnummer: {
-                    "@id": "sor:perceelnummer",
-                    "@type": "xsd:integer",
-                },
-                kadastraalObjectId: "zvg:kadastraalObjectId",
-                kadastraalObject: "zvg:kadastraalObject",
+export async function processEvent(eventQuery: solidQuery, event: Event): Promise<KoekState> {
+    let theType = event.type;
+    let aggregateId = event.aggregateId;
+
+    if (theType === "koopovereenkomstGeinitieerd") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processKoopovereenkomstGeinitieerd(event, eventQuery);
+    } else if (theType === "kadastraalObjectIdToegevoegd") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processKadastraalObjectIdToegevoegd(event, eventQuery);
+    } else if (theType === "koopprijsToegevoegd") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processKoopprijsToegevoegd(event, eventQuery);
+    } else if (theType === "datumVanLeveringToegevoegd") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processDatumVanLeveringToegevoegd(event, eventQuery);
+    } else if (
+        theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
+        theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
+        theType === "persoonsgegevensRefToegevoegd" ||
+        theType === "conceptKoopovereenkomstKoperOpgeslagen" ||
+        theType ===
+        "getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster" ||
+        theType === "getekendeKoopovereenkomstVerkoperOpgeslagen" ||
+        theType === "conceptKoopovereenkomstGetekend"
+    ) {
+        console.log(`[aggregate: ${aggregateId}] skip [${theType}] event`);
+    } else {
+        console.warn(`unsupported event in handler: [${theType}]`);
+    }
+    return initState();
+}
+
+
+
+async function processKoopprijsToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+    Object.assign(event, { koopprijs: await eventQuery.eventData.koopprijs.value });
+
+    return initState({ koopprijs: "zvg:koopprijs" }, { koopprijs: event.koopprijs });
+}
+
+async function processDatumVanLeveringToegevoegd(e: Event, event: solidQuery): Promise<KoekState> {
+    Object.assign(e, {
+        datumVanLevering: await event.eventData.datumVanLevering.value,
+    });
+
+    return initState({ datumVanLevering: "zvg:datumVanLevering" }, { datumVanLevering: e.datumVanLevering });
+}
+
+async function processKadastraalObjectIdToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+    Object.assign(event, {
+        kadastraalObjectId: await eventQuery.eventData.kadastraalObjectId.value,
+    });
+
+    let perceel = await callKadasterKnowledgeGraph(event.kadastraalObjectId);
+
+    return initState({
+        sor: "https://data.kkg.kadaster.nl/sor/model/def/",
+        perceel: "https://data.kkg.kadaster.nl/id/perceel/",
+        perceelnummer: {
+            "@id": "sor:perceelnummer",
+            "@type": "xsd:integer",
+        },
+        kadastraalObjectId: "zvg:kadastraalObjectId",
+        kadastraalObject: "zvg:kadastraalObject",
+    },
+        {
+            kadastraalObject: {
+                kadastraalObjectId: event.kadastraalObjectId,
+                perceelNummer: perceel.perceelNummer,
             },
-            {
-                kadastraalObject: {
-                    kadastraalObjectId: event.kadastraalObjectId,
-                    perceelNummer: await callKadasterKnowledgeGraph(event.kadastraalObjectId),
-                },
-            }
+        });
+}
+
+async function processKoopovereenkomstGeinitieerd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+    Object.assign(event, { template: await eventQuery.eventData.template.value });
+
+    if (event.template === "NVM Simple Default Koophuis") {
+        return initState({ typeKoopovereenkomst: "zvg:typeKoopovereenkomst" }, { typeKoopovereenkomst: "Koop" });
+    } else {
+        throw new Error(
+            `Unsupported template [${event.template}] in processing events`
         );
     }
-
-    private async processKoopovereenkomstGeinitieerd(event: Event, eventQuery: solidQuery) {
-        Object.assign(event, { template: await eventQuery.eventData.template.value });
-
-        if (event.template === "NVM Simple Default Koophuis") {
-            this.stateAppend(
-                { typeKoopovereenkomst: "zvg:typeKoopovereenkomst" },
-                { typeKoopovereenkomst: "Koop" }
-            );
-        } else {
-            throw new Error(
-                `Unsupported template [${event.template}] in processing events`
-            );
-        }
-    }
-
 }
+
 
 function beautifyCamelCase(s: string): string {
     return (

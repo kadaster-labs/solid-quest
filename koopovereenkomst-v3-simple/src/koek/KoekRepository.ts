@@ -42,12 +42,12 @@ export default class KoekRepository {
         try {
             let koekUri = `${this.logboekContainer}/${koekId}`;
             let aggregate = new KoekAggregate(koekUri, koekId, this);
-            console.log(aggregate)
             let koekQuery = solidQuery[koekUri];
             try {
                 for await (let eventUri of koekQuery.wasGeneratedBy) {
-                    await aggregate.evntHdlr.handleEvent(eventUri);
+                    aggregate.pushEvent(eventUri);
                 }
+                await aggregate.processEvents();
             } catch (e) {
                 console.error(e);
             }

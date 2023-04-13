@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from "@mui/material/Typography";
 
-import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
+import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Link from "../../src/Link";
 import PodIcon from "../../src/PodIcon";
 import { getRootContainerURL } from "../../src/Solid";
@@ -77,10 +77,10 @@ export function Step1b({ stepNr = 0, handleNext, handleBack, selectKoek, koek, r
     // Create table rows
     const rows = koeks.map((koek) => ({
       id: koek.id,
-      object: Object.hasOwnProperty.call(koek.getData(), 'kadastraalObject') ? koek.getData().kadastraalObject.perceelNummer : "...",
-      koopdatum: koek.getData().datumVanLevering || "...",
-      koopprijs: koek.getData().koopprijs || "...",
-      url: koek.getData().iri,
+      object: Object.hasOwnProperty.call(koek.data, 'kadastraalObject') ? koek.data.kadastraalObject.perceelNummer : "...",
+      koopdatum: koek.data.datumVanLevering || "...",
+      koopprijs: koek.data.koopprijs || "...",
+      url: koek.data.iri,
     }));
 
     setTableRows(rows);
@@ -93,7 +93,7 @@ export function Step1b({ stepNr = 0, handleNext, handleBack, selectKoek, koek, r
   }, []);
 
   useEffect(() => {
-    data.context.extend(SOLID_ZVG_CONTEXT);
+    solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
     // This function will run when the component mounts
     if (koek) {

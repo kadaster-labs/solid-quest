@@ -1,19 +1,19 @@
+import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import { v4 as uuidv4 } from "uuid";
 import { Event } from "../../src/koek/Event";
-import KoekEventHandler from "./KoekEventHandler";
+import KoekAggregate from "./KoekAggregate";
 import KoekRepository from "./KoekRepository";
-import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 
 
 export default class KoekCommandHandler {
     private aggregateId: string;
     private repo: KoekRepository;
-    private evntHdlr: KoekEventHandler;
+    private koek: KoekAggregate;
 
-    constructor(aggregateId: string, repo: KoekRepository, evntHdlr: KoekEventHandler) {
+    constructor(aggregateId: string, koek: KoekAggregate, repo: KoekRepository) {
         this.aggregateId = aggregateId;
+        this.koek = koek;
         this.repo = repo;
-        this.evntHdlr = evntHdlr;
     }
 
     public async populateWithMockEvents(): Promise<void> {
@@ -100,6 +100,7 @@ export default class KoekCommandHandler {
             const event: Event = {
                 aggregateId: this.aggregateId,
                 id,
+                iri: undefined,
                 type: events[seq].type,
                 seq: seq,
                 actor: events[seq].actor,
@@ -110,15 +111,15 @@ export default class KoekCommandHandler {
 
             await this.addEvent(event);
         }
-
-        await this.repo.save(this.aggregateId, this.evntHdlr.getProcessedEvents());
+        await this.koek.processEvents()
+        await this.repo.save(this.aggregateId, this.koek.getEvents());
     }
 
     private async addEvent(event: Event, save = true): Promise<void> {
         if (save) {
             let filePath = await this.repo.saveEvent(event);
             try {
-                this.evntHdlr.handleEvent(solidQuery[filePath]);
+                this.koek.pushEvent(solidQuery[filePath]);
             } catch (error) {
                 this.repo.deleteEvent(event);
             }

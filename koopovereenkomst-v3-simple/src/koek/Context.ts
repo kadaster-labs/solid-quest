@@ -17,6 +17,7 @@ export const SOLID_ZVG_CONTEXT = {
   eventData: "cloudevents:data",
   time: "cloudevents:time",
 
+  aggregateIdentifier: "zvg:aggregateIdentifier",
   aan: "zvg:aan",
   aangebodenDoor: "zvg:aangebodenDoor",
   koopprijs: "zvg:koopprijs",

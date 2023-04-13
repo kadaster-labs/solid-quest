@@ -71,13 +71,16 @@ const context = {
 export async function callKadasterKnowledgeGraph(kadastraalObjectId: string): Promise<Perceel> {
     const queryEngine = new ComunicaEngine('https://api.labs.kadaster.nl/datasets/dst/kkg/services/default/sparql');
     const path = new PathFactory({ context, queryEngine });
+    let n = kadastraalObjectId.startsWith(prefix.perceel) ? kadastraalObjectId : `${prefix.perceel}${kadastraalObjectId}`;
     const perceel = path.create({
-        subject: namedNode(`${prefix.perceel}${kadastraalObjectId}`),
+        subject: namedNode(n),
     });
 
     console.log("looking up @ KKG - perceel:", kadastraalObjectId);
-    return {
+    let result = {
         kadastraalObjectId: kadastraalObjectId,
         perceelNummer: await perceel.perceelnummer.value
     }
+    console.log('kkgService returned: ', result);
+    return result;
 }
