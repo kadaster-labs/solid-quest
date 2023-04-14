@@ -4,6 +4,7 @@ import { PathFactory } from "ldflex";
 import ComunicaEngine from "@ldflex/comunica";
 // @ts-ignore
 import { namedNode } from "@rdfjs/data-model";
+import { Perceel } from "./Perceel";
 
 const prefix = {
     gebouw: "https://data.kkg.kadaster.nl/id/gebouw/",

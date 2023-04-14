@@ -10,7 +10,14 @@ import Typography from "@mui/material/Typography";
 import Layout from "../src/Layout";
 import KoekAggregate from '../src/koek/KoekAggregate';
 import KoekRepository from "../src/koek/KoekRepository";
-import { Step1, Step1b, Step2, Step3, Step4, Step5, Step6 } from "./steps_verkoper";
+
+import Step1 from "./steps_verkoper/Step1";
+import Step1b from "./steps_verkoper/Step1b";
+import Step2 from "./steps_verkoper/Step2";
+import Step3 from "./steps_verkoper/Step3";
+import Step4 from "./steps_verkoper/Step4";
+import Step5 from "./steps_verkoper/Step5";
+import Step6 from "./steps_verkoper/Step6";
 
 const steps = [
   "Datapod koppelen",

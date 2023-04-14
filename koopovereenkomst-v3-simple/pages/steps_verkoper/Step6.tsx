@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
 
-export function Step6({ stepNr = 6, handleBack = () => {} }) {
+export default function Step6({ stepNr = 6, handleBack = () => {} }) {
   return (
     <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">

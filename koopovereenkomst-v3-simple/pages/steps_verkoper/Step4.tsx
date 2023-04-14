@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 
-export function Step4({ stepNr = 4, handleNext, handleBack = () => { } }) {
+export default function Step4({ stepNr = 4, handleNext, handleBack = () => { } }) {
   return (
     <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">

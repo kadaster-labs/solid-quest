@@ -22,7 +22,7 @@ function createData(
   return { name, value };
 }
 
-export function Step2({ stepNr = 2, handleNext, handleBack = () => { } }) {
+export default function Step2({ stepNr = 2, handleNext, handleBack = () => { } }) {
   const [loadedBRPVC, setLoadedBRPVC] = useState({} as any);
 
   const [rows, setRows] = useState([] as Array<any>);

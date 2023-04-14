@@ -54,7 +54,7 @@ interface Step1bProps {
   repo: KoekRepository;
 }
 
-export function Step1b({ stepNr = 0, handleNext, handleBack, selectKoek, koek, repo }: Step1bProps) {
+export default function Step1b({ stepNr = 0, handleNext, handleBack, selectKoek, koek, repo }: Step1bProps) {
 
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
@@ -90,7 +90,7 @@ export function Step1b({ stepNr = 0, handleNext, handleBack, selectKoek, koek, r
     if (selected > -1) {
       setSelectedRowId(rows[selected].id);
     }
-  }, []);
+  }, [repo]);
 
   useEffect(() => {
     solidQuery.context.extend(SOLID_ZVG_CONTEXT);

@@ -26,7 +26,7 @@ interface Step5Props {
   koek: KoekAggregate;
 }
 
-export function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) {
+export default function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) {
 
   const [errors, setErrors] = useState("");
   const [eventLabels, setEventLabels] = useState([]);
@@ -53,7 +53,7 @@ export function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) 
       </Typography>
 
       <Box>
-        <Box>
+        { koek && <Box>
           <Typography>Koopovereenkomst #{koek.id}</Typography>
           <List>
             <ListItem>Type: {koek.data.typeKoopovereenkomst}</ListItem>
@@ -63,7 +63,7 @@ export function Step5({ stepNr = 5, handleNext, handleBack, koek }: Step5Props) 
             <ListItem>Koopprijs: {koek.data.koopprijs}</ListItem>
             <ListItem>Datum levering: {koek.data.datumVanLevering}</ListItem>
           </List>
-        </Box>
+        </Box> }
         <Box sx={{ p: "2rem 0" }}>
           <Box>
             <List>
