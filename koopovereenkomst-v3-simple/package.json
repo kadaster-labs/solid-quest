@@ -11,7 +11,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@comunica/query-sparql-solid": "^2.3.0",
+    "@comunica/actor-http-inrupt-solid-client-authn": "^2.4.0",
+    "@comunica/query-sparql-solid": "^2.4.0",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",

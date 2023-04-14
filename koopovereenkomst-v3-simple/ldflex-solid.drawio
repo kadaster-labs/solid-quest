@@ -1,0 +1,87 @@
+<mxfile host="65bd71144e">
+    <diagram id="cAQt-3FACewYigEqpSm2" name="Page-1">
+        <mxGraphModel dx="836" dy="576" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="7" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="2" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="2" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="2" target="13" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="2" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <UserObject label="LDflex/Query-Solid" link="https://github.com/LDflex/Query-Solid" id="2">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="222.5" y="10" width="180" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LDflex/LDflex-Comunica (3.4)" link="https://github.com/LDflex/LDflex-Comunica" id="4">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="245" width="200" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LDflex/LDflex-rdflib/" link="https://github.com/LDflex/LDflex-rdflib/" id="6">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="380" y="245" width="210" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="9" value="Query Engine (pick 1)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="245" y="265" width="135" height="30" as="geometry"/>
+                </mxCell>
+                <UserObject label="nodeSolidServer/solid-auth-client&lt;br&gt;(deprecated, works not)" link="https://github.com/nodeSolidServer/solid-auth-client" id="10">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="530" y="15" width="330" height="60" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="11" value="+ auth" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="45" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="12" target="15" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="12" target="16" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <UserObject label="comunica/comunica-feature-solid" link="https://github.com/comunica/comunica-feature-solid" id="12">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="30" y="540" width="220" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="LDflex/LDflex" link="https://github.com/LDflex/LDflex" id="13">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="147.5" y="130" width="330" height="60" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="comunica/comunica-feature-solid&lt;br&gt;query-sparql-solid" link="https://github.com/comunica/comunica-feature-solid/tree/master/engines/query-sparql-solid" id="15">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="30" y="667" width="240" height="80" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="comunica/comunica-feature-solid&lt;br&gt;actor-http-inrupt-solid-client-authn" link="https://github.com/comunica/comunica-feature-solid/tree/master/packages/actor-http-inrupt-solid-client-authn" id="16">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="320" y="667" width="240" height="80" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <UserObject label="https://github.com/inrupt/solid-client-js" link="https://github.com/inrupt/solid-client-js" id="17">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="1200" y="20" width="250" height="60" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="24" style="edgeStyle=none;html=1;" parent="1" source="23" target="12" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <UserObject label="LDflex/LDflex-Comunica (4+)" link="https://github.com/LDflex/LDflex-Comunica" id="23">
+                    <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                        <mxGeometry x="40" y="414" width="200" height="70" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

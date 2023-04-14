@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useSession } from "@inrupt/solid-ui-react";
+const QueryEngine = require('@comunica/query-sparql-solid').QueryEngine;
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -60,23 +62,16 @@ export function createPathUsingFactory(factory: any) {
   return function createPath(node: any, sources?: any, options?: any) {
     const _options = options ?? {}
     const subject = typeof node === 'string' ? namedNode(node) : node;
-    
+
     const namespace = NAMESPACE.exec(subject.value)?.[0] ?? ''
     console.log(namespace)
-    
+
     // Try and use the original nodes namespace for the vocab if no context is provided
     const context = _options.context ?? { "@context": { '@vocab': namespace } };
-  
+
     return factory(sources ?? namespace, { ..._options, context }).create({ subject });
   }
 }
-
-const koek_path = pathFactory('http://localhost:3001/verkoper-vera/koopovereenkomst/id/22067', { context: { "@context": {
-  '@vocab': 'https://www.w3.org/TR/prov-o/#',
-  'i': 'http://localhost:3001/koper-koos/koopovereenkomst/events/id/',
-  'id0': 'http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/',
-} } });
-const koopovereenkomst = koek_path.create('http://localhost:3001/verkoper-vera/koopovereenkomst/id/22067');
 
 async function showKoek(koek) {
   for await (const event of koek.wasGeneratedBy) {
@@ -84,8 +79,6 @@ async function showKoek(koek) {
   }
   console.log(`This koek is ${await koek.wasGeneratedBy.values}`);
 }
-
-showKoek(koopovereenkomst);
 
 const VerkoopLogboekContainer = function () {
   return `${getRootContainerURL()}/koopovereenkomst/id`;
@@ -100,6 +93,8 @@ interface Step1bProps {
 }
 
 export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: Step1bProps) {
+
+  const { session } = useSession();
 
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
@@ -117,17 +112,41 @@ export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: 
     // Create aggregates
     const koeks: KoopovereenkomstAggregate[] = [];
     for (let i = 0; i < ids.length; i++) {
-      const ko = data[koekUrls[i]];
+
+      // https://github.com/comunica/comunica-feature-solid/tree/master/engines/query-sparql-solid
+      const myEngine = new QueryEngine()
+
+      await myEngine.queryBindings(`
+        SELECT * WHERE {
+            ?s ?p ?o
+        } LIMIT 100`, {
+        sources: [session.info.webId], // Sets your profile as query source
+        '@comunica/actor-http-inrupt-solid-client-authn:session': session,
+      });
+
+      const koek_path = pathFactory(koekUrls[i], { context: { "@context": {
+          '@vocab': 'https://www.w3.org/TR/prov-o/#',
+          'i': 'http://localhost:3001/koper-koos/koopovereenkomst/events/id/',
+          'id0': 'http://localhost:3001/verkoper-vera/koopovereenkomst/events/id/',
+        },
+        queryEngine: myEngine,
+      },
+
+      });
+      const ko = koek_path.create(koekUrls[i]);
+
+      // showKoek(koopovereenkomst);
+
       const aggregate = new KoopovereenkomstAggregate(koekUrls[i], ids[i]);
       // console.log(aggregate)
 
-      // try {
-      //   for await (const eventUri of ko.wasGeneratedBy) {
-      //     await aggregate.handleEvent(eventUri);
-      //   }
-      // } catch (e) {
-      //   console.error(e);
-      // }
+      try {
+        for await (const eventUri of ko.wasGeneratedBy) {
+          await aggregate.handleEvent(eventUri);
+        }
+      } catch (e) {
+        console.error(e);
+      }
 
       koeks.push(aggregate);
     }
