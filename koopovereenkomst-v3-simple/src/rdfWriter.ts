@@ -1,6 +1,6 @@
 import * as $rdf from 'rdflib';
 
-import { Event } from './aggregate/koopovereenkomst-aggregate';
+import { Event } from "./koek/Event";
 import { getWebId } from './Solid';
 
 export function Aggregate2RDF(id: string, events: Event[], options): string {
@@ -19,8 +19,7 @@ export function Aggregate2RDF(id: string, events: Event[], options): string {
   };
 
   const eventList = events.map(event => { 
-    const eventContainer = event.actor === "koper-koos" ? `http://localhost:3001/koper-koos/koopovereenkomst/events/id` : options.eventContainer;
-    return `${eventContainer}/${event.id}`
+    return `${event.id}`
   });
 
   for (const event of eventList) {

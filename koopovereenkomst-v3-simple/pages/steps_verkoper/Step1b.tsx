@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -17,12 +16,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from "@mui/material/Typography";
 
-import { default as data } from "@solid/query-ldflex/lib/exports/rdflib";
+import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Link from "../../src/Link";
 import PodIcon from "../../src/PodIcon";
-import { getAllFileUrls, getRootContainerURL, saveTurtle } from "../../src/Solid";
-import { SOLID_ZVG_CONTEXT } from "../../src/aggregate/context";
-import KoopovereenkomstAggregate, { Event } from "../../src/aggregate/koopovereenkomst-aggregate";
+import { getRootContainerURL } from "../../src/Solid";
+import { SOLID_ZVG_CONTEXT } from "../../src/koek/Context";
+import KoekAggregate from "../../src/koek/KoekAggregate";
+import KoekRepository from "../../src/koek/KoekRepository";
 
 /**
  * Wat is het opbouwen van de koopovereenkomst precies?
@@ -50,10 +50,11 @@ interface Step1bProps {
   handleNext: () => void;
   handleBack: () => void;
   selectKoek: (koek: string) => void;
-  koek: KoopovereenkomstAggregate;
+  koek: KoekAggregate;
+  repo: KoekRepository;
 }
 
-export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: Step1bProps) {
+export default function Step1b({ stepNr = 0, handleNext, handleBack, selectKoek, koek, repo }: Step1bProps) {
 
   // Loading koopovereenkomsten
   const [tableRows, setTableRows] = useState([] as Array<any>);
@@ -64,35 +65,22 @@ export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: 
   const [selectedOption, setSelectedOption] = useState(1);
 
   const loadKoeks = useCallback(async (selectedKoekId: string = undefined) => {
-    const koekUrls = await getAllFileUrls(VerkoopLogboekContainer());
-    console.log(koekUrls);
-    const ids = koekUrls.map((file) => file.split('/').pop());
+    let koekIds = await repo.list();
 
     // Create aggregates
-    const koeks: KoopovereenkomstAggregate[] = [];
-    for (let i = 0; i < ids.length; i++) {
-      const ko = data[koekUrls[i]];
-      const aggregate = new KoopovereenkomstAggregate(koekUrls[i], ids[i]);
-      console.log(aggregate)
-
-      try {
-        for await (const eventUri of ko.wasGeneratedBy) {
-          await aggregate.handleEvent(eventUri);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-
+    const koeks: KoekAggregate[] = [];
+    for (let i = 0; i < koekIds.length; i++) {
+      let aggregate = await repo.load(koekIds[i]);
       koeks.push(aggregate);
     }
 
     // Create table rows
     const rows = koeks.map((koek) => ({
       id: koek.id,
-      object: Object.hasOwnProperty.call(koek.getData(), 'kadastraalObject') ? koek.getData().kadastraalObject.perceelNummer : "...",
-      koopdatum: koek.getData().datumVanLevering || "...",
-      koopprijs: koek.getData().koopprijs || "...",
-      url: koek.getData().iri,
+      object: Object.hasOwnProperty.call(koek.data, 'kadastraalObject') ? koek.data.kadastraalObject.perceelNummer : "...",
+      koopdatum: koek.data.datumVanLevering || "...",
+      koopprijs: koek.data.koopprijs || "...",
+      url: koek.data.iri,
     }));
 
     setTableRows(rows);
@@ -102,10 +90,10 @@ export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: 
     if (selected > -1) {
       setSelectedRowId(rows[selected].id);
     }
-  }, []);
+  }, [repo]);
 
   useEffect(() => {
-    data.context.extend(SOLID_ZVG_CONTEXT);
+    solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
     // This function will run when the component mounts
     if (koek) {
@@ -117,17 +105,7 @@ export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: 
 
   const handleConfirm = async () => {
     setIsLoading(true);
-    const randomId = (Math.floor(Math.random() * 100000) + 1000).toString();
-
-    const filepath = `${VerkoopLogboekContainer()}/${randomId}`;
-    await saveTurtle(filepath, `
-      @prefix koopovereenkomst: <> .
-      @prefix zvg: <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
-
-      koopovereenkomst:
-        a zvg:Koop .
-    `);
-
+    let randomId = await repo.create()
     selectKoek(randomId);
 
     loadKoeks(randomId);
@@ -144,101 +122,8 @@ export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: 
   };
 
   const createEvents = async () => {
-    const events = [
-      {
-        type: 'koopovereenkomstGeinitieerd',
-        data: {
-          template: 'NVM Simple Default Koophuis',
-        },
-        actor: 'verkoper',
-      },
-      {
-        type: 'kadastraalObjectIdToegevoegd',
-        data: {
-          kadastraalObjectId: "10020263270000",
-        },
-        actor: 'verkoper',
-      },
-      {
-        type: 'koopprijsToegevoegd',
-        data: {
-          // random price between 100k and 1m
-          koopprijs: Math.floor(Math.random() * 900000) + 100000,
-        },
-        actor: 'verkoper',
-      },
-      {
-        type: 'datumVanLeveringToegevoegd',
-        data: {
-          datumVanLevering: new Date().toISOString(),
-        },
-        actor: 'verkoper',
-      },
-      {
-        type: 'persoonsgegevensRefToegevoegd',
-        data: {},
-        actor: 'verkoper',
-      },
-      {
-        type: 'persoonsgegevensRefToegevoegd',
-        data: {},
-        actor: 'koper-koos',
-      },
-      {
-        type: 'conceptKoopovereenkomstKoperOpgeslagen',
-        data: {},
-        actor: 'koper-koos',
-      },
-      {
-        type: 'conceptKoopovereenkomstKoperOpgeslagen',
-        data: {},
-        actor: 'verkoper',
-      },
-      {
-        type: 'conceptKoopovereenkomstGetekend',
-        data: {},
-        actor: 'verkoper',
-      },
-      {
-        type: 'conceptKoopovereenkomstGetekend',
-        data: {},
-        actor: 'koper-koos',
-      },
-      {
-        type: 'getekendeKoopovereenkomstVerkoperOpgeslagen',
-        data: {},
-        actor: 'verkoper',
-      },
-      {
-        type: 'getekendeKoopovereenkomstVerkoperOpgeslagen',
-        data: {},
-        actor: 'koper-koos',
-      },
-      {
-        type: 'getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster',
-        data: {},
-        actor: 'koper-koos',
-      },
-    ];
+    await koek.cmdHdlr.populateWithMockEvents()
 
-    for (let seq = 0; seq < events.length; seq++) {
-      const id = uuidv4();
-
-      const event: Event = {
-        aggregateId: koek.id,
-        id,
-        type: events[seq].type,
-        seq: seq,
-        actor: events[seq].actor,
-        label: `${seq}-${events[seq].actor}-${events[seq].type}`,
-        time: new Date().toISOString(),
-        ...events[seq].data
-      }
-
-      await koek.addEvent(event);
-    }
-
-    await koek.save();
     loadKoeks(koek.id);
   }
 
@@ -306,9 +191,7 @@ export function Step1b({stepNr = 0, handleNext, handleBack, selectKoek, koek }: 
                       <TableCell>{row.koopdatum}</TableCell>
                       <TableCell>{row.koopprijs}</TableCell>
                       <TableCell>
-                        <Link href={row.url} target="_blank">
-                          <PodIcon />
-                        </Link>
+                        <PodIcon href={row.url} target="_blank" />
                       </TableCell>
                     </TableRow>
                   ))}

@@ -18,7 +18,7 @@ import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 import { VCARD } from "@inrupt/vocab-common-rdf";
 import { SolidPerson, SolidAddress } from "../../src/Solid";
 
-export function Step1({ handleNext, handleBack = () => { } }) {
+export default function Step1({ handleNext, handleBack = () => { } }) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);

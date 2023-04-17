@@ -9,7 +9,7 @@ import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
 import Link from "../../src/Link";
 
-export function Step3({ stepNr = 3, handleNext, handleBack = () => { } }) {
+export default function Step3({ stepNr = 3, handleNext, handleBack = () => { } }) {
   const [loadedBRKVC, setLoadedBRKVC] = useState([] as any);
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
