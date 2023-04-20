@@ -16,7 +16,7 @@ export default class KoekCommandHandler {
         this.repo = repo;
     }
 
-    public async initializeWith(template: string) {
+    public async initializeWith(template: string): Promise<boolean> {
         let event = this.buildEvent(
             'koopovereenkomstGeinitieerd',
             'verkoper',
@@ -27,6 +27,22 @@ export default class KoekCommandHandler {
         await this.addEvent(event);
         await this.koek.processEvents();
         await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+        return true;
+    }
+
+    public async toevoegenPersoonsgegevensRef(refVcUrl: string): Promise<boolean> {
+        console.log('toevoegen persoonsgegevens vc ref url', refVcUrl);
+        let event = this.buildEvent(
+            'persoonsgegevensRefToegevoegd',
+            'verkoper',
+            {
+                refVcUrl: refVcUrl,
+            },
+        );
+        await this.addEvent(event);
+        await this.koek.processEvents();
+        await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+        return true;
     }
 
     public async populateWithMockEvents(): Promise<void> {

@@ -13,4 +13,5 @@ export interface Event {
   kadastraalObjectId?: string;
   koopprijs?: number;
   datumVanLevering?: string;
+  refVcUrls?: string[];
 }
