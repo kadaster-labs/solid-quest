@@ -106,9 +106,10 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
   const handleConfirm = async () => {
     setIsLoading(true);
     let randomId = await repo.create()
+    let koek = await repo.load(randomId);
+    await koek.cmdHdlr.initializeWith("NVM Standaard Koopovereenkomst Koophuis");
+    
     await selectKoek(randomId);
-    koek.cmdHdlr.initializeWith("NVM Standaard Koopovereenkomst Koophuis");
-
     loadKoeks(randomId);
     setIsLoading(false);
   };

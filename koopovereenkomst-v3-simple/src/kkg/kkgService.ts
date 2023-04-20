@@ -70,9 +70,18 @@ const context = {
 };
 
 export async function callKadasterKnowledgeGraph(kadastraalObjectId: string): Promise<Perceel> {
+    if (kadastraalObjectId === undefined) {
+        throw new Error(`Kadaster Knowledge Graph kan niet zonder [kadastraalObjecId] aangeroepen worden (ontvangen: ${kadastraalObjectId})`);
+    }
     const queryEngine = new ComunicaEngine('https://api.labs.kadaster.nl/datasets/dst/kkg/services/default/sparql');
     const path = new PathFactory({ context, queryEngine });
-    let n = kadastraalObjectId.startsWith(prefix.perceel) ? kadastraalObjectId : `${prefix.perceel}${kadastraalObjectId}`;
+
+    // safety check string conversion
+    let koid = typeof kadastraalObjectId == 'string' ? kadastraalObjectId : String(kadastraalObjectId);
+
+    // safety check kadasterObjectId vs IRI 
+    let n = koid.startsWith(prefix.perceel) ? kadastraalObjectId : `${prefix.perceel}${kadastraalObjectId}`;
+
     const perceel = path.create({
         subject: namedNode(n),
     });

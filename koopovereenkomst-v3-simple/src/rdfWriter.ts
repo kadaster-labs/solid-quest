@@ -3,7 +3,7 @@ import * as $rdf from 'rdflib';
 import { Event } from "./koek/Event";
 import { getWebId } from './Solid';
 
-export function Aggregate2RDF(id: string, events: Event[], options): string {
+export function aggregate2RDF(id: string, events: Event[], options): string {
   if (events.length === 0) {
     return '';
   }

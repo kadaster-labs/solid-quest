@@ -1,6 +1,6 @@
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import * as solid from "../Solid";
-import { Aggregate2RDF, event2RDF } from "../rdfWriter";
+import { aggregate2RDF, event2RDF } from "../rdfWriter";
 import { Event } from "./Event";
 import KoekAggregate from "./KoekAggregate";
 
@@ -13,8 +13,8 @@ export default class KoekRepository {
 
     constructor(rootContainerUrl: string = solid.getRootContainerURL()) {
         this.rootContainerUrl = rootContainerUrl;
-        this.logboekContainer = `${rootContainerUrl}/koopovereenkomst/id`;
-        this.eventContainer = `${rootContainerUrl}/koopovereenkomst/events/id`;
+        this.logboekContainer = `${this.rootContainerUrl}/koopovereenkomst/id`;
+        this.eventContainer = `${this.rootContainerUrl}/koopovereenkomst/events/id`;
     }
 
     public async list(): Promise<Array<string>> {
@@ -72,8 +72,8 @@ export default class KoekRepository {
         return filepath;
     }
 
-    public async save(aggregateId: string, events: Event[]): Promise<void> {
-        const rdf = Aggregate2RDF(aggregateId, events, {
+    public async saveAggregate(aggregateId: string, events: Event[]): Promise<void> {
+        const rdf = aggregate2RDF(aggregateId, events, {
             vlbContainer: this.logboekContainer,
             eventContainer: this.eventContainer,
         });

@@ -26,7 +26,7 @@ export default class KoekCommandHandler {
         );
         await this.addEvent(event);
         await this.koek.processEvents();
-        await this.repo.save(this.aggregateId, this.koek.getEvents());
+        await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
     }
 
     public async populateWithMockEvents(): Promise<void> {
@@ -126,7 +126,7 @@ export default class KoekCommandHandler {
             await this.addEvent(event);
         }
         await this.koek.processEvents()
-        await this.repo.save(this.aggregateId, this.koek.getEvents());
+        await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
     }
 
     private async addEvent(event: Event, save = true): Promise<void> {

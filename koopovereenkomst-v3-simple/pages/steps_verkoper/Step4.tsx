@@ -47,7 +47,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { } }
             Het volgende object ID van het perceel is gevonden in de verifiable credential van het Kadaster.
             Maak gebruik van de Kadaster Knowledge Graph om informatie op te halen over je perceel.
           </Typography>
-          <KadasterKnowledgeGraph objectId={(loadedBRKVC[0].vc.credentialSubject.eigendom.perceel.identificatie as number)} />
+          <KadasterKnowledgeGraph objectId={(loadedBRKVC[0].vc.credentialSubject.eigendom.perceel.identificatie as string)} />
         </Box>
         :
         <Box>

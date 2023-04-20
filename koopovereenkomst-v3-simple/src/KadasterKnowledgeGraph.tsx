@@ -6,13 +6,14 @@ import { callKadasterKnowledgeGraph } from "./kkg/kkgService";
 const KadasterKnowledgeGraph = function ({ objectId }) {
     const [perceelnummer, setPerceelnummer] = useState("");
 
-    let [kadastraalObjectId, setKadastraalObjectId] = useState(objectId);
+    let [kadastraalObjectId, setKadastraalObjectId] = useState(String(objectId));
 
     const handleChange = (e) => {
         setKadastraalObjectId(e.target.value);
     };
 
     const callKadaster = async () => {
+        console.log('calling KKG with', kadastraalObjectId);
         let perceel = await callKadasterKnowledgeGraph(kadastraalObjectId);
         setPerceelnummer(perceel.perceelNummer);
     }

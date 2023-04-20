@@ -117,10 +117,15 @@ async function processKadastraalObjectIdToegevoegd(event: Event, eventQuery: sol
         });
 }
 
+const supportedTemplates = [
+    "NVM Standaard Koopovereenkomst Koophuis",
+    "NVM Simple Default Koophuis",
+];
+
 async function processKoopovereenkomstGeinitieerd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
     Object.assign(event, { template: await eventQuery.eventData.template.value });
 
-    if (event.template === "NVM Simple Default Koophuis") {
+    if (supportedTemplates.includes(event.template)) {
         return initState({ typeKoopovereenkomst: "zvg:typeKoopovereenkomst" }, { typeKoopovereenkomst: "Koop" });
     } else {
         throw new Error(
