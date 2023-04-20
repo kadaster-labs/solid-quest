@@ -16,6 +16,19 @@ export default class KoekCommandHandler {
         this.repo = repo;
     }
 
+    public async initializeWith(template: string) {
+        let event = this.buildEvent(
+            'koopovereenkomstGeinitieerd',
+            'verkoper',
+            {
+                template: template,
+            },
+        );
+        await this.addEvent(event);
+        await this.koek.processEvents();
+        await this.repo.save(this.aggregateId, this.koek.getEvents());
+    }
+
     public async populateWithMockEvents(): Promise<void> {
         let events = [
             {
@@ -95,20 +108,21 @@ export default class KoekCommandHandler {
         ];
 
         for (let seq = 0; seq < events.length; seq++) {
-            const id = uuidv4();
+            // const id = uuidv4();
 
-            const event: Event = {
-                aggregateId: this.aggregateId,
-                id,
-                iri: undefined,
-                type: events[seq].type,
-                seq: seq,
-                actor: events[seq].actor,
-                label: `${seq}-${events[seq].actor}-${events[seq].type}`,
-                time: new Date().toISOString(),
-                ...events[seq].data
-            }
+            // const event: Event = {
+            //     aggregateId: this.aggregateId,
+            //     id,
+            //     iri: undefined,
+            //     type: events[seq].type,
+            //     seq: seq,
+            //     actor: events[seq].actor,
+            //     label: `${seq}-${events[seq].actor}-${events[seq].type}`,
+            //     time: new Date().toISOString(),
+            //     ...events[seq].data
+            // }
 
+            let event = this.buildEvent(events[seq].type, events[seq].actor, events[seq].data)
             await this.addEvent(event);
         }
         await this.koek.processEvents()
@@ -124,6 +138,24 @@ export default class KoekCommandHandler {
                 this.repo.deleteEvent(event);
             }
         }
+    }
+
+    private buildEvent(type: string, actor: string, data: object): Event {
+        let id = uuidv4();
+        let seq = this.koek.getEvents.length;
+
+        let event: Event = {
+            aggregateId: this.aggregateId,
+            id,
+            iri: undefined,
+            type: type,
+            seq: seq,
+            actor: actor,
+            label: `${seq}-${actor}-${type}`,
+            time: new Date().toISOString(),
+            ...data
+        }
+        return event;
     }
 
 }

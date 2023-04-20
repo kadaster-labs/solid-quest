@@ -18,7 +18,7 @@ import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 import { VCARD } from "@inrupt/vocab-common-rdf";
 import { SolidPerson, SolidAddress } from "../../src/Solid";
 
-export default function Step1({ handleNext, handleBack = () => { } }) {
+export default function Step1({ stepNr = 1, handleNext, handleBack = () => { } }) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);
@@ -104,11 +104,16 @@ export default function Step1({ handleNext, handleBack = () => { } }) {
       <Typography variant="h1" color="text.primary" align="center">
         Start een nieuwe koopovereenkomst
       </Typography>
+      <Typography variant="h2" color="text.primary" align="center">
+        {stepNr}. Koppelen van je Personal Online Datastore (POD)
+      </Typography>
+
       <Typography variant="body1" color="text.primary" align="center">
-        Om een koopovereenkomst te starten als verkoper, doorloop je verschillende stappen.
+        Om een koopovereenkomst te starten als verkoper,<br />
+        doorloop je verschillende stappen.
       </Typography>
       <Box>
-        <Typography variant="body1" color="text.primary" align="center">
+        <Typography variant="h2" color="text.primary" align="center">
           Log in met je WebID of mailadres
         </Typography>
         <ConnectSolid />

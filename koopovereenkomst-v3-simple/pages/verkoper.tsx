@@ -12,20 +12,20 @@ import KoekAggregate from '../src/koek/KoekAggregate';
 import KoekRepository from "../src/koek/KoekRepository";
 
 import Step1 from "./steps_verkoper/Step1";
-import Step1b from "./steps_verkoper/Step1b";
 import Step2 from "./steps_verkoper/Step2";
 import Step3 from "./steps_verkoper/Step3";
 import Step4 from "./steps_verkoper/Step4";
 import Step5 from "./steps_verkoper/Step5";
 import Step6 from "./steps_verkoper/Step6";
+import Step7 from "./steps_verkoper/Step7";
 
 const steps = [
-  "Datapod koppelen",
-  "Koopovereenkomst aanmaken (debug)",
+  "POD koppelen",
+  "Koopovereenkomst",
   "Persoonsgegevens",
   "Eigendomsgegevens",
-  "Koopovereenkomst aanmaken",
-  "Koopovereenkomst",
+  "Koopdetails",
+  "Overzicht",
   "Tekenen",
 ];
 
@@ -68,19 +68,19 @@ export default function Verkoper() {
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
-        return <Step1 handleNext={handleNext} />;
+        return <Step1 stepNr={props.value + 1} handleNext={handleNext} />;
       case 1:
-        return <Step1b stepNr={props.value} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} repo={koekRepo} />;
+        return <Step2 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} repo={koekRepo} />;
       case 2:
-        return <Step2 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} />;
+        return <Step3 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} />;
       case 3:
-        return <Step3 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} />;
+        return <Step4 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} />;
       case 4:
-        return <Step4 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} />;
+        return <Step5 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} />;
       case 5:
-        return <Step5 stepNr={props.value} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
+        return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 6:
-        return <Step6 stepNr={props.value} handleBack={handleBack} />;
+        return <Step7 stepNr={props.value + 1} handleBack={handleBack} />;
       default:
         return <Step1 handleNext={handleNext} />;
     }

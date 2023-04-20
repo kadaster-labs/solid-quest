@@ -31,7 +31,7 @@ export default class KoekAggregate {
     this._id = id;
     this.cmdHdlr = new KoekCommandHandler(this._id, this, repo);
 
-    this.appendState(this.internalState, {
+    this.internalState = this.appendState(this.internalState, {
       "@context": {
         iri: "zvg:koopovereenkomst-iri",
         koopovereenkomst: "zvg:koopovereenkomst",
@@ -56,7 +56,6 @@ export default class KoekAggregate {
       .sort((a, b) => a[1].seq - b[1].seq);
     this.events = loadedEvents
       .map(v => v[1]);
-    console.log(`[${this._id}] loaded events: `, this.events);
     let l = await Promise.all(loadedEvents
       .map(async (q) => await processEvent(await q[0], q[1])));
     this.internalState = l
@@ -91,11 +90,12 @@ export default class KoekAggregate {
   }
 
   private appendState(cumState: KoekState, state: KoekState): KoekState {
-    cumState = { ...cumState, ...state };
-    cumState["@context"] = {
+    let stateContext = {
       ...cumState["@context"],
       ...state["@context"],
     };
+    cumState = { ...state, ...cumState };
+    cumState["@context"] = stateContext;
     return cumState;
   }
 }

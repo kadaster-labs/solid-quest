@@ -1,123 +1,214 @@
-import * as React from "react";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { Box } from "@mui/system";
-import VC, { SolidVC, VCType } from '../../src/VC';
-import Image from "../../src/Image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Radio from "@mui/material/Radio";
+import Select from '@mui/material/Select';
+import Stack from "@mui/material/Stack";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Link from "../../src/Link";
+import Typography from "@mui/material/Typography";
 
-function createData(
-  name: string,
-  value: string,
-) {
-  return { name, value };
+import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
+import Link from "../../src/Link";
+import PodIcon from "../../src/PodIcon";
+import { getRootContainerURL } from "../../src/Solid";
+import { SOLID_ZVG_CONTEXT } from "../../src/koek/Context";
+import KoekAggregate from "../../src/koek/KoekAggregate";
+import KoekRepository from "../../src/koek/KoekRepository";
+
+/**
+ * Wat is het opbouwen van de koopovereenkomst precies?
+ *
+ * - Verkooplogboek
+ *  - Bij verkoper
+ *  - Verwijzingen naar events
+ * - Lijst van events
+ *  - Verspreid over verkoper en koper
+ *
+ * Functionaliteit:
+ * - Verkoper kan een nieuwe koopovereenkomst aanmaken ✅
+ * - Verkoper kan een bestaande koopovereenkomst openen ✅
+ * - Verkoper kan een bestaande koopovereenkomst opslaan ✅
+ * - Verkoper kan events toevoegen aan een bestaande koopovereenkomst ✅
+ *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1 ✅
+ */
+
+const VerkoopLogboekContainer = function () {
+  return `${getRootContainerURL()}/koopovereenkomst/id`;
 }
 
-export default function Step2({ stepNr = 2, handleNext, handleBack = () => { } }) {
-  const [loadedBRPVC, setLoadedBRPVC] = useState({} as any);
+interface Step2Props {
+  stepNr: number;
+  handleNext: () => void;
+  handleBack: () => void;
+  selectKoek: (koek: string) => void;
+  koek: KoekAggregate;
+  repo: KoekRepository;
+}
 
-  const [rows, setRows] = useState([] as Array<any>);
+export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, koek, repo }: Step2Props) {
 
-  const updateVCs = useCallback(async (vcs: SolidVC[]) => {
-    // useCallback is important here. With each update from vcs
-    // <VC> will be re-rendered, and this will cause a new updateVCs
-    // resulting in an infinite loop.
+  // Loading koopovereenkomsten
+  const [tableRows, setTableRows] = useState([] as Array<any>);
+  const [selectedRowId, setSelectedRowId] = useState(null);
 
-    if (vcs.length === 0) {
-      setLoadedBRPVC({});
-      return;
+  // Creating a new koopovereenkomst
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(1);
+
+  const loadKoeks = useCallback(async (selectedKoekId: string = undefined) => {
+    let koekIds = await repo.list();
+
+    // Create aggregates
+    const koeks: KoekAggregate[] = [];
+    for (let i = 0; i < koekIds.length; i++) {
+      let aggregate = await repo.load(koekIds[i]);
+      koeks.push(aggregate);
     }
 
-    const vc = vcs[0];
-    setLoadedBRPVC(vc);
+    // Create table rows
+    const rows = koeks.map((koek) => ({
+      id: koek.id,
+      object: Object.hasOwnProperty.call(koek.data, 'kadastraalObject') ? koek.data.kadastraalObject.perceelNummer : "...",
+      koopdatum: koek.data.datumVanLevering || "...",
+      koopprijs: koek.data.koopprijs || "...",
+      url: koek.data.iri || "http://localhost:3001",
+    }));
 
-    let certificateValidity;
-    // if type is string, it's a stringified JSON object
-    if (typeof vc.status === "string") {
-      certificateValidity = vc.status;
-    } else if (vc.status.verified) {
-      certificateValidity = "✅";
+    setTableRows(rows);
+
+    // Select the row if one was selected
+    const selected = rows.findIndex((row) => row.id === selectedKoekId);
+    if (selected > -1) {
+      setSelectedRowId(rows[selected].id);
+    }
+  }, [repo]);
+
+  useEffect(() => {
+    solidQuery.context.extend(SOLID_ZVG_CONTEXT);
+
+    // This function will run when the component mounts
+    if (koek) {
+      loadKoeks(koek.id);
     } else {
-      certificateValidity = "❌";
+      loadKoeks();
     }
+  }, [loadKoeks, koek]);
 
-    setRows([
-      createData('Naam', vc.vc.credentialSubject.naam),
-      createData('Geboortedatum', vc.vc.credentialSubject.geboorte.geboortedatum),
-      createData('Geboorteplaats', vc.vc.credentialSubject.geboorte.geboorteplaats),
-      createData('Geboorteland', vc.vc.credentialSubject.geboorte.geboorteland),
-      createData('Certificaat geldig?', certificateValidity),
-    ]);
-  }, []);
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    let randomId = await repo.create()
+    await selectKoek(randomId);
+    koek.cmdHdlr.initializeWith("NVM Standaard Koopovereenkomst Koophuis");
+
+    loadKoeks(randomId);
+    setIsLoading(false);
+  };
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const handleRowSelect = (event, row) => {
+    setSelectedRowId(row.id);
+    selectKoek(row.id);
+  };
+
+  const createEvents = async () => {
+    await koek.cmdHdlr.populateWithMockEvents()
+
+    loadKoeks(koek.id);
+  }
 
   return (
-    <Box sx={{ flex: 1 }}>
+    <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
       <Typography variant="h1" color="text.primary" align="center">
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst
+        {stepNr}. Selecteren koopovereenkomst
       </Typography>
 
-      <VC type={VCType.BRP} onChange={updateVCs} />
-
-      <hr />
-      {Object.keys(loadedBRPVC).length === 0 ?
-        <Box>
-          <Link href="/brpersonen" target="_blank">
-            <Image
-              src="/solid-quest/images/mijnoverheid.png"
-              alt="Mijn Overheid Logo"
-              width={400}
-              height={180}
-              style={{ display: "block", margin: "25px auto" }}
-            />
-          </Link>
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginBottom: '2rem' }}>
+        <Typography variant="body1" color="text.primary" align="center" sx={{
+          margin: "25px auto 0px auto",
+          maxWidth: "600px",
+        }}>
+          Voor het aanmaken van de koopovereenkomst, kun je kiezen uit <Link href="" color="text.secondary">verschillende standaard koopovereenkomsten</Link>. Kies hieronder welke voor jou van toepassing is.
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+          <Box sx={{ minWidth: 120, my: '2rem' }}>
+            <Select value={selectedOption} onChange={handleOptionChange}>
+              <MenuItem value={1}>Standaard koopovereenkomst</MenuItem>
+              <MenuItem value={2}>Default koopovereenkomst</MenuItem>
+              <MenuItem value={3}>Die ene koopovereenkomst</MenuItem>
+            </Select>
+          </Box>
+          {isLoading ? <CircularProgress /> : <Button variant="contained" onClick={handleConfirm}>Create</Button>}
         </Box>
-        :
-        <Box>
-          <Typography variant="body1" color="text.primary" align="center">
-            Je hebt je persoonsgegevens opgeslagen in je datakluis. Kloppen de gegevens?
-          </Typography>
-          {/* https://mui.com/material-ui/react-table/ */}
-          <TableContainer sx={{ marginY: '3rem' }} component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{
-                      '&:last-child td, &:last-child th': {
-                        border: 0,
-                        fontStyle: 'italic',
-                        fontWeight: 'bold',
-                        height: '4rem',
-                      }
-                    }}
-                  >
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.value}</TableCell>
+        {/* Onderste helft */}
+        {tableRows.length > 0 && (
+          <Box>
+            <Typography variant="body1" color="text.primary" align="center" sx={{
+              marginX: "auto",
+              maxWidth: "600px",
+            }}>
+              Kies hieronder de koopovereenkomst om (verder) op te stellen.
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650, '& .MuiRadio-root.Mui-checked': { color: 'rgba(255, 255, 255, 0.9)' } }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox" />
+                    <TableCell>Id</TableCell>
+                    <TableCell>Object</TableCell>
+                    <TableCell>Datum</TableCell>
+                    <TableCell>Prijs</TableCell>
+                    <TableCell>Link</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      }
+                </TableHead>
+                <TableBody>
+                  {tableRows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      hover
+                      onClick={(event) => handleRowSelect(event, row)}
+                      selected={selectedRowId === row.id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Radio checked={selectedRowId === row.id} />
+                      </TableCell>
+                      <TableCell component="th" scope="row">{row.id}</TableCell>
+                      <TableCell>{row.object}</TableCell>
+                      <TableCell>{row.koopdatum}</TableCell>
+                      <TableCell>{row.koopprijs}</TableCell>
+                      <TableCell>
+                        <PodIcon href={row.url} target="_blank" />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        )}
+      </Box>
 
-      <Stack direction="row" justifyContent="space-between">
+      <Stack sx={{ width: "50vw", marginBottom: '2rem' }} direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleNext}>Akkoord</Button> }
+        {selectedRowId && <Button variant="contained" onClick={createEvents}>Create events (debug)</Button>}
+        {selectedRowId && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
       </Stack>
     </Box>
   );
 }
+
