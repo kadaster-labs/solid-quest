@@ -23,6 +23,7 @@ import { getRootContainerURL } from "../../src/Solid";
 import { SOLID_ZVG_CONTEXT } from "../../src/koek/Context";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import KoekRepository from "../../src/koek/KoekRepository";
+import Events from "../../src/ui-components/Events";
 
 const VerkoopLogboekContainer = function () {
   return `${getRootContainerURL()}/koopovereenkomst/id`;
@@ -187,6 +188,7 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
         )}
       </Box>
 
+      <Events koek={koek} />
       <Stack sx={{ width: "50vw", marginBottom: '2rem' }} direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         {selectedRowId && <Button variant="contained" onClick={createEvents}>Create events (debug)</Button>}

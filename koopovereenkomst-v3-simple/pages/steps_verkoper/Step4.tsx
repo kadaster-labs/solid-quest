@@ -8,8 +8,9 @@ import { useCallback, useState } from "react";
 import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
 import Link from "../../src/Link";
+import Events from "../../src/ui-components/Events";
 
-export default function Step4({ stepNr = 4, handleNext, handleBack = () => { } }) {
+export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, koek }) {
   const [loadedBRKVC, setLoadedBRKVC] = useState([] as any);
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
@@ -63,6 +64,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { } }
         </Box>
       }
 
+      <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         {loadedBRKVC.length !== 0 && <Button variant="contained" onClick={handleNext}>Akkoord</Button>}

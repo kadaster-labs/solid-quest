@@ -5,19 +5,9 @@ import { Box } from "@mui/system";
 
 import { useEffect, useState } from "react";
 
-import { List, ListItem, ListItemText } from "@mui/material";
-import Link from "../../src/Link";
+import { List, ListItem } from "@mui/material";
 import KoekAggregate from '../../src/koek/KoekAggregate';
-
-const zvg_base = 'http://taxonomie.zorgeloosvastgoed.nl/def/zvg#'
-const zvg = {
-  koopsom: zvg_base + 'koopsom',
-}
-
-interface Case {
-  caseId?: string;
-  koopsom?: number;
-}
+import Events from "../../src/ui-components/Events";
 
 interface Step6Props {
   stepNr: number;
@@ -53,7 +43,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, koek }: Step
       </Typography>
 
       <Box>
-        { koek && <Box>
+        {koek && <Box>
           <Typography>Koopovereenkomst #{koek.id}</Typography>
           <List>
             <ListItem>Type: {koek.data.typeKoopovereenkomst}</ListItem>
@@ -63,42 +53,8 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, koek }: Step
             <ListItem>Koopprijs: {koek.data.koopprijs}</ListItem>
             <ListItem>Datum levering: {koek.data.datumVanLevering}</ListItem>
           </List>
-        </Box> }
+        </Box>}
         <Box sx={{ p: "2rem 0" }}>
-          <Box>
-            <List>
-              {eventLabels.map((e, i) => (
-                <ListItem key={i} sx={{
-                  ...(e.actor === "verkoper-vera" && {
-                    textAlign: "right",
-                  })
-                }}>
-                  <Link href={e.id} target="_blank" rel="noreferrer" style={{
-                    padding: "0 2rem",
-                    borderRadius: "0.5rem",
-                    color: "white",
-                    textDecoration: "none",
-                    width: "80%",
-                    ...(e.actor === "verkoper-vera" && {
-                      marginLeft: "auto",
-                    }),
-                    ...(e.actor === "verkoper-vera" && {
-                      backgroundColor: "rgb(106, 136, 165, 0.8)",
-                    }),
-                    ...(e.actor === "koper-koos" && {
-                      backgroundColor: "rgb(125, 122, 95, 0.8)",
-                    })
-                  }}>
-                    <ListItemText sx={{
-                    }}
-                      primary={e.newLabel}
-                      secondary={e.actor}
-                    />
-                  </Link>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
           {errors !== "" && (
             <Box sx={{
               color: "black",
@@ -112,6 +68,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, koek }: Step
             </Box>
           )}
         </Box>
+        <Events koek={koek} show={true} />
       </Box>
 
       <Stack direction="row" justifyContent="space-between">

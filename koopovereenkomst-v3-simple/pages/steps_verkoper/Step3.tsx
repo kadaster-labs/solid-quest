@@ -14,6 +14,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Link from "../../src/Link";
 import KoekAggregate from "../../src/koek/KoekAggregate";
+import Events from "../../src/ui-components/Events";
 
 function createData(
   name: string,
@@ -147,6 +148,7 @@ export default function Step3({
         </Box>
       }
 
+      <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleAkkoord} disabled={!vcValid}>Akkoord</Button>}
