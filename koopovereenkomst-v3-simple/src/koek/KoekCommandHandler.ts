@@ -1,4 +1,5 @@
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
+import { Dayjs } from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import { Event } from "../../src/koek/Event";
 import KoekAggregate from "./KoekAggregate";
@@ -46,13 +47,13 @@ export default class KoekCommandHandler {
             await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
         }
         else {
-            console.log('[%s] verkoper ref already existant for this koopovereenkomst', this.aggregateId);
+            console.log('[%s] verkoper ref already exists for this koopovereenkomst', this.aggregateId);
         }
 
         return true;
     }
 
-    public isNotYetVerkoper(url: string): boolean {
+    private isNotYetVerkoper(url: string): boolean {
         let refs = this.koek.getEvents().filter((e) => e.type === "persoonsgegevensRefToegevoegd");
         return refs.filter((e) => e.verkoperRefs.includes(url)).length == 0;
     }
@@ -73,15 +74,35 @@ export default class KoekCommandHandler {
             await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
         }
         else {
-            console.log('[%s] verkoper ref already existant for this koopovereenkomst', this.aggregateId);
+            console.log('[%s] eigendom ref already exists for this koopovereenkomst', this.aggregateId);
         }
 
         return true;
     }
 
-    public doesNotContainEigendomYet(url: string): boolean {
+    private doesNotContainEigendomYet(url: string): boolean {
         let refs = this.koek.getEvents().filter((e) => e.type === "eigendomRefToegevoegd");
         return refs.filter((e) => e.eigendomRefs.includes(url)).length == 0;
+    }
+    public async datumVanLeveringVastgesteld(datum: Dayjs): Promise<boolean> {
+        if (this.isDifferentDatumVanLevering(datum)) {
+            console.log('[%s] store datum van levering', this.aggregateId, datum);
+            let event = this.buildEvent(
+                'datumVanLeveringToegevoegd',
+                'verkoper',
+                {
+                    datumVanLevering: datum.toISOString(),
+                },
+            );
+            await this.addEvent(event);
+            await this.koek.processEvents();
+            await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+        }
+        return true;
+    }
+
+    private isDifferentDatumVanLevering(datum: Dayjs) {
+        return true;
     }
 
     public async populateWithMockEvents(): Promise<void> {

@@ -6,6 +6,8 @@ import Head from 'next/head';
 import { useEffect, useState } from "react";
 import Image from './Image';
 import Link from "./Link";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 export const siteTitle = 'Koopovereenkomst Solid App';
 
@@ -92,16 +94,18 @@ export default function Layout({ children, home, role }: {
                         <meta name="twitter:card" content="summary_large_image" />
                     </Head>
 
-                    <Box sx={{
-                        minHeight: "92vh",
-                        padding: "4rem 0",
-                        flex: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl-nl">
+                        <Box sx={{
+                            minHeight: "92vh",
+                            padding: "4rem 0",
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
 
-                    }}>{children}</Box>
+                        }}>{children}</Box>
+                    </LocalizationProvider>
 
                     <Box sx={footerStyle}  >
                         <Link href="/">Home</Link>

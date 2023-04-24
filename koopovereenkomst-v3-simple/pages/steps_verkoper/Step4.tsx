@@ -19,7 +19,6 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
 
   const handleAkkoord = useCallback(async () => {
     let vc = loadedBRKVCs[0];
-    console.log('loaded BRK VC', vc);
     let success = await koek.cmdHdlr.toevoegenEigendomRef(vc);
     if (success == true) {
       handleNext();
@@ -28,7 +27,6 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
       throw new Error(`Toevoegen eigendom VC is niet gelukt! (check console voor errors)`);
     }
   }, [updateVCs, loadedBRKVCs]);
-
 
   return (
     <Box sx={{ flex: 1 }}>
