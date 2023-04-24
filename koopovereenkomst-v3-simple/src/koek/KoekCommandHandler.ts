@@ -57,6 +57,33 @@ export default class KoekCommandHandler {
         return refs.filter((e) => e.verkoperRefs.includes(url)).length == 0;
     }
 
+    public async toevoegenEigendomRef(vc: { url: string, vc: any, status: any }): Promise<boolean> {
+
+        if (this.doesNotContainEigendomYet(vc.url)) {
+            console.log('[%s] add eigendom vc ref url', this.aggregateId, vc.url);
+            let event = this.buildEvent(
+                'eigendomRefToegevoegd',
+                'verkoper',
+                {
+                    eigendomRefs: [vc.url],
+                },
+            );
+            await this.addEvent(event);
+            await this.koek.processEvents();
+            await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+        }
+        else {
+            console.log('[%s] verkoper ref already existant for this koopovereenkomst', this.aggregateId);
+        }
+
+        return true;
+    }
+
+    public doesNotContainEigendomYet(url: string): boolean {
+        let refs = this.koek.getEvents().filter((e) => e.type === "eigendomRefToegevoegd");
+        return refs.filter((e) => e.eigendomRefs.includes(url)).length == 0;
+    }
+
     public async populateWithMockEvents(): Promise<void> {
         let events = [
             {

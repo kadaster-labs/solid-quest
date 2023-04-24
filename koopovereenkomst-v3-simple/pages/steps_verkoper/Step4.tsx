@@ -1,9 +1,9 @@
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import VC, { SolidVC, VCType } from '../../src/VC';
 import { useCallback, useState } from "react";
+import VC, { SolidVC, VCType } from '../../src/VC';
 
 import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";
@@ -11,11 +11,24 @@ import Link from "../../src/Link";
 import Events from "../../src/ui-components/Events";
 
 export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, koek }) {
-  const [loadedBRKVC, setLoadedBRKVC] = useState([] as any);
+  const [loadedBRKVCs, setLoadedBRKVCs] = useState([] as any);
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
-    setLoadedBRKVC(vcs);
+    setLoadedBRKVCs(vcs);
   }, []);
+
+  const handleAkkoord = useCallback(async () => {
+    let vc = loadedBRKVCs[0];
+    console.log('loaded BRK VC', vc);
+    let success = await koek.cmdHdlr.toevoegenEigendomRef(vc);
+    if (success == true) {
+      handleNext();
+    }
+    else {
+      throw new Error(`Toevoegen eigendom VC is niet gelukt! (check console voor errors)`);
+    }
+  }, [updateVCs, loadedBRKVCs]);
+
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -33,13 +46,13 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
       <VC type={VCType.BRK} onChange={updateVCs} />
 
       <hr />
-      {loadedBRKVC.length !== 0 ?
+      {loadedBRKVCs.length !== 0 ?
         <Box>
           <Typography variant="body1" color="text.primary" align="center">
             Je hebt je eigendomsgegevens opgeslagen in je datakluis. Kloppen de gegevens?
           </Typography>
           <Typography variant="body1" color="text.primary" align="center" fontWeight="bold" fontStyle="italic">
-            Certificaat geldig? {loadedBRKVC[0].status.verified ? "✅" : "❌"}
+            Certificaat geldig? {loadedBRKVCs[0].status.verified ? "✅" : "❌"}
           </Typography>
           <Typography variant="body1" color="text.primary" align="center" sx={{
             margin: "25px auto",
@@ -48,7 +61,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
             Het volgende object ID van het perceel is gevonden in de verifiable credential van het Kadaster.
             Maak gebruik van de Kadaster Knowledge Graph om informatie op te halen over je perceel.
           </Typography>
-          <KadasterKnowledgeGraph objectId={(loadedBRKVC[0].vc.credentialSubject.eigendom.perceel.identificatie as string)} />
+          <KadasterKnowledgeGraph objectId={(loadedBRKVCs[0].vc.credentialSubject.eigendom.perceel.identificatie as string)} />
         </Box>
         :
         <Box>
@@ -67,7 +80,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {loadedBRKVC.length !== 0 && <Button variant="contained" onClick={handleNext}>Akkoord</Button>}
+        {loadedBRKVCs.length !== 0 && <Button variant="contained" onClick={handleAkkoord}>Akkoord</Button>}
       </Stack>
     </Box>
   );

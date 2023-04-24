@@ -63,6 +63,9 @@ export async function processEvent(eventQuery: solidQuery, event: Event): Promis
     } else if (theType === "persoonsgegevensRefToegevoegd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processPersoonsgegevensRefToegevoegd(event, eventQuery);
+    } else if (theType === "eigendomRefToegevoegd") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processEigendomRefToegevoegd(event, eventQuery);
     } else if (
         theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
         theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
@@ -148,6 +151,40 @@ async function processPersoonsgegevensRefToegevoegd(event: Event, eventQuery: so
 
     let vc = await retrieveVC(event.verkoperRefs[0]);
     return initState({ aangebodenDoor: "zvg:aangebodenDoor" }, { aangebodenDoor: vc.credentialSubject.naam });
+}
+
+async function processEigendomRefToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+
+    let refs = [];
+    for await (const ref of eventQuery.eventData.eigendom) {
+        refs.push(ref.value);
+    }
+    Object.assign(event, { eigendomRefs: refs });
+
+    let vc = await retrieveVC(event.eigendomRefs[0]);
+
+    Object.assign(event, {
+        kadastraalObjectId: vc.credentialSubject.eigendom.perceel.identificatie as string,
+    });
+
+    let perceel = await callKadasterKnowledgeGraph(event.kadastraalObjectId);
+
+    return initState({
+        sor: "https://data.kkg.kadaster.nl/sor/model/def/",
+        perceel: "https://data.kkg.kadaster.nl/id/perceel/",
+        perceelnummer: {
+            "@id": "sor:perceelnummer",
+            "@type": "xsd:integer",
+        },
+        kadastraalObjectId: "zvg:kadastraalObjectId",
+        kadastraalObject: "zvg:kadastraalObject",
+    },
+        {
+            kadastraalObject: {
+                kadastraalObjectId: event.kadastraalObjectId,
+                perceelNummer: perceel.perceelNummer,
+            },
+        });
 }
 
 async function retrieveVC(uri: string): Promise<any> {

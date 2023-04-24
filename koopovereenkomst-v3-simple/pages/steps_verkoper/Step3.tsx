@@ -39,7 +39,6 @@ export default function Step3({
   const [rows, setRows] = useState([] as Array<any>);
 
   const [vcValid, setVcValid] = useState(false);
-  const [vcUrl, setVcUrl] = useState<string>();
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
     // useCallback is important here. With each update from vcs
@@ -62,8 +61,6 @@ export default function Step3({
     } else if (vc.status.verified) {
       certificateValidity = "✅";
       setVcValid(true);
-      console.log('setting vc url state', vc.url);
-      setVcUrl(vc.url);
     } else {
       certificateValidity = "❌";
       setVcValid(false);
@@ -79,7 +76,6 @@ export default function Step3({
   }, []);
 
   const handleAkkoord = useCallback(async () => {
-    console.log('handling vc', loadedBRPVC);
     let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(loadedBRPVC);
     if (success == true) {
       handleNext();
@@ -87,7 +83,7 @@ export default function Step3({
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [updateVCs, vcUrl]);
+  }, [updateVCs, loadedBRPVC]);
 
   useEffect(() => {
 
