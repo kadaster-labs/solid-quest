@@ -18,7 +18,7 @@ export function aggregate2RDF(id: string, events: Event[], options): string {
     rdf: $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
   };
 
-  const eventList = events.map(event => { 
+  const eventList = events.map(event => {
     return `${event.id}`
   });
 
@@ -28,7 +28,6 @@ export function aggregate2RDF(id: string, events: Event[], options): string {
 
   const serializer = new $rdf.Serializer(store);
   const string = serializer.toN3(store);
-  console.log("vlb string", string);
 
   return string;
 }
@@ -64,7 +63,7 @@ export function event2RDF(eventData: Event, options): string {
   store.add(eventNode, ns.cloudevents('source'), ns.me, eventNode);
   store.add(eventNode, ns.rdfs('label'), labelNode, eventNode);
 
-  if (eventData.template || eventData.kadastraalObjectId || eventData.koopprijs || eventData.datumVanLevering) {
+  if (eventData.template || eventData.kadastraalObjectId || eventData.koopprijs || eventData.datumVanLevering || eventData.verkoperRefs) {
     const dataNode = $rdf.namedNode(ns.event.uri + '#data');
 
     store.add(eventNode, ns.cloudevents('data'), dataNode, eventNode);
@@ -81,6 +80,11 @@ export function event2RDF(eventData: Event, options): string {
     }
     if (eventData.datumVanLevering) {
       store.add(dataNode, ns.zvg('datumVanLevering'), $rdf.literal(eventData.datumVanLevering, ns.xsd('date')), dataNode);
+    }
+    if (eventData.verkoperRefs) {
+      eventData.verkoperRefs.forEach(ref => {
+        store.add(dataNode, ns.zvg('verkoper'), $rdf.namedNode(ref), dataNode);
+      });
     }
   }
 

@@ -30,18 +30,27 @@ export default class KoekCommandHandler {
         return true;
     }
 
-    public async toevoegenPersoonsgegevensRef(refVcUrl: string): Promise<boolean> {
-        console.log('toevoegen persoonsgegevens vc ref url', refVcUrl);
-        let event = this.buildEvent(
-            'persoonsgegevensRefToegevoegd',
-            'verkoper',
-            {
-                refVcUrl: refVcUrl,
-            },
-        );
-        await this.addEvent(event);
-        await this.koek.processEvents();
-        await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+    public async toevoegenVerkoperPersoonsgegevensRef(verkoperRef: string): Promise<boolean> {
+        // TODO check if this verkoperRef already exists in this aggregate
+        let verkoperRefDoesNotExistYet = true;
+
+        if (verkoperRefDoesNotExistYet) {
+            console.log('[%s] add verkoper vc ref url', this.aggregateId, verkoperRef);
+            let event = this.buildEvent(
+                'persoonsgegevensRefToegevoegd',
+                'verkoper',
+                {
+                    verkoperRefs: [verkoperRef],
+                },
+            );
+            await this.addEvent(event);
+            await this.koek.processEvents();
+            await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+        }
+        else {
+            console.log('[%s] verkoper ref already existant for this koopovereenkomst', this.aggregateId);
+        }
+
         return true;
     }
 

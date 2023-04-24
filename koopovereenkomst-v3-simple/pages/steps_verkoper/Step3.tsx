@@ -78,8 +78,7 @@ export default function Step3({
   }, []);
 
   const handleAkkoord = useCallback(async () => {
-    console.log('using this vc as persoonVCref', vcUrl);
-    let success = await koek.cmdHdlr.toevoegenPersoonsgegevensRef(vcUrl);
+    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(vcUrl);
     if (success == true) {
       handleNext();
     }

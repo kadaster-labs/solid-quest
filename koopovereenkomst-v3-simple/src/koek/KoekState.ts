@@ -32,7 +32,6 @@ export function initState(context?: object | undefined, value?: object | undefin
             ...internalState["@context"],
             ...context,
         };
-        console.log('update context', internalState);
     }
 
     return internalState;
