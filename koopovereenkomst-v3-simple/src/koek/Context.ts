@@ -25,6 +25,7 @@ export const SOLID_ZVG_CONTEXT = {
   bod: "zvg:bod",
   template: "zvg:koopovereenkomstTemplate",
   kadastraalObjectId: "zvg:kadastraalObjectId",
+  verkoper: "zvg:verkoper",
 };
 
 export const KADASTER_KKG_CONTEXT = {

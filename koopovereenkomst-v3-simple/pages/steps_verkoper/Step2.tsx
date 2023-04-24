@@ -24,23 +24,6 @@ import { SOLID_ZVG_CONTEXT } from "../../src/koek/Context";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import KoekRepository from "../../src/koek/KoekRepository";
 
-/**
- * Wat is het opbouwen van de koopovereenkomst precies?
- *
- * - Verkooplogboek
- *  - Bij verkoper
- *  - Verwijzingen naar events
- * - Lijst van events
- *  - Verspreid over verkoper en koper
- *
- * Functionaliteit:
- * - Verkoper kan een nieuwe koopovereenkomst aanmaken ✅
- * - Verkoper kan een bestaande koopovereenkomst openen ✅
- * - Verkoper kan een bestaande koopovereenkomst opslaan ✅
- * - Verkoper kan events toevoegen aan een bestaande koopovereenkomst ✅
- *  - Simpelweg tellen van events, nieuwe krijgt lengte van array + 1 ✅
- */
-
 const VerkoopLogboekContainer = function () {
   return `${getRootContainerURL()}/koopovereenkomst/id`;
 }
@@ -108,7 +91,7 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
     let randomId = await repo.create()
     let koek = await repo.load(randomId);
     await koek.cmdHdlr.initializeWith("NVM Standaard Koopovereenkomst Koophuis");
-    
+
     await selectKoek(randomId);
     loadKoeks(randomId);
     setIsLoading(false);

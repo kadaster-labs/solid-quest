@@ -30,17 +30,15 @@ export default class KoekCommandHandler {
         return true;
     }
 
-    public async toevoegenVerkoperPersoonsgegevensRef(verkoperRef: string): Promise<boolean> {
-        // TODO check if this verkoperRef already exists in this aggregate
-        let verkoperRefDoesNotExistYet = true;
+    public async toevoegenVerkoperPersoonsgegevensRef(vc: { url: string, vc: any, status: any }): Promise<boolean> {
 
-        if (verkoperRefDoesNotExistYet) {
-            console.log('[%s] add verkoper vc ref url', this.aggregateId, verkoperRef);
+        if (this.isNotYetVerkoper(vc.url)) {
+            console.log('[%s] add verkoper vc ref url', this.aggregateId, vc.url);
             let event = this.buildEvent(
                 'persoonsgegevensRefToegevoegd',
                 'verkoper',
                 {
-                    verkoperRefs: [verkoperRef],
+                    verkoperRefs: [vc.url],
                 },
             );
             await this.addEvent(event);
@@ -52,6 +50,11 @@ export default class KoekCommandHandler {
         }
 
         return true;
+    }
+
+    public isNotYetVerkoper(url: string): boolean {
+        let refs = this.koek.getEvents().filter((e) => e.type === "persoonsgegevensRefToegevoegd");
+        return refs.filter((e) => e.verkoperRefs.includes(url)).length == 0;
     }
 
     public async populateWithMockEvents(): Promise<void> {
@@ -167,7 +170,7 @@ export default class KoekCommandHandler {
 
     private buildEvent(type: string, actor: string, data: object): Event {
         let id = uuidv4();
-        let seq = this.koek.getEvents.length;
+        let seq = this.koek.getEvents().length;
 
         let event: Event = {
             aggregateId: this.aggregateId,

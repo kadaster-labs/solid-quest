@@ -78,7 +78,8 @@ export default function Step3({
   }, []);
 
   const handleAkkoord = useCallback(async () => {
-    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(vcUrl);
+    console.log('handling vc', loadedBRPVC);
+    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(loadedBRPVC);
     if (success == true) {
       handleNext();
     }

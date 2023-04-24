@@ -1,4 +1,5 @@
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
+import { getFile } from "../Solid";
 import { callKadasterKnowledgeGraph } from "../kkg/kkgService";
 import { Event } from "./Event";
 import KoekState, { initState } from "./KoekState";
@@ -59,6 +60,9 @@ export async function processEvent(eventQuery: solidQuery, event: Event): Promis
     } else if (theType === "datumVanLeveringToegevoegd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processDatumVanLeveringToegevoegd(event, eventQuery);
+    } else if (theType === "persoonsgegevensRefToegevoegd") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processPersoonsgegevensRefToegevoegd(event, eventQuery);
     } else if (
         theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
         theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
@@ -132,6 +136,25 @@ async function processKoopovereenkomstGeinitieerd(event: Event, eventQuery: soli
             `Unsupported template [${event.template}] in processing events`
         );
     }
+}
+
+async function processPersoonsgegevensRefToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+
+    let refs = [];
+    for await (const ref of eventQuery.eventData.verkoper) {
+        refs.push(ref.value);
+    }
+    Object.assign(event, { verkoperRefs: refs });
+
+    let vc = await retrieveVC(event.verkoperRefs[0]);
+    return initState({ aangebodenDoor: "zvg:aangebodenDoor" }, { aangebodenDoor: vc.credentialSubject.naam });
+}
+
+async function retrieveVC(uri: string): Promise<any> {
+    const file = await getFile(uri);
+    const text = await file.text();
+    const credential = JSON.parse(text);
+    return credential;
 }
 
 
