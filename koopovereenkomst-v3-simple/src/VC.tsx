@@ -61,7 +61,6 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
     for (let i = 0; i < vcs.length; i++) {
       const { vc } = vcs[i];
       const verificationResult = await verifyVC(vc);
-      console.log("refreshing status", verificationResult);
       updatedVcs.push({ ...vcs[i], status: verificationResult });
     }
     setVCs(updatedVcs);

@@ -7,6 +7,7 @@ import KoekCommandHandler from "./KoekCommandHandler";
 import { loadEvent, processEvent } from "./KoekEventHandler";
 import KoekRepository from "./KoekRepository";
 import KoekState from "./KoekState";
+import dayjs, { Dayjs } from "dayjs";
 
 export default class KoekAggregate {
   internalState: any = {
@@ -43,40 +44,37 @@ export default class KoekAggregate {
     });
   }
 
+  public get data(): KoekState {
+    return this.internalState;
+  }
+
   public pushEvent(eventUri: string) {
     console.log(`[${this._id}] pushEvent: `, eventUri);
     this.eventUris.push(eventUri);
-  }
+  }  
 
   public async processEvents() {
     console.log(`[${this._id}] process events!!`);
     let loadedEvents = (
       await Promise.all(this.eventUris
         .map(loadEvent)))
-      .sort((a, b) => a[1].seq - b[1].seq);
-    this.events = loadedEvents
+      .sort((a, b) => a[1].seq - b[1].seq);  
+    this.events = loadedEvents  
       .map(v => v[1]);
     let l = await Promise.all(loadedEvents
       .map(async (q) => await processEvent(await q[0], q[1])));
-    this.internalState = l
+    this.internalState = l  
       .reduce(this.appendState, this.internalState)
-    console.log(`[${this._id}] loaded state: `, this.internalState);
-  }
-
-  private toSolidQuery(uri: string) {
-    let q = solidQuery[uri];
-    return q;
-  }
+    console.log(`[${this._id}] loaded state: `, this.internalState);  
+  }  
 
   public getEvents(): Event[] {
     return this.events;
+  }  
+
+  public getDatumVanLevering() : Dayjs {
+    return dayjs(this.internalState.datumVanLevering);
   }
-
-  public get data(): KoekState {
-    return this.internalState;
-  }
-
-
 
   public async dumpJsonLD(): Promise<object> {
     const p = new Promise<object>((resolve, reject) => {
@@ -94,7 +92,7 @@ export default class KoekAggregate {
       ...cumState["@context"],
       ...state["@context"],
     };
-    cumState = { ...state, ...cumState };
+    cumState = { ...cumState, ...state,  };
     cumState["@context"] = stateContext;
     return cumState;
   }

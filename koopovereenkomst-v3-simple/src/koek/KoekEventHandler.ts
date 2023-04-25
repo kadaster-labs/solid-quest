@@ -54,10 +54,10 @@ export async function processEvent(eventQuery: solidQuery, event: Event): Promis
     } else if (theType === "kadastraalObjectIdToegevoegd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processKadastraalObjectIdToegevoegd(event, eventQuery);
-    } else if (theType === "koopprijsToegevoegd") {
+    } else if (theType === "koopprijsToegevoegd" || theType === "koopprijsGewijzigd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processKoopprijsToegevoegd(event, eventQuery);
-    } else if (theType === "datumVanLeveringToegevoegd") {
+    } else if (theType === "datumVanLeveringToegevoegd" || theType === "datumVanLeveringGewijzigd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processDatumVanLeveringToegevoegd(event, eventQuery);
     } else if (theType === "persoonsgegevensRefToegevoegd") {

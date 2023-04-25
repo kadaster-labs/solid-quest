@@ -24,6 +24,7 @@ import { SOLID_ZVG_CONTEXT } from "../../src/koek/Context";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import KoekRepository from "../../src/koek/KoekRepository";
 import Events from "../../src/ui-components/Events";
+import { koopprijsFormatter } from "../../src/koek/KoekState";
 
 const VerkoopLogboekContainer = function () {
   return `${getRootContainerURL()}/koopovereenkomst/id`;
@@ -63,7 +64,7 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
       id: koek.id,
       object: Object.hasOwnProperty.call(koek.data, 'kadastraalObject') ? koek.data.kadastraalObject.perceelNummer : "...",
       koopdatum: koek.data.datumVanLevering || "...",
-      koopprijs: koek.data.koopprijs || "...",
+      koopprijs: koopprijsFormatter.format(+koek.data.koopprijs) || "...",
       url: koek.data.iri || "http://localhost:3001",
     }));
 

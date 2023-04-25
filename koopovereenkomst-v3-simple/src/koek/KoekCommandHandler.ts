@@ -84,25 +84,57 @@ export default class KoekCommandHandler {
         let refs = this.koek.getEvents().filter((e) => e.type === "eigendomRefToegevoegd");
         return refs.filter((e) => e.eigendomRefs.includes(url)).length == 0;
     }
+
     public async datumVanLeveringVastgesteld(datum: Dayjs): Promise<boolean> {
-        if (this.isDifferentDatumVanLevering(datum)) {
-            console.log('[%s] store datum van levering', this.aggregateId, datum);
+        let cleanDatum = datum.hour(0).minute(0).second(0).millisecond(0).locale('nl-nl');
+        if (this.isDifferentDatumVanLevering(cleanDatum)) {
+            let eventType = this.koek.data.datumVanLevering ? 'datumVanLeveringGewijzigd' : 'datumVanLeveringToegevoegd';
+            console.log('[%s] store datum van levering', this.aggregateId, cleanDatum);
             let event = this.buildEvent(
-                'datumVanLeveringToegevoegd',
+                eventType,
                 'verkoper',
                 {
-                    datumVanLevering: datum.toISOString(),
+                    datumVanLevering: cleanDatum.format('YYYY-MM-DD'),
                 },
             );
             await this.addEvent(event);
             await this.koek.processEvents();
             await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
         }
+        else {
+            console.log('[%s] datum van levering stays the same for this koopovereenkomst', this.aggregateId);
+        }
         return true;
     }
 
     private isDifferentDatumVanLevering(datum: Dayjs) {
+        return !this.koek.data.datumVanLevering || !datum.isSame(this.koek.getDatumVanLevering());
+    }
+
+    public async koopprijsVastgesteld(koopprijs: number): Promise<boolean> {
+        if (this.isDifferentKoopprijs(koopprijs)) {
+            console.log('[%s] store koopprijs', this.aggregateId, koopprijs);
+            let eventType = this.koek.data.koopprijs > 0 ? 'koopprijsGewijzigd' : 'koopprijsToegevoegd';
+            let event = this.buildEvent(
+                eventType,
+                'verkoper',
+                {
+                    koopprijs: koopprijs,
+                },
+            );
+            await this.addEvent(event);
+            await this.koek.processEvents();
+            await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+        }
+        else {
+            console.log('[%s] koopprijs stays the same for this koopovereenkomst', this.aggregateId);
+        }
         return true;
+    }
+
+    private isDifferentKoopprijs(koopprijs: number) {
+        console.log('[%s] compare koopprijs [%n] with state [%n]', this.aggregateId, koopprijs, this.koek.data.koopprijs);
+        return this.koek.data.koopprijs != koopprijs;
     }
 
     public async populateWithMockEvents(): Promise<void> {
