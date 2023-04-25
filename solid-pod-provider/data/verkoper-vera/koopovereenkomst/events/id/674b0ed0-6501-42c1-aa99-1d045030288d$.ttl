@@ -19,4 +19,4 @@ event:
 
 <#data>
     a zvg:eventData;
-    zvg:datumVanLevering "2002-03-27T10:00:00Z"^^xsd:dateTime . 
+    zvg:datumVanLevering "2002-03-27"^^xsd:date . 
