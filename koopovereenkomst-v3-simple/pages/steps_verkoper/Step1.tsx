@@ -17,8 +17,14 @@ import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
 import { VCARD } from "@inrupt/vocab-common-rdf";
 import { SolidPerson, SolidAddress } from "../../src/Solid";
+import { Signing } from "../../src/verifiable/signing";
 
-export function Step1({ handleNext, handleBack = () => { } }) {
+export function Step1({ handleNext, handleBack = () => { }, setSigning, signing }: {
+  handleNext: any;
+  handleBack?: () => void;
+  setSigning: any;
+  signing: Signing;
+}) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);
@@ -34,6 +40,20 @@ export function Step1({ handleNext, handleBack = () => { } }) {
 
     return profile;
   }, [webId, session.fetch]);
+  
+  const createKeyPair = async () => {
+    setSigning(new Signing());
+  }
+  
+  const sign = async () => {
+    const signedDocument = await signing.signDocument();
+    console.log('doc', signedDocument);
+    
+    const verified = await signing.verifyDocument(signedDocument);
+    console.log('verified', verified);
+    
+    await signing.storeDocument(signedDocument);
+  }
 
   const getPersonInfo: (profile: ThingPersisted) => SolidPerson = useCallback(
     (profile) => {
@@ -127,6 +147,12 @@ export function Step1({ handleNext, handleBack = () => { } }) {
           <pre>
             {JSON.stringify(eigendom, null, 2)}
           </pre>
+          <Button variant="contained" onClick={createKeyPair}>
+            Create/load keypair
+          </Button>
+          <Button variant="contained" onClick={sign}>
+            Sign
+          </Button>
         </Box>
       )}
       {isLoggedIn && isReady == true && (

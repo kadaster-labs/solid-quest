@@ -11,6 +11,8 @@ import Layout from "../src/Layout";
 import { getRootContainerURL } from "../src/Solid";
 import KoopovereenkomstAggregate from '../src/aggregate/koopovereenkomst-aggregate';
 import { Step1, Step1b, Step2, Step3, Step4, Step5, Step6 } from "./steps_verkoper";
+import { Signing } from "../src/verifiable/signing";
+
 
 const steps = [
   "Datapod koppelen",
@@ -27,6 +29,7 @@ export default function Verkoper() {
   const [skipped, setSkipped] = React.useState(new Set<number>());
   
   const [koek, setActiveKoek] = React.useState(null as KoopovereenkomstAggregate);
+  const [signing, setSigning] = React.useState(null as Signing);
 
   const isStepOptional = (step: number) => {
     // return step === 1;
@@ -60,7 +63,7 @@ export default function Verkoper() {
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
-        return <Step1 handleNext={handleNext} />;
+        return <Step1 handleNext={handleNext} setSigning={setSigning} signing={signing} />;
       case 1:
         return <Step1b stepNr={props.value} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} />;
       case 2:

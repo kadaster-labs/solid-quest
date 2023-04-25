@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/system";
-import VC, { SolidVC, VCType } from '../../src/VC';
+import VC, { SolidVC, VCType } from '../../src/verifiable/VC';
 import Image from "../../src/Image";
 import { useCallback, useState } from "react";
 
