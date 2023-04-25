@@ -40,7 +40,7 @@ export default class KoekRepository {
 
     public async load(koekId: string): Promise<KoekAggregate> {
         try {
-            let koekUri = `${this.logboekContainer}/${koekId}`;
+            let koekUri = koekId.startsWith("http") ? koekId : `${this.logboekContainer}/${koekId}`;
             let aggregate = new KoekAggregate(koekUri, koekId, this);
             let koekQuery = solidQuery[koekUri];
             try {
@@ -77,7 +77,7 @@ export default class KoekRepository {
             vlbContainer: this.logboekContainer,
             eventContainer: this.eventContainer,
         });
-        const filepath = `${this.logboekContainer}/${aggregateId}`;
+        const filepath = aggregateId.startsWith("http") ? aggregateId : `${this.logboekContainer}/${aggregateId}`;
         await solid.saveTurtle(filepath, rdf);
     }
 

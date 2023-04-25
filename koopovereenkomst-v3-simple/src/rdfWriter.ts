@@ -10,8 +10,10 @@ export function aggregate2RDF(id: string, events: Event[], options): string {
 
   const store = $rdf.graph();
 
+  const idUri = id.startsWith("http") ? id : `${options.vlbContainer}/${id}`;
+
   const ns = {
-    koopovereenkomst: $rdf.namedNode(`${options.vlbContainer}/${id}`),
+    koopovereenkomst: $rdf.namedNode(idUri),
     event: $rdf.namedNode(options.eventContainer),
     koperEvent: $rdf.namedNode(`http://localhost:3001/koper-koos/koopovereenkomst/events/id/`),
     prov: $rdf.Namespace('https://www.w3.org/TR/prov-o/#'),

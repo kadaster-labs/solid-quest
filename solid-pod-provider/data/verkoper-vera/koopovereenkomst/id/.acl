@@ -16,3 +16,9 @@
     acl:agentClass foaf:Agent;
     acl:default id:;
     acl:mode acl:Read.
+:ReadWrite
+    a acl:Authorization;
+    acl:accessTo id:;
+    acl:agentClass acl:AuthenticatedAgent;
+    acl:default id:;
+    acl:mode acl:Read, acl:Write.

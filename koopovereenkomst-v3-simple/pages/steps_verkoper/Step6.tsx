@@ -5,9 +5,10 @@ import { Box } from "@mui/system";
 
 
 import { List, ListItem } from "@mui/material";
+import { useEffect, useState } from "react";
 import KoekAggregate from '../../src/koek/KoekAggregate';
-import Events from "../../src/ui-components/Events";
 import { koopprijsFormatter } from "../../src/koek/KoekState";
+import Events from "../../src/ui-components/Events";
 
 interface Step6Props {
   stepNr: number;
@@ -17,6 +18,17 @@ interface Step6Props {
 }
 
 export default function Step6({ stepNr = 6, handleNext, handleBack, koek }: Step6Props) {
+
+  const [koperRefGevuld, setKoperRefGevuld] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (koek.data.aan) {
+      setKoperRefGevuld(true);
+    }
+    else {
+      setKoperRefGevuld(false);
+    }
+  }, [koek]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -44,7 +56,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, koek }: Step
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={handleNext}>Doorgaan</Button>
+        <Button variant="contained" onClick={handleNext} disabled={!koperRefGevuld}>Doorgaan</Button>
       </Stack>
     </Box>
   );

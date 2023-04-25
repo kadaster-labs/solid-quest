@@ -58,6 +58,33 @@ export default class KoekCommandHandler {
         return refs.filter((e) => e.verkoperRefs.includes(url)).length == 0;
     }
 
+    public async toevoegenKoperPersoonsgegevensRef(vc: { url: string, vc: any, status: any }): Promise<boolean> {
+
+        if (this.isNotYetKoper(vc.url)) {
+            console.log('[%s] add koper vc ref url', this.aggregateId, vc.url);
+            let event = this.buildEvent(
+                'koperRefToegevoegd',
+                'koper',
+                {
+                    koperRefs: [vc.url],
+                },
+            );
+            await this.addEvent(event);
+            await this.koek.processEvents();
+            await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
+        }
+        else {
+            console.log('[%s] koper ref already exists for this koopovereenkomst', this.aggregateId);
+        }
+
+        return true;
+    }
+
+    private isNotYetKoper(url: string): boolean {
+        let refs = this.koek.getEvents().filter((e) => e.type === "koperRefToegevoegd");
+        return refs.filter((e) => e.koperRefs.includes(url)).length == 0;
+    }
+
     public async toevoegenEigendomRef(vc: { url: string, vc: any, status: any }): Promise<boolean> {
 
         if (this.doesNotContainEigendomYet(vc.url)) {

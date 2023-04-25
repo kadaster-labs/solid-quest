@@ -113,9 +113,6 @@ export default function Step1({ stepNr = 1, handleNext, handleBack = () => { } }
         doorloop je verschillende stappen.
       </Typography>
       <Box>
-        <Typography variant="h2" color="text.primary" align="center">
-          Log in met je WebID of mailadres
-        </Typography>
         <ConnectSolid />
       </Box>
 

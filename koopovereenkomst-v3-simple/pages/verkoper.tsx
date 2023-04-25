@@ -7,9 +7,11 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 
+import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Layout from "../src/Layout";
 import KoekAggregate from '../src/koek/KoekAggregate';
 import KoekRepository from "../src/koek/KoekRepository";
+import { SOLID_ZVG_CONTEXT } from "../src/koek/Context";
 
 import Step1 from "./steps_verkoper/Step1";
 import Step2 from "./steps_verkoper/Step2";
@@ -31,6 +33,7 @@ const steps = [
 
 export default function Verkoper() {
   let koekRepo = new KoekRepository();
+  solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());

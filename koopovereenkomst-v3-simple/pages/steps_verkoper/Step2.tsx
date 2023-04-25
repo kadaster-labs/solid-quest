@@ -16,15 +16,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from "@mui/material/Typography";
 
-import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Link from "../../src/Link";
 import PodIcon from "../../src/PodIcon";
 import { getRootContainerURL } from "../../src/Solid";
-import { SOLID_ZVG_CONTEXT } from "../../src/koek/Context";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import KoekRepository from "../../src/koek/KoekRepository";
-import Events from "../../src/ui-components/Events";
 import { koopprijsFormatter } from "../../src/koek/KoekState";
+import Events from "../../src/ui-components/Events";
 
 const VerkoopLogboekContainer = function () {
   return `${getRootContainerURL()}/koopovereenkomst/id`;
@@ -78,8 +76,6 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
   }, [repo]);
 
   useEffect(() => {
-    solidQuery.context.extend(SOLID_ZVG_CONTEXT);
-
     // This function will run when the component mounts
     if (koek) {
       loadKoeks(koek.id);
