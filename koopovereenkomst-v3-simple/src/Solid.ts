@@ -1,17 +1,20 @@
-import { fetch, getDefaultSession } from "@inrupt/solid-client-authn-browser";
 import {
+  WithResourceInfo,
+  createAclFromFallbackAcl,
   createContainerAt,
+  deleteContainer,
   deleteFile as deleteFileSolid,
   deleteSolidDataset,
   getContainedResourceUrlAll,
   getFile as getFileSolid,
   getSolidDataset,
+  getSolidDatasetWithAcl,
   getSourceUrl,
-  saveFileInContainer,
   overwriteFile,
-  WithResourceInfo,
-  WithServerResourceInfo,
+  saveAclFor,
+  setPublicDefaultAccess,
 } from "@inrupt/solid-client";
+import { fetch, getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
 
 export interface SolidPerson {
@@ -172,5 +175,36 @@ async function createContainerIfNotExistsForFile(filepath: string): Promise<void
     await getSolidDataset(containerUrl, { fetch });
   } catch (error) {
     await createContainerAt(containerUrl, { fetch });
+  }
+}
+
+export async function createContainer(folder: string, makePublic = false): Promise<void> {
+  const containerUrl = `${getRootContainerURL()}/${folder}/`;
+
+  try {
+    await getSolidDataset(containerUrl, { fetch });
+  } catch (error) {
+    await createContainerAt(containerUrl, { fetch });
+  }
+
+  if (makePublic) {
+    // https://docs.inrupt.com/developer-tools/javascript/client-libraries/tutorial/manage-wac/#change-access-to-a-resource
+    console.log("make public", containerUrl);
+    
+    // Step 1: Create ACL
+    const containerWithAcl = await getSolidDatasetWithAcl(containerUrl, { fetch });
+    
+    const resourceAcl = createAclFromFallbackAcl(containerWithAcl as any);
+    console.log("acl dataset", resourceAcl);
+    
+    // Set access for items in this container
+    // https://docs.inrupt.com/developer-tools/javascript/client-libraries/reference/glossary/#term-Default-access
+    const updatedAcl = setPublicDefaultAccess(
+      resourceAcl,
+      { read: true, append: false, write: false, control: false },
+    );
+    
+    const saved = await saveAclFor(containerWithAcl as any, updatedAcl, { fetch });
+    console.log("saved acl", saved);
   }
 }
