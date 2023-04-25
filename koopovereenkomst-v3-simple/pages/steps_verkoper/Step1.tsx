@@ -16,7 +16,7 @@ import ConnectSolid from "../../src/ConnectSolid";
 import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
 import { VCARD } from "@inrupt/vocab-common-rdf";
-import { SolidPerson, SolidAddress } from "../../src/Solid";
+import { SolidPerson, SolidAddress, loadJson, saveJson } from "../../src/Solid";
 import { Signing } from "../../src/verifiable/signing";
 
 export function Step1({ handleNext, handleBack = () => { }, setSigning, signing }: {
@@ -52,7 +52,15 @@ export function Step1({ handleNext, handleBack = () => { }, setSigning, signing 
     const verified = await signing.verifyDocument(signedDocument);
     console.log('verified', verified);
     
-    await signing.storeDocument(signedDocument);
+    console.log('\n\n\n')
+    const brk_vc = await loadJson("http://localhost:3001/verkoper-vera/credentials/brk-credential.jsonld");
+    const verified2 = await signing.verifyDocument(brk_vc);
+    console.log('verified2', verified2);
+    
+    const derivedDocument = await signing.deriveProofFromDocument(signedDocument);
+    
+    await saveJson(`${signing.PRIVATE_FOLDER}/signedDocument.jsonld`, signedDocument);
+    await saveJson(`${signing.PUBLIC_FOLDER}/derived.jsonld`, derivedDocument);
   }
 
   const getPersonInfo: (profile: ThingPersisted) => SolidPerson = useCallback(

@@ -1,23 +1,19 @@
 import {
-    generateBls12381G2KeyPair,
-    blsSign,
-    blsVerify,
-    blsCreateProof,
-    blsVerifyProof,
-    BlsKeyPair,
+    generateBls12381G2KeyPair
 } from "@mattrglobal/bbs-signatures";
-import { createContainer, getRootContainerURL, loadJson, loadText, saveJson, saveText } from "../Solid";
-import { BbsBlsSignature2020, Bls12381G2KeyPair, KeyPairOptions } from "@mattrglobal/jsonld-signatures-bbs";
+import { BbsBlsSignature2020, BbsBlsSignatureProof2020, Bls12381G2KeyPair, deriveProof } from "@mattrglobal/jsonld-signatures-bbs";
+import axios from 'axios';
 import bs58 from 'bs58';
-import { extendContextLoader, sign, verify, purposes } from "jsonld-signatures";
+import { extendContextLoader, purposes, sign, verify } from "jsonld-signatures";
+import { createContainer, getRootContainerURL, loadJson, loadText, saveJson, saveText } from "../Solid";
 
-import inputDocument from "./data/inputDocument.json";
 import bbsContext from "./data/bbs.json";
 import citizenVocab from "./data/citizenVocab.json";
 import credentialContext from "./data/credentialsContext.json";
+import revealDocument from "./data/deriveProofFrame.json";
+import inputDocument from "./data/inputDocument.json";
 import suiteContext from "./data/suiteContext.json";
 
-import axios, * as others from 'axios';
 
 /* eslint-disable-next-line */
 const documents = {
@@ -62,9 +58,10 @@ const documentLoader = extendContextLoader(customDocLoader);
 
 
 export class Signing {
-    private readonly PUBLIC_FOLDER = `${getRootContainerURL()}/public`;
-    private readonly PRIVATE_FOLDER = `${getRootContainerURL()}/private`;
     private readonly KEYPAIR_NAME = 'keypair1';
+
+    public readonly PUBLIC_FOLDER = `${getRootContainerURL()}/public`;
+    public readonly PRIVATE_FOLDER = `${getRootContainerURL()}/private`;
 
     private keyPair: Bls12381G2KeyPair;
 
@@ -141,6 +138,7 @@ export class Signing {
     }
 
     async verifyDocument(signedDocument: any): Promise<boolean> {
+        console.log( 'verifying document', signedDocument)
         return await verify(signedDocument, {
             suite: new BbsBlsSignature2020(),
             purpose: new purposes.AssertionProofPurpose(),
@@ -148,10 +146,26 @@ export class Signing {
         });
     }
 
-    async storeDocument(signedDocument: any): Promise<void> {
-        console.log('storing document')
-        const filepath = `${this.PUBLIC_FOLDER}/signedDocument.jsonld`;
-        await saveJson(filepath, signedDocument);
-        console.log('document stored')
+    async deriveProofFromDocument(signedDocument: any): Promise<any> {
+        //Derive a proof
+        const derivedProof = await deriveProof(signedDocument, revealDocument, {
+            suite: new BbsBlsSignatureProof2020(),
+            documentLoader,
+        });
+
+        console.log(JSON.stringify(derivedProof, null, 2));
+
+        console.log("Verifying Derived Proof");
+        //Verify the derived proof
+        const verified = await verify(derivedProof, {
+            suite: new BbsBlsSignatureProof2020(),
+            purpose: new purposes.AssertionProofPurpose(),
+            documentLoader,
+        });
+
+        console.log("Verification result");
+        console.log(JSON.stringify(verified, null, 2));
+        
+        return derivedProof
     }
 }
