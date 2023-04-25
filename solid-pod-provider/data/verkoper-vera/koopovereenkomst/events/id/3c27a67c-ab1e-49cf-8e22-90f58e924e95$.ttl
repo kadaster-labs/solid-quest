@@ -8,7 +8,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 event:
-    a zvg:kadastraalObjectIdToegevoegd;
+    a zvg:eigendomRefToegevoegd;
     zvg:aggregateIdentifier koopovereenkomst:345;
     cloudevents:sequence "1"^^xsd:integer;
     cloudevents:specversion "1.0";
@@ -16,8 +16,6 @@ event:
     cloudevents:time "2001-09-27T10:15:50Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "01 | verkoper vera | kadastraal object id toegevoegd voor 345";
-    cloudevents:data <#data> .
+    cloudevents:data :data .
 
-<#data>
-    a zvg:eventData;
-    zvg:kadastraalObjectId <https://data.kkg.kadaster.nl/id/perceel/10020263270000> .
+:data a zvg:eventData; zvg:eigendom <../../../credentials/brk-credential.jsonld>.

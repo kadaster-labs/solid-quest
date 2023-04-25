@@ -7,16 +7,15 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 event:
-    a zvg:persoonsgegevensRefToegevoegd;
+    a zvg:verkoperRefToegevoegd;
     zvg:aggregateIdentifier koopovereenkomst:345;
     cloudevents:sequence "4"^^xsd:integer;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
     cloudevents:time "2001-09-28T20:18:13Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "04 | verkoper vera | persoonsgegevens toegevoegd voor 345";
-    cloudevents:data <#data> .
+    rdfs:label "04 | verkoper vera | verkoper gegevens toegevoegd voor 345";
+    cloudevents:data :data .
 
-<#data>
-    a zvg:eventData .
+:data a zvg:eventData; zvg:verkoper <../../../credentials/brp-credential.jsonld>.
    
