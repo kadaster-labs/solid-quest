@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 
 import Link from "../../src/Link";
 import PodIcon from "../../src/PodIcon";
-import { getRootContainerURL } from "../../src/Solid";
+import { getRootContainerURL, getWebId } from "../../src/Solid";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import KoekRepository from "../../src/koek/KoekRepository";
 import { koopprijsFormatter } from "../../src/koek/KoekState";
@@ -53,7 +53,7 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
     // Create aggregates
     const koeks: KoekAggregate[] = [];
     for (let i = 0; i < koekIds.length; i++) {
-      let aggregate = await repo.load(koekIds[i]);
+      let aggregate = await repo.load(koekIds[i], getWebId());
       koeks.push(aggregate);
     }
 
@@ -87,7 +87,7 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
   const handleConfirm = async () => {
     setIsLoading(true);
     let randomId = await repo.create()
-    let koek = await repo.load(randomId);
+    let koek = await repo.load(randomId, getWebId());
     await koek.cmdHdlr.initializeWith("NVM Standaard Koopovereenkomst Koophuis");
 
     await selectKoek(randomId);

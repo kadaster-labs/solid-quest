@@ -2,18 +2,27 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { getWebId } from "../../src/Solid";
+import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
 
-export default function Step7({ stepNr = 6, handleBack = () => { }, handleMyKoeks = () => { }, koek }) {
-
-  const [finished, setFinished] = useState(false);
+export default function Step5({
+  stepNr = 5,
+  handleNext,
+  handleBack = () => { },
+  koek }:
+  {
+    stepNr: number;
+    handleNext: () => void;
+    handleBack: () => void;
+    koek: KoekAggregate;
+  }) {
 
   const handleAkkoord = useCallback(async () => {
     let success = await koek.cmdHdlr.tekenen(getWebId());
     if (success == true) {
-      setFinished(true);
+      handleNext();
     }
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
@@ -23,7 +32,7 @@ export default function Step7({ stepNr = 6, handleBack = () => { }, handleMyKoek
   return (
     <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
-        Start een nieuwe koopovereenkomst
+        Ik wil een huis kopen
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek.id}</Typography>
@@ -33,7 +42,6 @@ export default function Step7({ stepNr = 6, handleBack = () => { }, handleMyKoek
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         <Button variant="contained" onClick={handleAkkoord} >Akkoord</Button>
-        <Button variant="contained" onClick={handleMyKoeks} disabled={!finished} >Mijn Koopovereenkomsten</Button>
       </Stack>
     </Box>
   );

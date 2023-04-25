@@ -1,7 +1,7 @@
 import { Box, Stack, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
 
@@ -17,10 +17,20 @@ interface Step2Props {
 export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, koek }: Step2Props) {
 
   const [koekUrl, setKoekUrl] = useState(koek ? koek.id : "");
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const loadKoek = async () => {
     await selectKoek(koekUrl);
   }
+
+  useEffect(() => {
+    if (koek) {
+      setIsLoaded(true);
+    }
+    else {
+      setIsLoaded(false);
+    }
+  }, [koek]);
 
   return (
     <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
@@ -37,7 +47,7 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
       <Stack sx={{ width: "50vw", marginBottom: '2rem' }} direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         <Button variant="contained" onClick={loadKoek}>Laad Koopovereenkomst</Button>
-        <Button variant="contained" onClick={handleNext}>Doorgaan</Button>
+        <Button variant="contained" onClick={handleNext} disabled={!isLoaded}>Doorgaan</Button>
       </Stack>
     </Box>
   );

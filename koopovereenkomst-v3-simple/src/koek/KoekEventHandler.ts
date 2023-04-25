@@ -69,14 +69,16 @@ export async function processEvent(eventQuery: solidQuery, event: Event): Promis
     } else if (theType === "eigendomRefToegevoegd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processEigendomRefToegevoegd(event, eventQuery);
+    } else if (theType === "conceptKoopovereenkomstGetekend") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processKoopovereenkomstGetekend(event, eventQuery);
     } else if (
         theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
         theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
         theType === "conceptKoopovereenkomstKoperOpgeslagen" ||
         theType ===
         "getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster" ||
-        theType === "getekendeKoopovereenkomstVerkoperOpgeslagen" ||
-        theType === "conceptKoopovereenkomstGetekend"
+        theType === "getekendeKoopovereenkomstVerkoperOpgeslagen"
     ) {
         console.log(`[aggregate: ${aggregateId}] skip [${theType}] event`);
     } else {
@@ -200,6 +202,12 @@ async function processEigendomRefToegevoegd(event: Event, eventQuery: solidQuery
             },
         });
 }
+
+async function processKoopovereenkomstGetekend(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+
+    return initState({ getekend: "zvg:getekend" }, { getekend: [event.actor] });
+}
+
 
 async function retrieveVC(uri: string): Promise<any> {
     const file = await getFile(uri);

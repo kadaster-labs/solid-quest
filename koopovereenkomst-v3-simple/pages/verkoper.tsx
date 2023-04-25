@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
@@ -7,12 +7,14 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 
+import { SessionProvider } from "@inrupt/solid-ui-react";
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Layout from "../src/Layout";
+import { SOLID_ZVG_CONTEXT } from "../src/koek/Context";
 import KoekAggregate from '../src/koek/KoekAggregate';
 import KoekRepository from "../src/koek/KoekRepository";
-import { SOLID_ZVG_CONTEXT } from "../src/koek/Context";
 
+import { getWebId } from "../src/Solid";
 import Step1 from "./steps_verkoper/Step1";
 import Step2 from "./steps_verkoper/Step2";
 import Step3 from "./steps_verkoper/Step3";
@@ -65,8 +67,13 @@ export default function Verkoper() {
   };
 
   const selectKoek = async (id) => {
-    setActiveKoek(await koekRepo.load(id));
+    setActiveKoek(await koekRepo.load(id, getWebId()));
   }
+
+  const handleMyKoeks = useCallback(() => {
+    setActiveStep(1);
+  }, []);
+
 
   function ActiveStep(props) {
     switch (props.value) {
@@ -83,7 +90,7 @@ export default function Verkoper() {
       case 5:
         return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 6:
-        return <Step7 stepNr={props.value + 1} handleBack={handleBack} koek={koek} />;
+        return <Step7 stepNr={props.value + 1} handleBack={handleBack} koek={koek} handleMyKoeks={handleMyKoeks} />;
       default:
         return <Step1 handleNext={handleNext} />;
     }
@@ -97,32 +104,34 @@ export default function Verkoper() {
       <Box
         sx={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%', width: '100%', marginTop: 4 }}
       >
-        <ActiveStep value={activeStep} />
-        <Stepper
-          sx={{
-            width: "100%",
-            minHeight: "4rem",
-          }} activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const stepProps: { completed?: boolean } = {};
-            const labelProps: {
-              optional?: React.ReactNode;
-            } = {};
-            if (isStepOptional(index)) {
-              labelProps.optional = (
-                <Typography variant="caption">Optional</Typography>
+        <SessionProvider>
+          <ActiveStep value={activeStep} />
+          <Stepper
+            sx={{
+              width: "100%",
+              minHeight: "4rem",
+            }} activeStep={activeStep}>
+            {steps.map((label, index) => {
+              const stepProps: { completed?: boolean } = {};
+              const labelProps: {
+                optional?: React.ReactNode;
+              } = {};
+              if (isStepOptional(index)) {
+                labelProps.optional = (
+                  <Typography variant="caption">Optional</Typography>
+                );
+              }
+              if (isStepSkipped(index)) {
+                stepProps.completed = false;
+              }
+              return (
+                <Step key={label} {...stepProps}>
+                  <StepLabel {...labelProps}>{label}</StepLabel>
+                </Step>
               );
-            }
-            if (isStepSkipped(index)) {
-              stepProps.completed = false;
-            }
-            return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
+            })}
+          </Stepper>
+        </SessionProvider>
       </Box>
     </Layout>
   );

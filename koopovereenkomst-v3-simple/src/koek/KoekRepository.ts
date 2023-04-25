@@ -38,10 +38,10 @@ export default class KoekRepository {
         return randomId;
     }
 
-    public async load(koekId: string): Promise<KoekAggregate> {
+    public async load(koekId: string, webId: string): Promise<KoekAggregate> {
         try {
             let koekUri = koekId.startsWith("http") ? koekId : `${this.logboekContainer}/${koekId}`;
-            let aggregate = new KoekAggregate(koekUri, koekId, this);
+            let aggregate = new KoekAggregate(koekUri, koekId, this, webId);
             let koekQuery = solidQuery[koekUri];
             try {
                 for await (let eventUri of koekQuery.wasGeneratedBy) {

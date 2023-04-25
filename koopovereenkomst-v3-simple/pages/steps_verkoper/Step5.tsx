@@ -74,7 +74,7 @@ export default function Step5(
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Koopdetails
+        {stepNr}. Koopdetails voor koopovereenkomst <Typography variant="body1">#{koek.id}</Typography>
       </Typography>
 
       <Box sx={{ textAlign: "center", backgroundColor: "rgba(255,255,255,0.1)", m: "1rem 0" }}>

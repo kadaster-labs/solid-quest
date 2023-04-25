@@ -1,13 +1,12 @@
-import { SessionProvider } from "@inrupt/solid-ui-react";
 import { Typography, useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Head from 'next/head';
 import { useEffect, useState } from "react";
 import Image from './Image';
 import Link from "./Link";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 export const siteTitle = 'Koopovereenkomst Solid App';
 
@@ -72,57 +71,55 @@ export default function Layout({ children, home, role }: {
                 backgroundPosition: "right top",
             })
         }}>
-            <SessionProvider>
-                <Container maxWidth="lg" sx={{
-                    maxWidth: "60rem",
-                    padding: "1rem 0 3rem",
-                    margin: "0 auto",
-                    // minHeight: "97vh",
-                    width: "100%",
-                }}>
-                    <Head>
-                        <link rel="icon" href="/solid-quest/favicon.ico" />
-                        <meta
-                            name="description"
-                            content="Discover what the SOLID specification contains and how it works by developing a working example with a 'Koopovereenkomst Solid App'"
+            <Container maxWidth="lg" sx={{
+                maxWidth: "60rem",
+                padding: "1rem 0 3rem",
+                margin: "0 auto",
+                // minHeight: "97vh",
+                width: "100%",
+            }}>
+                <Head>
+                    <link rel="icon" href="/solid-quest/favicon.ico" />
+                    <meta
+                        name="description"
+                        content="Discover what the SOLID specification contains and how it works by developing a working example with a 'Koopovereenkomst Solid App'"
+                    />
+                    <meta
+                        property="og:image"
+                        content={`/solid-quest/images/kadaster.svg`}
+                    />
+                    <meta name="og:title" content={siteTitle} />
+                    <meta name="twitter:card" content="summary_large_image" />
+                </Head>
+
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl-nl">
+                    <Box sx={{
+                        minHeight: "92vh",
+                        padding: "4rem 0",
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+
+                    }}>{children}</Box>
+                </LocalizationProvider>
+
+                <Box sx={footerStyle}  >
+                    <Link href="/">Home</Link>
+                    <Typography> | </Typography>
+                    <Link href="https://labs.kadaster.nl/cases/Solid-Pods" target="_blank">
+                        <Image
+                            priority
+                            src="/solid-quest/images/kadaster-wit.svg"
+                            height={22}
+                            width={22}
+                            alt="Kadaster Labs"
                         />
-                        <meta
-                            property="og:image"
-                            content={`/solid-quest/images/kadaster.svg`}
-                        />
-                        <meta name="og:title" content={siteTitle} />
-                        <meta name="twitter:card" content="summary_large_image" />
-                    </Head>
-
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl-nl">
-                        <Box sx={{
-                            minHeight: "92vh",
-                            padding: "4rem 0",
-                            flex: 1,
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-
-                        }}>{children}</Box>
-                    </LocalizationProvider>
-
-                    <Box sx={footerStyle}  >
-                        <Link href="/">Home</Link>
-                        <Typography> | </Typography>
-                        <Link href="https://labs.kadaster.nl/cases/Solid-Pods" target="_blank">
-                            <Image
-                                priority
-                                src="/solid-quest/images/kadaster-wit.svg"
-                                height={22}
-                                width={22}
-                                alt="Kadaster Labs"
-                            />
-                            Labs
-                        </Link>
-                    </Box>
-                </Container>
-            </SessionProvider>
+                        Labs
+                    </Link>
+                </Box>
+            </Container>
         </Box >
     );
 }

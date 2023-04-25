@@ -28,6 +28,7 @@ export const SOLID_ZVG_CONTEXT = {
   verkoper: "zvg:verkoper",
   koper: "zvg:koper",
   eigendom: "zvg:eigendom",
+  getekend: "zvg:getekend",
 };
 
 export const KADASTER_KKG_CONTEXT = {

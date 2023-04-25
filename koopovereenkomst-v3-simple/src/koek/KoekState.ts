@@ -15,6 +15,7 @@ export default interface KoekState {
     kadastraalObject?: {
         perceelNummer: string;
     }
+    getekend?: string[];
 }
 
 // Create our number formatter.
