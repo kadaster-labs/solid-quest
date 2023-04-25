@@ -49,7 +49,6 @@ export default class KoekAggregate {
   }
 
   public pushEvent(eventUri: string) {
-    console.log(`[${this._id}] pushEvent: `, eventUri);
     this.eventUris.push(eventUri);
   }  
 

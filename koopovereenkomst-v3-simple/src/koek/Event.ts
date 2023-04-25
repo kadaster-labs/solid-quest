@@ -14,5 +14,6 @@ export interface Event {
   koopprijs?: number;
   datumVanLevering?: string;
   verkoperRefs?: string[];
+  koperRefs?: string[];
   eigendomRefs?: string[];
 }

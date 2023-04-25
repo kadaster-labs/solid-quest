@@ -60,16 +60,18 @@ export async function processEvent(eventQuery: solidQuery, event: Event): Promis
     } else if (theType === "datumVanLeveringToegevoegd" || theType === "datumVanLeveringGewijzigd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processDatumVanLeveringToegevoegd(event, eventQuery);
-    } else if (theType === "persoonsgegevensRefToegevoegd") {
+    } else if (theType === "verkoperRefToegevoegd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
-        return await processPersoonsgegevensRefToegevoegd(event, eventQuery);
+        return await processVerkoperRefToegevoegd(event, eventQuery);
+    } else if (theType === "koperRefToegevoegd") {
+        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        return await processKoperRefToegevoegd(event, eventQuery);
     } else if (theType === "eigendomRefToegevoegd") {
         console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processEigendomRefToegevoegd(event, eventQuery);
     } else if (
         theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
         theType === "getekendeKoopovereenkomstKoperOpgeslagen" ||
-        theType === "persoonsgegevensRefToegevoegd" ||
         theType === "conceptKoopovereenkomstKoperOpgeslagen" ||
         theType ===
         "getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster" ||
@@ -141,7 +143,7 @@ async function processKoopovereenkomstGeinitieerd(event: Event, eventQuery: soli
     }
 }
 
-async function processPersoonsgegevensRefToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+async function processVerkoperRefToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
 
     let refs = [];
     for await (const ref of eventQuery.eventData.verkoper) {
@@ -151,6 +153,18 @@ async function processPersoonsgegevensRefToegevoegd(event: Event, eventQuery: so
 
     let vc = await retrieveVC(event.verkoperRefs[0]);
     return initState({ aangebodenDoor: "zvg:aangebodenDoor" }, { aangebodenDoor: vc.credentialSubject.naam });
+}
+
+async function processKoperRefToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {
+
+    let refs = [];
+    for await (const ref of eventQuery.eventData.koper) {
+        refs.push(ref.value);
+    }
+    Object.assign(event, { koperRefs: refs });
+
+    let vc = await retrieveVC(event.koperRefs[0]);
+    return initState({ aan: "zvg:aan" }, { aan: vc.credentialSubject.naam });
 }
 
 async function processEigendomRefToegevoegd(event: Event, eventQuery: solidQuery): Promise<KoekState> {

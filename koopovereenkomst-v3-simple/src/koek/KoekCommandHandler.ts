@@ -36,7 +36,7 @@ export default class KoekCommandHandler {
         if (this.isNotYetVerkoper(vc.url)) {
             console.log('[%s] add verkoper vc ref url', this.aggregateId, vc.url);
             let event = this.buildEvent(
-                'persoonsgegevensRefToegevoegd',
+                'verkoperRefToegevoegd',
                 'verkoper',
                 {
                     verkoperRefs: [vc.url],
@@ -54,7 +54,7 @@ export default class KoekCommandHandler {
     }
 
     private isNotYetVerkoper(url: string): boolean {
-        let refs = this.koek.getEvents().filter((e) => e.type === "persoonsgegevensRefToegevoegd");
+        let refs = this.koek.getEvents().filter((e) => e.type === "verkoperRefToegevoegd");
         return refs.filter((e) => e.verkoperRefs.includes(url)).length == 0;
     }
 
@@ -133,7 +133,6 @@ export default class KoekCommandHandler {
     }
 
     private isDifferentKoopprijs(koopprijs: number) {
-        console.log('[%s] compare koopprijs [%n] with state [%n]', this.aggregateId, koopprijs, this.koek.data.koopprijs);
         return this.koek.data.koopprijs != koopprijs;
     }
 
