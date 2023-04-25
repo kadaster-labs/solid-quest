@@ -18,6 +18,9 @@ export default function Events({ koek, show = false }: { koek: KoekAggregate, sh
                 console.error("Error handling events of koopovereenkomst!", error);
             }
         }
+        else {
+            setShowEvents(false);
+        }
         if (showEvents) {
             setFlag("-");
         }
@@ -33,7 +36,7 @@ export default function Events({ koek, show = false }: { koek: KoekAggregate, sh
 
     return (
         <Box sx={{ p: "1rem", m: "1rem 0", backgroundColor: "rgba(255, 255, 255, 0.1)" }}>
-            <Typography onClick={toggleEvents} sx={{ alignContent: "flex-end", cursor: "pointer" }}>(events {flag})</Typography>
+            {koek && <Typography onClick={toggleEvents} sx={{ alignContent: "flex-end", cursor: "pointer" }}>(events {flag})</Typography>}
             {showEvents && <List>
                 {eventLabels.map((e, i) => (
                     <ListItem key={i} sx={{

@@ -138,43 +138,47 @@ export default class KoekCommandHandler {
 
     public async populateWithMockEvents(): Promise<void> {
         let events = [
+            // {
+            //     type: 'koopovereenkomstGeinitieerd',
+            //     data: {
+            //         template: 'NVM Simple Default Koophuis',
+            //     },
+            //     actor: 'verkoper',
+            // },
+            // {
+            //     type: 'kadastraalObjectIdToegevoegd',
+            //     data: {
+            //         kadastraalObjectId: "10020263270000",
+            //     },
+            //     actor: 'verkoper',
+            // },
+            // {
+            //     type: 'koopprijsToegevoegd',
+            //     data: {
+            //         // random price between 100k and 1m
+            //         koopprijs: Math.floor(Math.random() * 900000) + 100000,
+            //     },
+            //     actor: 'verkoper',
+            // },
+            // {
+            //     type: 'datumVanLeveringToegevoegd',
+            //     data: {
+            //         datumVanLevering: new Date().toISOString(),
+            //     },
+            //     actor: 'verkoper',
+            // },
+            // {
+            //     type: 'verkoperRefToegevoegd',
+            //     data: {
+            //         verkoperRefs: ["http://localhost:3001/verkoper-vera/credentials/brp-credential.jsonld"],
+            //     },
+            //     actor: 'verkoper',
+            // },
             {
-                type: 'koopovereenkomstGeinitieerd',
+                type: 'koperRefToegevoegd',
                 data: {
-                    template: 'NVM Simple Default Koophuis',
+                    koperRefs: ["http://localhost:3001/koper-koos/credentials/brp-credential.jsonld"],
                 },
-                actor: 'verkoper',
-            },
-            {
-                type: 'kadastraalObjectIdToegevoegd',
-                data: {
-                    kadastraalObjectId: "10020263270000",
-                },
-                actor: 'verkoper',
-            },
-            {
-                type: 'koopprijsToegevoegd',
-                data: {
-                    // random price between 100k and 1m
-                    koopprijs: Math.floor(Math.random() * 900000) + 100000,
-                },
-                actor: 'verkoper',
-            },
-            {
-                type: 'datumVanLeveringToegevoegd',
-                data: {
-                    datumVanLevering: new Date().toISOString(),
-                },
-                actor: 'verkoper',
-            },
-            {
-                type: 'persoonsgegevensRefToegevoegd',
-                data: {},
-                actor: 'verkoper',
-            },
-            {
-                type: 'persoonsgegevensRefToegevoegd',
-                data: {},
                 actor: 'koper-koos',
             },
             {

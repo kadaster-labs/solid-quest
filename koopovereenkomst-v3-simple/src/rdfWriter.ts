@@ -63,7 +63,13 @@ export function event2RDF(eventData: Event, options): string {
   store.add(eventNode, ns.cloudevents('source'), ns.me, eventNode);
   store.add(eventNode, ns.rdfs('label'), labelNode, eventNode);
 
-  if (eventData.template || eventData.kadastraalObjectId || eventData.koopprijs || eventData.datumVanLevering || eventData.verkoperRefs || eventData.eigendomRefs) {
+  if (eventData.template
+    || eventData.kadastraalObjectId
+    || eventData.koopprijs
+    || eventData.datumVanLevering
+    || eventData.verkoperRefs
+    || eventData.eigendomRefs
+    || eventData.koperRefs) {
     const dataNode = $rdf.namedNode(ns.event.uri + '#data');
 
     store.add(eventNode, ns.cloudevents('data'), dataNode, eventNode);
@@ -84,6 +90,12 @@ export function event2RDF(eventData: Event, options): string {
     if (eventData.verkoperRefs) {
       eventData.verkoperRefs.forEach(ref => {
         store.add(dataNode, ns.zvg('verkoper'), $rdf.namedNode(ref), dataNode);
+      });
+    }
+    if (eventData.koperRefs) {
+      eventData.koperRefs.forEach(ref => {
+        console.log('adding named node for koper', ref);
+        store.add(dataNode, ns.zvg('koper'), $rdf.namedNode(ref), dataNode);
       });
     }
     if (eventData.eigendomRefs) {
