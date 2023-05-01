@@ -1,4 +1,4 @@
-@prefix event: <> .
+@prefix id: <./>.
 @prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
 @prefix koopovereenkomst: <../../id/> .
 @prefix cloudevents: <https://cloudevents.io/def/> .
@@ -6,10 +6,10 @@
 @prefix me: </profile/card#me> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-event:
+id:817f3528-aa93-45bd-8462-ee43837f8df4
     a zvg:verkoperRefToegevoegd;
     zvg:aggregateIdentifier koopovereenkomst:345;
-    cloudevents:sequence "4"^^xsd:integer;
+    cloudevents:sequence 4;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
     cloudevents:time "2001-09-28T20:18:13Z"^^xsd:dateTime;
@@ -18,4 +18,3 @@ event:
     cloudevents:data :data .
 
 :data a zvg:eventData; zvg:verkoper <../../../credentials/brp-credential.jsonld>.
-   
