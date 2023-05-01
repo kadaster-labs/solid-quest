@@ -14,26 +14,22 @@ interface Step4Props {
   stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
+  navigateToMyKoeks: () => void;
   koek: KoekAggregate;
 }
 
-export default function Step4({ stepNr = 4, handleNext, handleBack, koek }: Step4Props) {
+export default function Step4({ stepNr = 4, handleNext, handleBack, navigateToMyKoeks, koek }: Step4Props) {
 
-  const [koperRefGevuld, setKoperRefGevuld] = useState<boolean>(false);
+  const [koekComplete, setKoekComplete] = useState<boolean>(false);
 
   useEffect(() => {
-    if (koek.data.aan) {
-      setKoperRefGevuld(true);
-    }
-    else {
-      setKoperRefGevuld(false);
-    }
+    setKoekComplete(koek.isComplete());
   }, [koek]);
 
   return (
     <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
-      Ik wil een huis kopen
+        Ik wil een huis kopen
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Concept koopovereenkomst
@@ -56,7 +52,8 @@ export default function Step4({ stepNr = 4, handleNext, handleBack, koek }: Step
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={handleNext} disabled={!koperRefGevuld}>Doorgaan</Button>
+        <Button variant="contained" onClick={navigateToMyKoeks}>Deelnemen Koopovereenkomst</Button>
+        <Button variant="contained" onClick={handleNext} disabled={!koekComplete}>Doorgaan</Button>
       </Stack>
     </Box>
   );

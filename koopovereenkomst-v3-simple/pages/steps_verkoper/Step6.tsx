@@ -14,20 +14,16 @@ interface Step6Props {
   stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
+  navigateToMyKoeks: () => void;
   koek: KoekAggregate;
 }
 
-export default function Step6({ stepNr = 6, handleNext, handleBack, koek }: Step6Props) {
+export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMyKoeks, koek }: Step6Props) {
 
-  const [koperRefGevuld, setKoperRefGevuld] = useState<boolean>(false);
+  const [koekComplete, setKoekComplete] = useState<boolean>(false);
 
   useEffect(() => {
-    if (koek.data.aan) {
-      setKoperRefGevuld(true);
-    }
-    else {
-      setKoperRefGevuld(false);
-    }
+    setKoekComplete(koek.isComplete());
   }, [koek]);
 
   return (
@@ -56,7 +52,8 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, koek }: Step
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={handleNext} disabled={!koperRefGevuld}>Doorgaan</Button>
+        <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
+        <Button variant="contained" onClick={handleNext} disabled={!koekComplete}>Doorgaan</Button>
       </Stack>
     </Box>
   );

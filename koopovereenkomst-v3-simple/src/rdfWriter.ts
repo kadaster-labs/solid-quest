@@ -54,7 +54,7 @@ export function event2RDF(eventData: Event, options): string {
   );
   const timeNode = $rdf.literal(eventData.time, ns.xsd('dateTime'));
   const sequenceNode = $rdf.literal(eventData.seq, ns.xsd('integer'));
-  const aggregateId = $rdf.namedNode(`${options.vlbContainer}/${eventData.aggregateId}`);
+  const aggregateId = $rdf.namedNode(eventData.aggregateId.startsWith('http') ? eventData.aggregateId : `${options.vlbContainer}/${eventData.aggregateId}`);
 
   store.add(eventNode, ns.rdf('type'), ns.zvg(eventData.type), eventNode);
   store.add(eventNode, ns.zvg('aggregateIdentifier'), aggregateId, eventNode);

@@ -70,10 +70,9 @@ export default function Verkoper() {
     setActiveKoek(await koekRepo.load(id, getWebId()));
   }
 
-  const handleMyKoeks = useCallback(() => {
+  const navigateToMyKoeks = useCallback(() => {
     setActiveStep(1);
   }, []);
-
 
   function ActiveStep(props) {
     switch (props.value) {
@@ -88,9 +87,9 @@ export default function Verkoper() {
       case 4:
         return <Step5 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 5:
-        return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
+        return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       case 6:
-        return <Step7 stepNr={props.value + 1} handleBack={handleBack} koek={koek} handleMyKoeks={handleMyKoeks} />;
+        return <Step7 stepNr={props.value + 1} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       default:
         return <Step1 handleNext={handleNext} />;
     }

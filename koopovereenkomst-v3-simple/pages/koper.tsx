@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
@@ -68,6 +68,10 @@ export default function Koper() {
     setActiveKoek(await koekRepo.load(id, getWebId()));
   }
 
+  const navigateToMyKoeks = useCallback(() => {
+    setActiveStep(1);
+  }, []);
+
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
@@ -77,11 +81,11 @@ export default function Koper() {
       case 2:
         return <Step3 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 3:
-        return <Step4 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
+        return <Step4 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       case 4:
         return <Step5 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 5:
-        return <Step6 stepNr={props.value + 1} handleBack={handleBack} koek={koek} />;
+        return <Step6 stepNr={props.value + 1} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       default:
         return <Step1 handleNext={handleNext} />;
     }

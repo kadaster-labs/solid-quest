@@ -2,21 +2,19 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { getWebId } from "../../src/Solid";
 import Events from "../../src/ui-components/Events";
 
-export default function Step7({ stepNr = 6, handleBack = () => { }, handleMyKoeks = () => { }, koek }) {
-
-  const [finished, setFinished] = useState(false);
+export default function Step7({ stepNr = 6, handleBack = () => { }, navigateToMyKoeks: navigateToMyKoeks = () => { }, koek }) {
 
   const handleAkkoord = useCallback(async () => {
     let success = await koek.cmdHdlr.tekenen(getWebId());
     if (success == true) {
-      setFinished(true);
+      navigateToMyKoeks();
     }
     else {
-      throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
+      throw new Error(`Tekenen niet gelukt! (check console voor errors)`);
     }
   }, [koek]);
 
@@ -32,8 +30,8 @@ export default function Step7({ stepNr = 6, handleBack = () => { }, handleMyKoek
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={handleAkkoord} >Akkoord</Button>
-        <Button variant="contained" onClick={handleMyKoeks} disabled={!finished} >Mijn Koopovereenkomsten</Button>
+        <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
+        <Button variant="contained" onClick={handleAkkoord}>Akkoord</Button>
       </Stack>
     </Box>
   );

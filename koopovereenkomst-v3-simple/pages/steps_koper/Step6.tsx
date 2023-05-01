@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import Events from "../../src/ui-components/Events";
 
-export default function Step6({ stepNr = 5, handleBack = () => { }, koek }) {
+export default function Step6({ stepNr = 5, handleBack = () => { }, navigateToMyKoeks: navigateToMyKoeks = () => { }, koek }) {
   return (
     <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
@@ -20,9 +20,8 @@ export default function Step6({ stepNr = 5, handleBack = () => { }, koek }) {
 
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
-        <Button variant="contained" onClick={handleBack}>
-          Terug
-        </Button>
+        <Button variant="contained" onClick={handleBack}>Terug</Button>
+        <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
       </Stack>
     </Box>
   );

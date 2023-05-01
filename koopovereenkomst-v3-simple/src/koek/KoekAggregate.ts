@@ -9,7 +9,7 @@ import KoekRepository from "./KoekRepository";
 import KoekState from "./KoekState";
 
 export default class KoekAggregate {
-  internalState: any = {
+  internalState: KoekState = {
     "@context": {
       ...GENERAL_CONTEXT,
       zvg: "http://taxonomie.zorgeloosvastgoed.nl/def/zvg#",
@@ -45,6 +45,22 @@ export default class KoekAggregate {
 
   public get data(): KoekState {
     return this.internalState;
+  }
+
+  /**
+   * Checks if this Koopovereenkomst (koek) is complete.
+   */
+  public isComplete(): boolean {
+
+    let result = this.internalState.aan !== ""
+      && this.internalState.aangebodenDoor !== ""
+      && this.internalState.datumVanLevering !== ""
+      && this.internalState.koopprijs > 0
+      && this.internalState.kadastraalObject != undefined
+      ;
+
+    console.log('[%s] isComplete: [%s]', this._id, result, this.internalState);
+    return result;
   }
 
   public pushEvent(eventUri: string) {
