@@ -16,7 +16,7 @@ export default function Step7({ stepNr = 6, handleBack = () => { }, navigateToMy
     else {
       throw new Error(`Tekenen niet gelukt! (check console voor errors)`);
     }
-  }, [koek]);
+  }, [koek, /* navigateToMyKoeks */]);
 
   return (
     <Box sx={{ flex: 1 }}>

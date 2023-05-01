@@ -83,7 +83,7 @@ export default function Step3({
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [updateVCs, loadedBRPVC]);
+  }, [updateVCs, loadedBRPVC, /* handleNext, koek */]);
 
   useEffect(() => {
 

@@ -27,7 +27,7 @@ export default function Step5({
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [koek]);
+  }, [koek, /* handleNext */]);
 
   return (
     <Box sx={{ flex: 1 }}>

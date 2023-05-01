@@ -15,7 +15,7 @@ export default function BRPersonen() {
 
     const refreshState = useCallback(() => {
         setIsLoggedOn(session.info.isLoggedIn);
-    }, [isLoggedOn, session.info.isLoggedIn])
+    }, [session.info.isLoggedIn])
 
     useEffect(() => {
         refreshState();

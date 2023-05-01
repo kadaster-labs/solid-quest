@@ -66,7 +66,7 @@ export default function Step5(
     else {
       throw new Error(`Vaststellen van de datum van levering is mislukt! (check console voor errors)`);
     }
-  }, [datum, koopprijs]);
+  }, [datum, koopprijs, /* handleNext, koek */]);
 
   return (
     <Box sx={{ flex: 1 }}>
