@@ -13,7 +13,6 @@ const KadasterKnowledgeGraph = function ({ objectId }) {
     };
 
     const callKadaster = async () => {
-        console.log('calling KKG with', kadastraalObjectId);
         let perceel = await callKadasterKnowledgeGraph(kadastraalObjectId);
         setPerceelnummer(perceel.perceelNummer);
     }

@@ -52,14 +52,14 @@ export default class KoekAggregate {
    */
   public isComplete(): boolean {
 
-    let result = this.internalState.aan !== ""
-      && this.internalState.aangebodenDoor !== ""
-      && this.internalState.datumVanLevering !== ""
+    let result = 'aan' in this.internalState
+      && 'aangebodenDoor' in this.internalState
+      && 'datumVanLevering' in this.internalState
       && this.internalState.koopprijs > 0
       && this.internalState.kadastraalObject != undefined
       ;
 
-    console.log('[%s] isComplete: [%s]', this._id, result, this.internalState);
+    // console.log('[%s] isComplete: [%s]', this._id, result, this.internalState);
     return result;
   }
 
@@ -68,7 +68,6 @@ export default class KoekAggregate {
   }
 
   public async processEvents() {
-    console.log(`[${this._id}] process events!!`);
     let loadedEvents = (
       await Promise.all(this.eventUris
         .map(loadEvent)))

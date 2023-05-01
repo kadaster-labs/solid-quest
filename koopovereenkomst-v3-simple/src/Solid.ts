@@ -42,7 +42,6 @@ export function getRootContainerURL() {
 }
 
 export async function deleteRecursively(dataset) {
-  console.log(dataset);
   const containedResourceUrls = getContainedResourceUrlAll(dataset);
   const containedDatasets = await Promise.all(
     containedResourceUrls.map(async (resourceUrl) => {

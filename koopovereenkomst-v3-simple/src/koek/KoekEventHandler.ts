@@ -49,28 +49,28 @@ export async function processEvent(eventQuery: solidQuery, event: Event): Promis
     let aggregateId = event.aggregateId;
 
     if (theType === "koopovereenkomstGeinitieerd") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processKoopovereenkomstGeinitieerd(event, eventQuery);
     } else if (theType === "kadastraalObjectIdToegevoegd") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processKadastraalObjectIdToegevoegd(event, eventQuery);
     } else if (theType === "koopprijsToegevoegd" || theType === "koopprijsGewijzigd") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processKoopprijsToegevoegd(event, eventQuery);
     } else if (theType === "datumVanLeveringToegevoegd" || theType === "datumVanLeveringGewijzigd") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processDatumVanLeveringToegevoegd(event, eventQuery);
     } else if (theType === "verkoperRefToegevoegd") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processVerkoperRefToegevoegd(event, eventQuery);
     } else if (theType === "koperRefToegevoegd") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processKoperRefToegevoegd(event, eventQuery);
     } else if (theType === "eigendomRefToegevoegd") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processEigendomRefToegevoegd(event, eventQuery);
     } else if (theType === "conceptKoopovereenkomstGetekend") {
-        console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
+        // console.log(`[aggregate: ${aggregateId}] extract data from [${theType}] event`);
         return await processKoopovereenkomstGetekend(event, eventQuery);
     } else if (
         theType === "conceptKoopovereenkomstVerkoperOpgeslagen" ||
