@@ -15,7 +15,7 @@ id:3dcf3747-185f-4862-a442-47de5e236fa9
     cloudevents:time "2001-10-05T16:45:13Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "05 | koper koos | koper gegevens toegevoegd voor 345";
-    cloudevents:data :data .
+    cloudevents:data <#data> .
 
-:data
+<#data>
     a zvg:eventData; zvg:koper <http://localhost:3001/koper-koos/credentials/brp-credential.jsonld> .

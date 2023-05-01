@@ -15,6 +15,6 @@ id:817f3528-aa93-45bd-8462-ee43837f8df4
     cloudevents:time "2001-09-28T20:18:13Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "04 | verkoper vera | verkoper gegevens toegevoegd voor 345";
-    cloudevents:data :data .
+    cloudevents:data <#data> .
 
-:data a zvg:eventData; zvg:verkoper <../../../credentials/brp-credential.jsonld>.
+<#data> a zvg:eventData; zvg:verkoper <../../../credentials/brp-credential.jsonld>.

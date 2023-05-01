@@ -15,8 +15,8 @@ id:1bc24631-de10-42b1-8ffe-6c0509336dfa
     cloudevents:time "2001-09-27T09:32:42Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "00 | verkoper vera | koopovereenkomst geinitieerd voor 345";
-    cloudevents:data :data .
+    cloudevents:data <#data> .
 
-:data
+<#data>
     a zvg:eventData;
     zvg:koopovereenkomstTemplate "NVM Standaard Koopovereenkomst Koophuis" .

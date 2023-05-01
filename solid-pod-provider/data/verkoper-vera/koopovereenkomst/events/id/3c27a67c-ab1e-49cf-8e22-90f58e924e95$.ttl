@@ -15,6 +15,6 @@ id:3c27a67c-ab1e-49cf-8e22-90f58e924e95
     cloudevents:time "2001-09-27T10:15:50Z"^^xsd:dateTime;
     cloudevents:source me:;
     rdfs:label "01 | verkoper vera | kadastraal object id toegevoegd voor 345";
-    cloudevents:data :data .
+    cloudevents:data <#data> .
 
-:data a zvg:eventData; zvg:eigendom <../../../credentials/brk-credential.jsonld>.
+<#data> a zvg:eventData; zvg:eigendom <../../../credentials/brk-credential.jsonld>.
