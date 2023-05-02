@@ -7,17 +7,14 @@ import { getWebId } from "../../src/Solid";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
 
-export default function Step5({
-  stepNr = 5,
-  handleNext,
-  handleBack = () => { },
-  koek }:
-  {
-    stepNr: number;
-    handleNext: () => void;
-    handleBack: () => void;
-    koek: KoekAggregate;
-  }) {
+interface StepProps {
+  stepNr: number;
+  handleNext: () => void;
+  handleBack: () => void;
+  koek: KoekAggregate;
+}
+
+export default function Step5({ stepNr = 5, handleNext, handleBack = () => { }, koek }: StepProps) {
 
   const handleAkkoord = useCallback(async () => {
     let success = await koek.cmdHdlr.tekenen(getWebId());
@@ -27,7 +24,7 @@ export default function Step5({
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [koek, /* handleNext */]);
+  }, [koek, handleNext]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -35,7 +32,7 @@ export default function Step5({
         Ik wil een huis kopen
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek.id}</Typography>
+        {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>
 
       <Events koek={koek} />

@@ -4,9 +4,17 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { useCallback } from "react";
 import { getWebId } from "../../src/Solid";
+import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
 
-export default function Step7({ stepNr = 6, handleBack = () => { }, navigateToMyKoeks: navigateToMyKoeks = () => { }, koek }) {
+interface StepProps {
+  stepNr: number;
+  handleBack: () => void;
+  navigateToMyKoeks: () => void;
+  koek: KoekAggregate;
+}
+
+export default function Step7({ stepNr = 6, handleBack = () => { }, navigateToMyKoeks: navigateToMyKoeks = () => { }, koek}: StepProps) {
 
   const handleAkkoord = useCallback(async () => {
     let success = await koek.cmdHdlr.tekenen(getWebId());
@@ -16,7 +24,7 @@ export default function Step7({ stepNr = 6, handleBack = () => { }, navigateToMy
     else {
       throw new Error(`Tekenen niet gelukt! (check console voor errors)`);
     }
-  }, [koek, /* navigateToMyKoeks */]);
+  }, [koek, navigateToMyKoeks]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -24,7 +32,7 @@ export default function Step7({ stepNr = 6, handleBack = () => { }, navigateToMy
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek.id}</Typography>
+        {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>
 
       <Events koek={koek} />

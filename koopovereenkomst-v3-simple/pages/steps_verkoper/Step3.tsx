@@ -23,17 +23,14 @@ function createData(
   return { name, value };
 }
 
-export default function Step3({
-  stepNr = 3,
-  handleNext,
-  handleBack = () => { },
-  koek }:
-  {
-    stepNr: number;
-    handleNext: () => void;
-    handleBack: () => void;
-    koek: KoekAggregate;
-  }) {
+interface StepProps {
+  stepNr: number;
+  handleNext: () => void;
+  handleBack: () => void;
+  koek: KoekAggregate;
+}
+
+export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek }: StepProps) {
   const [loadedBRPVC, setLoadedBRPVC] = useState({} as any);
 
   const [rows, setRows] = useState([] as Array<any>);
@@ -83,7 +80,7 @@ export default function Step3({
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [updateVCs, loadedBRPVC, /* handleNext, koek */]);
+  }, [loadedBRPVC, handleNext, koek]);
 
   useEffect(() => {
 
@@ -95,7 +92,7 @@ export default function Step3({
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst <Typography variant="body1">#{koek.id}</Typography>
+        {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>
 
       <VC type={VCType.BRP} onChange={updateVCs} />

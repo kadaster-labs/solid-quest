@@ -3,7 +3,8 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { DateCalendar } from "@mui/x-date-pickers";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from 'dayjs';
 import React, { useCallback, useState } from "react";
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
@@ -41,21 +42,17 @@ const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(
   },
 );
 
-export default function Step5(
-  {
-    stepNr = 5,
-    handleNext,
-    handleBack = () => { },
-    koek
-  }: {
-    stepNr: number;
-    handleNext: () => void;
-    handleBack: () => void;
-    koek: KoekAggregate;
-  }) {
+interface StepProps {
+  stepNr: number;
+  handleNext: () => void;
+  handleBack: () => void;
+  koek: KoekAggregate;
+}
 
-  const [datum, setDatum] = useState<Dayjs | null>(koek.getDatumVanLevering());
-  const [koopprijs, setKoopprijs] = useState(String(koek.data.koopprijs));
+export default function Step5({ stepNr = 5, handleNext, handleBack = () => { }, koek }: StepProps) {
+
+  const [datum, setDatum] = useState<Dayjs | null>(koek?.getDatumVanLevering());
+  const [koopprijs, setKoopprijs] = useState(String(koek?.data.koopprijs));
 
   const handleAkkoord = useCallback(async () => {
     let success = await koek.cmdHdlr.datumVanLeveringVastgesteld(datum);
@@ -66,7 +63,7 @@ export default function Step5(
     else {
       throw new Error(`Vaststellen van de datum van levering is mislukt! (check console voor errors)`);
     }
-  }, [datum, koopprijs, /* handleNext, koek */]);
+  }, [datum, koopprijs, handleNext, koek]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -74,12 +71,14 @@ export default function Step5(
         Start een nieuwe koopovereenkomst
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Koopdetails voor koopovereenkomst <Typography variant="body1">#{koek.id}</Typography>
+        {stepNr}. Koopdetails voor koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>
 
       <Box sx={{ textAlign: "center", backgroundColor: "rgba(255,255,255,0.1)", m: "1rem 0" }}>
         <Typography variant="body1">Leveringsdatum ({datum ? datum.format('DD-MM-YYYY') : ""})</Typography>
-        <DateCalendar value={datum} onChange={(newDate) => setDatum(newDate)} />
+        <LocalizationProvider adapterLocale="nl-NL" dateAdapter={AdapterDayjs}>
+          <DateCalendar value={datum} onChange={(newDate) => setDatum(newDate)} />
+        </LocalizationProvider>
       </Box>
 
       <Box sx={{ textAlign: "center", backgroundColor: "rgba(255,255,255,0.1)", m: "1rem 0" }}>

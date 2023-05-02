@@ -26,7 +26,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
     else {
       throw new Error(`Toevoegen eigendom VC is niet gelukt! (check console voor errors)`);
     }
-  }, [updateVCs, loadedBRKVCs, /* handleNext, koek */]);
+  }, [loadedBRKVCs, handleNext, koek]);
 
   return (
     <Box sx={{ flex: 1 }}>
