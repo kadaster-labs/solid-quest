@@ -104,12 +104,6 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
     selectKoek(row.id);
   };
 
-  const createEvents = async () => {
-    await koek.cmdHdlr.populateWithMockEvents()
-
-    loadKoeks(koek.id);
-  }
-
   return (
     <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
       <Typography variant="h1" color="text.primary" align="center">
@@ -188,8 +182,7 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
       <Events koek={koek} />
       <Stack sx={{ width: "50vw", marginBottom: '2rem' }} direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {selectedRowId && <Button variant="contained" onClick={createEvents}>Create events (debug)</Button>}
-        {selectedRowId && <Button variant="contained" onClick={handleNext}>Doorgaan</Button>}
+        <Button variant="contained" onClick={handleNext} disabled={!selectedRowId}>Doorgaan</Button>
       </Stack>
     </Box>
   );

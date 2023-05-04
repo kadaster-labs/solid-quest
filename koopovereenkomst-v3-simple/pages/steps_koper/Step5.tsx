@@ -38,7 +38,7 @@ export default function Step5({ stepNr = 5, handleNext, handleBack = () => { }, 
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={handleAkkoord} >Akkoord</Button>
+        <Button variant="contained" onClick={handleAkkoord}>Akkoord</Button>
       </Stack>
     </Box>
   );

@@ -21,7 +21,7 @@ export default function Step6({ stepNr = 5, handleBack = () => { }, navigateToMy
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
+        <Button variant="contained" onClick={navigateToMyKoeks}>Deelnemen Koopovereenkomst</Button>
       </Stack>
     </Box>
   );
