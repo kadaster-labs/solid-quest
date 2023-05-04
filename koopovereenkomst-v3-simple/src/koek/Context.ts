@@ -17,6 +17,7 @@ export const SOLID_ZVG_CONTEXT = {
   eventData: "cloudevents:data",
   time: "cloudevents:time",
 
+  aggregateIdentifier: "zvg:aggregateIdentifier",
   aan: "zvg:aan",
   aangebodenDoor: "zvg:aangebodenDoor",
   koopprijs: "zvg:koopprijs",
@@ -24,6 +25,10 @@ export const SOLID_ZVG_CONTEXT = {
   bod: "zvg:bod",
   template: "zvg:koopovereenkomstTemplate",
   kadastraalObjectId: "zvg:kadastraalObjectId",
+  verkoper: "zvg:verkoper",
+  koper: "zvg:koper",
+  eigendom: "zvg:eigendom",
+  getekend: "zvg:getekend",
 };
 
 export const KADASTER_KKG_CONTEXT = {

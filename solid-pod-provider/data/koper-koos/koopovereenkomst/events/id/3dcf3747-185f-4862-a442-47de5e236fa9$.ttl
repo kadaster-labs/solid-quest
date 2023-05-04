@@ -1,22 +1,21 @@
-@prefix event: <> .
+@prefix id: <./>.
 @prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
-@prefix koopovereenkomst: <../../id/> .
+@prefix koopovereenkomst: <http://localhost:3001/verkoper-vera/koopovereenkomst/id/> .
 @prefix cloudevents: <https://cloudevents.io/def/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix me: </profile/card#me> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-event:
-    a zvg:persoonsgegevensRefToegevoegd;
+id:3dcf3747-185f-4862-a442-47de5e236fa9
+    a zvg:koperRefToegevoegd;
     zvg:aggregateIdentifier koopovereenkomst:345;
-    cloudevents:sequence "5"^^xsd:integer;
+    cloudevents:sequence 5;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
     cloudevents:time "2001-10-05T16:45:13Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "05 | koper koos | persoonsgegevens toegevoegd voor 345";
+    rdfs:label "05 | koper koos | koper gegevens toegevoegd voor 345";
     cloudevents:data <#data> .
 
 <#data>
-    a zvg:eventData .
-
+    a zvg:eventData; zvg:koper <http://localhost:3001/koper-koos/credentials/brp-credential.jsonld> .

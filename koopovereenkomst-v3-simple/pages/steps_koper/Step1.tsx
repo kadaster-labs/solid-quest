@@ -1,22 +1,144 @@
-import * as React from "react";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { useSession } from "@inrupt/solid-ui-react";
+import {
+  getDate,
+  getSolidDataset,
+  getStringNoLocale,
+  getThing,
+  getUrl,
+  ThingPersisted,
+} from "@inrupt/solid-client";
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { useCallback, useEffect, useState } from "react";
+import ConnectSolid from "../../src/ConnectSolid";
+import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
-export default function Step1({ handleNext }) {
+import { VCARD } from "@inrupt/vocab-common-rdf";
+import { SolidPerson, SolidAddress } from "../../src/Solid";
+
+export default function Step1({ stepNr = 1, handleNext }) {
+  const { session } = useSession();
+
+  const [isReady, setIsReady] = useState(null as boolean);
+  const [person, setPerson] = useState(null as SolidPerson);
+  const [eigendom, setEigendom] = useState(null as SolidAddress);
+
+  let isLoggedIn = session.info.isLoggedIn;
+  let webId = session.info.webId;
+
+  const getProfile: () => Promise<ThingPersisted> = useCallback(async () => {
+    const myDataset = await getSolidDataset(webId, { fetch: session.fetch });
+    const profile: ThingPersisted = getThing(myDataset, webId);
+
+    return profile;
+  }, [webId, session.fetch]);
+
+  const getPersonInfo: (profile: ThingPersisted) => SolidPerson = useCallback(
+    (profile) => {
+      const name = getStringNoLocale(profile, VCARD.fn);
+      const bday = getDate(profile, VCARD.bday);
+
+      return { name, bday };
+    }, []
+  );
+
+  const getEigendomInfo: (profile: ThingPersisted) => Promise<SolidAddress> =
+    useCallback(
+      async (profile) => {
+        // Get the URL of the address, it is a different dataset than the profile (#me)
+        const addressUrl = getUrl(profile, VCARD.hasAddress);
+
+        if (!addressUrl) {
+          return null;
+        }
+
+        const addressDataset = await getSolidDataset(addressUrl, {
+          fetch: session.fetch,
+        });
+        const address = getThing(addressDataset, addressUrl);
+
+        const streetAddress = getStringNoLocale(address, VCARD.street_address);
+        const locality = getStringNoLocale(address, VCARD.locality);
+        const region = getStringNoLocale(address, VCARD.region);
+        const postalCode = getStringNoLocale(address, VCARD.postal_code);
+        const countryName = getStringNoLocale(address, VCARD.country_name);
+
+        return { streetAddress, locality, region, postalCode, countryName };
+      }, [session.fetch]);
+
+  // Na inloggen, check of het WebID bekend is in de database
+  useEffect(() => {
+    async function checkIfWebIDIsReadyForDemo(webId): Promise<void> {
+      const result = await checkIfWebIDIsReady(webId);
+      setIsReady(result);
+    }
+
+    async function loadData(): Promise<void> {
+      const profile = await getProfile();
+
+      const person = getPersonInfo(profile);
+      const eigendom = await getEigendomInfo(profile);
+
+      setPerson(person);
+      setEigendom(eigendom);
+    }
+
+    if (isLoggedIn) {
+      const result = checkIfWebIDIsReadyForDemo(webId);
+      if (result) {
+        loadData();
+      }
+    }
+  }, [getEigendomInfo, getPersonInfo, getProfile, isLoggedIn, webId]);
 
   return (
-    <Box>
+    <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
         Ik wil een huis kopen
       </Typography>
-      <Typography variant="body1" color="text.primary" align="center">
-        De verkoper heeft jouw WebID ingevuld bij het aanmaken van de koopovereenkomst. Door in te loggen kan je straks jouw gegevens toevoegen.
+      <Typography variant="h2" color="text.primary" align="center">
+        {stepNr}. Koppelen van je Personal Online Datastore (POD)
       </Typography>
       <Typography variant="body1" color="text.primary" align="center">
-        1. Log in met je WebID of mailadres
+        De verkoper heeft jouw WebID ingevuld bij het aanmaken van de koopovereenkomst.
+        Door in te loggen kan je straks jouw gegevens toevoegen.
       </Typography>
-      <Button variant="contained" onClick={handleNext}>Doorgaan</Button>
+
+      <Box>
+        <ConnectSolid />
+      </Box>
+
+      {isLoggedIn && (
+        <Box>
+          <Typography variant="body1" color="text.primary" align="center">
+            Welkom{person && person.hasOwnProperty('name') && person.name !== null && " " + person.name}!
+            <br /><br />
+            Hieronder zie je je publieke data in je pod.
+          </Typography>
+          <pre>
+            {JSON.stringify(person, null, 2)}
+          </pre>
+          <pre>
+            {JSON.stringify(eigendom, null, 2)}
+          </pre>
+        </Box>
+      )}
+      {isLoggedIn && isReady == true && (
+        <Box>
+          <Stack direction="row" justifyContent="end">
+            <Button
+              disabled={!isLoggedIn}
+              variant="contained"
+              onClick={handleNext}
+            >
+              Doorgaan
+            </Button>
+          </Stack>
+        </Box>
+      )}
+
     </Box>
   );
 }

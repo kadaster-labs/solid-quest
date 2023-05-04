@@ -8,10 +8,6 @@ export default function Profile() {
     const { session } = useSession();
     const { webId } = session.info;
 
-    const logError = async function (e) {
-        console.log(`error gebeurt`, e);
-    }
-
     return (
         <div>
             <h2>Solid POD Profile</h2>

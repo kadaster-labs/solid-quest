@@ -16,9 +16,9 @@ import ConnectSolid from "../../src/ConnectSolid";
 import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
 import { VCARD } from "@inrupt/vocab-common-rdf";
-import { SolidPerson, SolidAddress } from "../../src/SolidInterfaces";
+import { SolidPerson, SolidAddress } from "../../src/Solid";
 
-export default function Step1({ handleNext, handleBack = () => {} }) {
+export default function Step1({ stepNr = 1, handleNext, handleBack = () => { } }) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);
@@ -49,6 +49,10 @@ export default function Step1({ handleNext, handleBack = () => {} }) {
       async (profile) => {
         // Get the URL of the address, it is a different dataset than the profile (#me)
         const addressUrl = getUrl(profile, VCARD.hasAddress);
+
+        if (!addressUrl) {
+          return null;
+        }
 
         const addressDataset = await getSolidDataset(addressUrl, {
           fetch: session.fetch,
@@ -100,15 +104,15 @@ export default function Step1({ handleNext, handleBack = () => {} }) {
       <Typography variant="h1" color="text.primary" align="center">
         Start een nieuwe koopovereenkomst
       </Typography>
+      <Typography variant="h2" color="text.primary" align="center">
+        {stepNr}. Koppelen van je Personal Online Datastore (POD)
+      </Typography>
+
       <Typography variant="body1" color="text.primary" align="center">
-        {
-          "Om een koopovereenkomst te starten als verkoper, doorloop je verschillende stappen."
-        }
+        Om een koopovereenkomst te starten als verkoper,<br />
+        doorloop je verschillende stappen.
       </Typography>
       <Box>
-        <Typography variant="body1" color="text.primary" align="center">
-          {"1. Log in met je WebID of mailadres"}
-        </Typography>
         <ConnectSolid />
       </Box>
 
@@ -116,6 +120,8 @@ export default function Step1({ handleNext, handleBack = () => {} }) {
         <Box>
           <Typography variant="body1" color="text.primary" align="center">
             Welkom{person && person.hasOwnProperty('name') && person.name !== null && " " + person.name}!
+            <br /><br />
+            Hieronder zie je je publieke data in je pod.
           </Typography>
           <pre>
             {JSON.stringify(person, null, 2)}

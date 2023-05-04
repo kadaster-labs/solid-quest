@@ -10,7 +10,7 @@ import KoekAggregate from '../../src/koek/KoekAggregate';
 import { koopprijsFormatter } from "../../src/koek/KoekState";
 import Events from "../../src/ui-components/Events";
 
-interface Step6Props {
+interface Step4Props {
   stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
@@ -18,7 +18,7 @@ interface Step6Props {
   koek: KoekAggregate;
 }
 
-export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMyKoeks, koek }: Step6Props) {
+export default function Step4({ stepNr = 4, handleNext, handleBack, navigateToMyKoeks, koek }: Step4Props) {
 
   const [koekComplete, setKoekComplete] = useState<boolean>(false);
 
@@ -29,7 +29,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMy
   return (
     <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
-        Start een nieuwe koopovereenkomst
+        Ik wil een huis kopen
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Concept koopovereenkomst
@@ -52,7 +52,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMy
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
+        <Button variant="contained" onClick={navigateToMyKoeks}>Deelnemen Koopovereenkomst</Button>
         <Button variant="contained" onClick={handleNext} disabled={!koekComplete}>Doorgaan</Button>
       </Stack>
     </Box>

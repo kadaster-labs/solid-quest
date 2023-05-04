@@ -10,4 +10,6 @@
     foaf:name "Koper Koos";
     rdfs:label "Koper Koos";
     foaf:givenName "Koos";
-    foaf:knows <http://localhost:3001/verkoper-vera/profile/card#me>.
+    foaf:knows <http://localhost:3001/verkoper-vera/profile/card#me>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Koos Kadastersen";
+    <http://www.w3.org/2006/vcard/ns#bday> "2022-08-01"^^<http://www.w3.org/2001/XMLSchema#date>.
