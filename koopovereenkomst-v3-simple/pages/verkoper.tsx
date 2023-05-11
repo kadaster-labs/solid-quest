@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
@@ -31,16 +31,18 @@ const steps = [
   "Koopdetails",
   "Overzicht",
   "Tekenen",
+  // "Afgerond",
 ];
 
 export default function Verkoper() {
   let koekRepo = new KoekRepository();
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set<number>());
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set<number>());
 
-  const [koek, setActiveKoek] = React.useState(null as KoekAggregate);
+  const [koek, setActiveKoek] = useState(null as KoekAggregate);
+  const [isKoekCompleted, setKoekCompleted] = useState(false);
 
   const isStepOptional = (step: number) => {
     // return step === 1;
@@ -52,23 +54,28 @@ export default function Verkoper() {
   };
 
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+    if (isKoekCompleted) {
+      setActiveStep(6);
     }
+    else {
+      let newSkipped = skipped;
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const selectKoek = async (id) => {
+  const selectKoek = useCallback(async (id) => {
     setActiveKoek(await koekRepo.load(id, getWebId()));
-  }
+  }, []);
 
   const navigateToMyKoeks = useCallback(() => {
     setActiveStep(1);
@@ -89,11 +96,19 @@ export default function Verkoper() {
       case 5:
         return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       case 6:
-        return <Step7 stepNr={props.value + 1} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       default:
-        return <Step1 handleNext={handleNext} />;
+        return <Step7 stepNr={props.value + 1} finished={isKoekCompleted} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
     }
   }
+
+  useEffect(() => {
+    if (koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend" && e.actor === "verkoper-vera").length > 0) {
+      setKoekCompleted(true);
+    }
+    else {
+      setKoekCompleted(false);
+    }
+  }, [koek, selectKoek, handleNext]);
 
   return (
     <Layout role="verkoper">
@@ -111,7 +126,7 @@ export default function Verkoper() {
               minHeight: "4rem",
             }} activeStep={activeStep}>
             {steps.map((label, index) => {
-              const stepProps: { completed?: boolean } = {};
+              const stepProps: { completed?: boolean } = { completed: isKoekCompleted && activeStep === 6 };
               const labelProps: {
                 optional?: React.ReactNode;
               } = {};
@@ -132,6 +147,6 @@ export default function Verkoper() {
           </Stepper>
         </SessionProvider>
       </Box>
-    </Layout>
+    </Layout >
   );
 }

@@ -26,6 +26,7 @@
     "@mui/x-date-pickers": "^6.2.1",
     "@solid/context": "^1.1.0",
     "@solid/query-ldflex": "^2.11.3",
+    "confetti-js": "^0.0.18",
     "dayjs": "^1.11.7",
     "gh-pages": "^4.0.0",
     "isomorphic-fetch": "^3.0.0",

@@ -78,6 +78,14 @@ export default function Layout({ children, home, role }: {
                 // minHeight: "97vh",
                 width: "100%",
             }}>
+                <canvas id="confetti-canvas" style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    zIndex: -1,
+                    height: '100%',
+                    width: '100%',
+                }}></canvas>
                 <Head>
                     <link rel="icon" href="/solid-quest/favicon.ico" />
                     <meta
