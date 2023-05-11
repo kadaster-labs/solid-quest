@@ -18,7 +18,7 @@ export default class KoekAggregate {
   public cmdHdlr: KoekCommandHandler;
 
   private _id: string;
-  private events: Event[];
+  private events: Event[] = [];
 
   public get id(): string {
     return this._id;

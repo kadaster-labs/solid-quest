@@ -81,11 +81,11 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
             Inschrijving Openbaar Register
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Deze optionele stap is niet geïmplementeerd
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Kopers kunnen optioneel de koopovereenkomst inschrijven in het Openbaar Register bij het Kadaster.
-            Daarmee verzekeren zij zich tegen faillissement van de verkoper en aanspraak op vergoeding bij de curator.
+            Daarmee verzekeren zij zich tegen faillissement van de verkoper en maken dan aanspraak op vergoeding bij de curator.
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2, fontStyle: "italic" }}>
+            Deze (optionele) stap is niet geïmplementeerd
           </Typography>
         </Box>
       </Modal>
