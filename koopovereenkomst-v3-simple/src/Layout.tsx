@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { useEffect, useState } from "react";
 import Image from './Image';
 import Link from "./Link";
+import { SessionProvider } from "@inrupt/solid-ui-react";
 
 export const siteTitle = 'Koopovereenkomst Solid App';
 
@@ -100,18 +101,20 @@ export default function Layout({ children, home, role }: {
                     <meta name="twitter:card" content="summary_large_image" />
                 </Head>
 
-                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl-nl">
-                    <Box sx={{
-                        minHeight: "92vh",
-                        padding: "4rem 0",
-                        flex: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
+                <SessionProvider>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl-nl">
+                        <Box sx={{
+                            minHeight: "92vh",
+                            padding: "4rem 0",
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
 
-                    }}>{children}</Box>
-                </LocalizationProvider>
+                        }}>{children}</Box>
+                    </LocalizationProvider>
+                </SessionProvider>
 
                 <Box sx={footerStyle}  >
                     <Link href="/">Home</Link>

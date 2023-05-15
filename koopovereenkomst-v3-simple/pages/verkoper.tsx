@@ -7,7 +7,6 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 
-import { SessionProvider } from "@inrupt/solid-ui-react";
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Layout from "../src/Layout";
 import { SOLID_ZVG_CONTEXT } from "../src/koek/Context";
@@ -35,12 +34,12 @@ const steps = [
 ];
 
 export default function Verkoper() {
-  let koekRepo = new KoekRepository();
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set<number>());
 
+  const [koekRepo, setKoekRepo] = useState(null as KoekRepository);
   const [koek, setActiveKoek] = useState(null as KoekAggregate);
   const [isKoekCompleted, setKoekCompleted] = useState(false);
 
@@ -63,7 +62,6 @@ export default function Verkoper() {
         newSkipped = new Set(newSkipped.values());
         newSkipped.delete(activeStep);
       }
-
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
       setSkipped(newSkipped);
     }
@@ -73,9 +71,14 @@ export default function Verkoper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const loadKoekRepo = useCallback(() => {
+    let repo = new KoekRepository();
+    setKoekRepo(repo);
+  }, []);
+
   const selectKoek = useCallback(async (id) => {
     setActiveKoek(await koekRepo.load(id, getWebId()));
-  }, []);
+  }, [koekRepo, setKoekRepo, loadKoekRepo]);
 
   const navigateToMyKoeks = useCallback(() => {
     setActiveStep(1);
@@ -84,7 +87,7 @@ export default function Verkoper() {
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
-        return <Step1 stepNr={props.value + 1} handleNext={handleNext} />;
+        return <Step1 stepNr={props.value + 1} handleNext={handleNext} loadKoekRepo={loadKoekRepo} />;
       case 1:
         return <Step2 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} repo={koekRepo} />;
       case 2:
@@ -102,7 +105,7 @@ export default function Verkoper() {
   }
 
   useEffect(() => {
-    if (koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend" && e.actor === "verkoper-vera").length > 0) {
+    if (koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend").length === 2) {
       setKoekCompleted(true);
     }
     else {
@@ -118,34 +121,32 @@ export default function Verkoper() {
       <Box
         sx={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%', width: '100%', marginTop: 4 }}
       >
-        <SessionProvider>
-          <ActiveStep value={activeStep} />
-          <Stepper
-            sx={{
-              width: "100%",
-              minHeight: "4rem",
-            }} activeStep={activeStep}>
-            {steps.map((label, index) => {
-              const stepProps: { completed?: boolean } = { completed: isKoekCompleted && activeStep === 6 };
-              const labelProps: {
-                optional?: React.ReactNode;
-              } = {};
-              if (isStepOptional(index)) {
-                labelProps.optional = (
-                  <Typography variant="caption">Optional</Typography>
-                );
-              }
-              if (isStepSkipped(index)) {
-                stepProps.completed = false;
-              }
-              return (
-                <Step key={label} {...stepProps}>
-                  <StepLabel {...labelProps}>{label}</StepLabel>
-                </Step>
+        <ActiveStep value={activeStep} />
+        <Stepper
+          sx={{
+            width: "100%",
+            minHeight: "4rem",
+          }} activeStep={activeStep}>
+          {steps.map((label, index) => {
+            const stepProps: { completed?: boolean } = { completed: isKoekCompleted };
+            const labelProps: {
+              optional?: React.ReactNode;
+            } = {};
+            if (isStepOptional(index)) {
+              labelProps.optional = (
+                <Typography variant="caption">Optional</Typography>
               );
-            })}
-          </Stepper>
-        </SessionProvider>
+            }
+            if (isStepSkipped(index)) {
+              stepProps.completed = false;
+            }
+            return (
+              <Step key={label} {...stepProps}>
+                <StepLabel {...labelProps}>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
       </Box>
     </Layout >
   );

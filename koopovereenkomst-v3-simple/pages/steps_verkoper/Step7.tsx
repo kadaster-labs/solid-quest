@@ -1,9 +1,9 @@
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import ConfettiGenerator from "confetti-js";
 import { Box } from "@mui/system";
-import { useCallback, useEffect } from "react";
+import ConfettiGenerator from "confetti-js";
+import { useCallback, useEffect, useState } from "react";
 import { getWebId } from "../../src/Solid";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
@@ -18,6 +18,8 @@ interface StepProps {
 }
 
 export default function Step7({ stepNr = 7, finished = false, handleNext, handleBack, navigateToMyKoeks, koek }: StepProps) {
+
+  const [isGetekendDoorVerkoper, setIsGetekendDoorVerkoper] = useState(finished);
 
   const handleAkkoord = useCallback(async () => {
     let success = await koek.cmdHdlr.tekenen(getWebId());
@@ -41,6 +43,9 @@ export default function Step7({ stepNr = 7, finished = false, handleNext, handle
 
       return () => confetti.clear();
     }
+    else if (!isGetekendDoorVerkoper) {
+      setIsGetekendDoorVerkoper(koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend" && e.actor === "verkoper-vera").length > 0);
+    }
   }, [finished]) // add the var dependencies or not
 
   return (
@@ -56,7 +61,7 @@ export default function Step7({ stepNr = 7, finished = false, handleNext, handle
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
-        {!finished && <Button variant="contained" onClick={handleAkkoord}>Akkoord</Button>}
+        {!isGetekendDoorVerkoper && <Button variant="contained" onClick={handleAkkoord}>Ondertekenen</Button>}
       </Stack>
     </Box>
   );

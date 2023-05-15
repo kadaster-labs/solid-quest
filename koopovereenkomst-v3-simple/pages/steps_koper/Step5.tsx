@@ -32,9 +32,8 @@ const style = {
 
 export default function Step5({ stepNr = 5, finished = false, handleNext, handleBack = () => { }, navigateToMyKoeks, koek }: StepProps) {
 
-  const [open, setOpen] = useState(false);
-  const handleInschrijvenOpenbaarRegister = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [showModel, setShowModal] = useState(false);
+  const [isGetekendDoorKoper, setIsGetekendDoorKoper] = useState(finished);
 
   const handleAkkoord = useCallback(async () => {
     let success = await koek.cmdHdlr.tekenen(getWebId());
@@ -59,6 +58,9 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
 
       return () => confetti.clear();
     }
+    else if (!isGetekendDoorKoper) {
+      setIsGetekendDoorKoper(koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend" && e.actor === "koper-koos").length > 0);
+    }
   }, [finished]) // add the var dependencies or not
 
   return (
@@ -71,8 +73,8 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
       </Typography>
 
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={showModel}
+        onClose={() => setShowModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -93,9 +95,9 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {finished && <Button variant="contained" onClick={handleInschrijvenOpenbaarRegister}>Inschrijven Openbaar Register</Button>}
+        {finished && <Button variant="contained" onClick={() => setShowModal(true)}>Inschrijven Openbaar Register</Button>}
         <Button variant="contained" onClick={navigateToMyKoeks}>Deelnemen Koopovereenkomst</Button>
-        {!finished && <Button variant="contained" onClick={handleAkkoord}>Akkoord</Button>}
+        {!isGetekendDoorKoper && <Button variant="contained" onClick={handleAkkoord}>Ondertekenen</Button>}
       </Stack>
     </Box>
   );
