@@ -1,5 +1,5 @@
-import { fetch, getDefaultSession } from "@inrupt/solid-client-authn-browser";
 import {
+  WithResourceInfo,
   createContainerAt,
   deleteFile as deleteFileSolid,
   deleteSolidDataset,
@@ -7,11 +7,9 @@ import {
   getFile as getFileSolid,
   getSolidDataset,
   getSourceUrl,
-  saveFileInContainer,
-  overwriteFile,
-  WithResourceInfo,
-  WithServerResourceInfo,
+  overwriteFile
 } from "@inrupt/solid-client";
+import { fetch, getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
 
 export interface SolidPerson {

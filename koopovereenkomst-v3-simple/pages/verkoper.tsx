@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
@@ -7,7 +7,6 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 
-import { SessionProvider } from "@inrupt/solid-ui-react";
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Layout from "../src/Layout";
 import { SOLID_ZVG_CONTEXT } from "../src/koek/Context";
@@ -31,16 +30,18 @@ const steps = [
   "Koopdetails",
   "Overzicht",
   "Tekenen",
+  // "Afgerond",
 ];
 
 export default function Verkoper() {
-  let koekRepo = new KoekRepository();
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set<number>());
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set<number>());
 
-  const [koek, setActiveKoek] = React.useState(null as KoekAggregate);
+  const [koekRepo, setKoekRepo] = useState(null as KoekRepository);
+  const [koek, setActiveKoek] = useState(null as KoekAggregate);
+  const [isKoekCompleted, setKoekCompleted] = useState(false);
 
   const isStepOptional = (step: number) => {
     // return step === 1;
@@ -52,23 +53,32 @@ export default function Verkoper() {
   };
 
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+    if (isKoekCompleted) {
+      setActiveStep(6);
     }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+    else {
+      let newSkipped = skipped;
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const selectKoek = async (id) => {
+  const loadKoekRepo = useCallback(() => {
+    let repo = new KoekRepository();
+    setKoekRepo(repo);
+  }, []);
+
+  const selectKoek = useCallback(async (id) => {
     setActiveKoek(await koekRepo.load(id, getWebId()));
-  }
+  }, [koekRepo, setKoekRepo, loadKoekRepo]);
 
   const navigateToMyKoeks = useCallback(() => {
     setActiveStep(1);
@@ -77,7 +87,7 @@ export default function Verkoper() {
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
-        return <Step1 stepNr={props.value + 1} handleNext={handleNext} />;
+        return <Step1 stepNr={props.value + 1} handleNext={handleNext} loadKoekRepo={loadKoekRepo} />;
       case 1:
         return <Step2 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} repo={koekRepo} />;
       case 2:
@@ -89,11 +99,19 @@ export default function Verkoper() {
       case 5:
         return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       case 6:
-        return <Step7 stepNr={props.value + 1} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
       default:
-        return <Step1 handleNext={handleNext} />;
+        return <Step7 stepNr={props.value + 1} finished={isKoekCompleted} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
     }
   }
+
+  useEffect(() => {
+    if (koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend").length === 2) {
+      setKoekCompleted(true);
+    }
+    else {
+      setKoekCompleted(false);
+    }
+  }, [koek, selectKoek, handleNext]);
 
   return (
     <Layout role="verkoper">
@@ -103,35 +121,33 @@ export default function Verkoper() {
       <Box
         sx={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%', width: '100%', marginTop: 4 }}
       >
-        <SessionProvider>
-          <ActiveStep value={activeStep} />
-          <Stepper
-            sx={{
-              width: "100%",
-              minHeight: "4rem",
-            }} activeStep={activeStep}>
-            {steps.map((label, index) => {
-              const stepProps: { completed?: boolean } = {};
-              const labelProps: {
-                optional?: React.ReactNode;
-              } = {};
-              if (isStepOptional(index)) {
-                labelProps.optional = (
-                  <Typography variant="caption">Optional</Typography>
-                );
-              }
-              if (isStepSkipped(index)) {
-                stepProps.completed = false;
-              }
-              return (
-                <Step key={label} {...stepProps}>
-                  <StepLabel {...labelProps}>{label}</StepLabel>
-                </Step>
+        <ActiveStep value={activeStep} />
+        <Stepper
+          sx={{
+            width: "100%",
+            minHeight: "4rem",
+          }} activeStep={activeStep}>
+          {steps.map((label, index) => {
+            const stepProps: { completed?: boolean } = { completed: isKoekCompleted };
+            const labelProps: {
+              optional?: React.ReactNode;
+            } = {};
+            if (isStepOptional(index)) {
+              labelProps.optional = (
+                <Typography variant="caption">Optional</Typography>
               );
-            })}
-          </Stepper>
-        </SessionProvider>
+            }
+            if (isStepSkipped(index)) {
+              stepProps.completed = false;
+            }
+            return (
+              <Step key={label} {...stepProps}>
+                <StepLabel {...labelProps}>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
       </Box>
-    </Layout>
+    </Layout >
   );
 }

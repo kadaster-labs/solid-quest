@@ -12,6 +12,9 @@ export default class KoekRepository {
     private eventContainer: string;
 
     constructor(rootContainerUrl: string = solid.getRootContainerURL()) {
+        if (rootContainerUrl === undefined) {
+            return null;
+        }
         this.rootContainerUrl = rootContainerUrl;
         this.logboekContainer = `${this.rootContainerUrl}/koopovereenkomst/id`;
         this.eventContainer = `${this.rootContainerUrl}/koopovereenkomst/events/id`;

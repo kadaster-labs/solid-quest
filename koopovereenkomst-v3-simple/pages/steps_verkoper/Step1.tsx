@@ -1,4 +1,3 @@
-import { useSession } from "@inrupt/solid-ui-react";
 import {
   getDate,
   getSolidDataset,
@@ -7,18 +6,19 @@ import {
   getUrl,
   ThingPersisted,
 } from "@inrupt/solid-client";
+import { useSession } from "@inrupt/solid-ui-react";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
 import ConnectSolid from "../../src/ConnectSolid";
 import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
 import { VCARD } from "@inrupt/vocab-common-rdf";
-import { SolidPerson, SolidAddress } from "../../src/Solid";
+import { SolidAddress, SolidPerson } from "../../src/Solid";
 
-export default function Step1({ stepNr = 1, handleNext, handleBack = () => { } }) {
+export default function Step1({ stepNr = 1, handleNext, loadKoekRepo }) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);
@@ -68,23 +68,28 @@ export default function Step1({ stepNr = 1, handleNext, handleBack = () => { } }
         return { streetAddress, locality, region, postalCode, countryName };
       }, [session.fetch]);
 
+  const checkIfWebIDIsReadyForDemo = async (webId): Promise<void> => {
+    const result = await checkIfWebIDIsReady(webId);
+    setIsReady(result);
+  }
+
+  const loadData = async (): Promise<void> => {
+    const profile = await getProfile();
+
+    const person = getPersonInfo(profile);
+    const eigendom = await getEigendomInfo(profile);
+
+    setPerson(person);
+    setEigendom(eigendom);
+  }
+
+  const next = () => {
+    loadKoekRepo();
+    handleNext();
+  }
+
   // Na inloggen, check of het WebID bekend is in de database
   useEffect(() => {
-    async function checkIfWebIDIsReadyForDemo(webId): Promise<void> {
-      const result = await checkIfWebIDIsReady(webId);
-      setIsReady(result);
-    }
-
-    async function loadData(): Promise<void> {
-      const profile = await getProfile();
-
-      const person = getPersonInfo(profile);
-      const eigendom = await getEigendomInfo(profile);
-
-      setPerson(person);
-      setEigendom(eigendom);
-    }
-
     if (isLoggedIn) {
       const result = checkIfWebIDIsReadyForDemo(webId);
       if (result) {
@@ -137,7 +142,7 @@ export default function Step1({ stepNr = 1, handleNext, handleBack = () => { } }
             <Button
               disabled={!isLoggedIn}
               variant="contained"
-              onClick={handleNext}
+              onClick={next}
             >
               Doorgaan
             </Button>
