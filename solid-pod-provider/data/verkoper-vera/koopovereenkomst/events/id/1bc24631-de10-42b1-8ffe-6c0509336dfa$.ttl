@@ -1,4 +1,4 @@
-@prefix event: <> .
+@prefix id: <./>.
 @prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
 @prefix koopovereenkomst: <../../id/> .
 @prefix cloudevents: <https://cloudevents.io/def/> .
@@ -6,10 +6,10 @@
 @prefix me: </profile/card#me> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-event:
+id:1bc24631-de10-42b1-8ffe-6c0509336dfa
     a zvg:koopovereenkomstGeinitieerd;
     zvg:aggregateIdentifier koopovereenkomst:345;
-    cloudevents:sequence "0"^^xsd:integer;
+    cloudevents:sequence 0;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
     cloudevents:time "2001-09-27T09:32:42Z"^^xsd:dateTime;
@@ -19,4 +19,4 @@ event:
 
 <#data>
     a zvg:eventData;
-    zvg:koopovereenkomstTemplate "NVM Simple Default Koophuis" .
+    zvg:koopovereenkomstTemplate "NVM Standaard Koopovereenkomst Koophuis" .

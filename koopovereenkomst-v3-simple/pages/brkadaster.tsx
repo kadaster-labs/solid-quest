@@ -1,8 +1,8 @@
 import { useSession } from "@inrupt/solid-ui-react";
-import { Button } from "@mui/material";
+
 import { Box } from "@mui/system";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ConnectSolid from "../src/ConnectSolid";
 import Layout from "../src/Layout";
 import VC, { VCType } from "../src/verifiable/VC";
@@ -12,14 +12,12 @@ export default function BRKadaster() {
     const { session } = useSession();
     const [isLoggedOn, setIsLoggedOn] = useState(false);
 
-    const refreshState = () => {
+    const refreshState = useCallback(() => {
         setIsLoggedOn(session.info.isLoggedIn);
-        console.log("Refresh state. isLoggedOn: ", isLoggedOn);
-    }
+    }, [session.info.isLoggedIn]);
 
     useEffect(() => {
         refreshState();
-        console.log("useEffect. isLoggedOn: ", isLoggedOn);
     }, [isLoggedOn, refreshState])
 
     return (
@@ -49,7 +47,6 @@ export default function BRKadaster() {
                     </Box>
                 </Box>
             </Box>
-
         </Layout>
     );
 }

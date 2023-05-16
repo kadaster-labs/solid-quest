@@ -124,16 +124,6 @@ export class Signing {
         return new Bls12381G2KeyPair({ ...publicDoc, privateKeyBase58 });
     }
 
-    // Sign the input document
-    async signDocument(): Promise<any> {
-        const purpose = new purposes.AssertionProofPurpose();
-        return await sign(inputDocument, {
-            suite: new BbsBlsSignature2020({ key: this.keyPair }),
-            purpose,
-            documentLoader,
-        });
-    }
-
     static async verifyDocument(signedDocument: any): Promise<boolean> {
         console.log( 'verifying document', signedDocument)
         return await verify(signedDocument, {

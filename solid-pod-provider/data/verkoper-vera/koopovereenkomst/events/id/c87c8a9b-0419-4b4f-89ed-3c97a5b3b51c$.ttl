@@ -1,4 +1,4 @@
-@prefix event: <> .
+@prefix id: <./>.
 @prefix zvg:   <http://taxonomie.zorgeloosvastgoed.nl/def/zvg#> .
 @prefix koopovereenkomst: <../../id/> .
 @prefix cloudevents: <https://cloudevents.io/def/> .
@@ -6,16 +6,12 @@
 @prefix me: </profile/card#me> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-event:
+id:c87c8a9b-0419-4b4f-89ed-3c97a5b3b51c
     a zvg:getekendeKoopovereenkomstVerkoperOpgeslagen;
     zvg:aggregateIdentifier koopovereenkomst:345;
-    cloudevents:sequence "10"^^xsd:integer;
+    cloudevents:sequence 10;
     cloudevents:specversion "1.0";
     cloudevents:subject koopovereenkomst:345;
     cloudevents:time "2001-11-02T09:02:33Z"^^xsd:dateTime;
     cloudevents:source me:;
-    rdfs:label "10 | verkoper vera | getekende koopovereenkomst verkoper opgeslagen voor 345";
-    cloudevents:data <#data> .
-
-<#data>
-    a zvg:eventData .
+    rdfs:label "10 | verkoper vera | getekende koopovereenkomst verkoper opgeslagen voor 345".

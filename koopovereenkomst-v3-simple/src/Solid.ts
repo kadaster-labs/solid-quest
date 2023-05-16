@@ -46,7 +46,6 @@ export function getRootContainerURL() {
 }
 
 export async function deleteRecursively(dataset) {
-  console.log(dataset);
   const containedResourceUrls = getContainedResourceUrlAll(dataset);
   const containedDatasets = await Promise.all(
     containedResourceUrls.map(async (resourceUrl) => {
@@ -190,7 +189,6 @@ export async function getAllFileUrls(containerUrl: string): Promise<string[]> {
     things = getContainedResourceUrlAll(container);
   } catch (error) {
     // getSolidDataset throws an error if the container does not exist
-    console.error(error);
     return [];
   }
 

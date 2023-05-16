@@ -7,7 +7,7 @@
 :ControlReadWrite
     a acl:Authorization;
     acl:accessTo id:;
-    acl:agent c:me, <mailto:vera@world.com>;
+    acl:agent c:me, <mailto:koos@world.com>;
     acl:default id:;
     acl:mode acl:Control, acl:Read, acl:Write.
 :Read
@@ -16,9 +16,3 @@
     acl:agentClass foaf:Agent;
     acl:default id:;
     acl:mode acl:Read.
-:ReadWrite
-    a acl:Authorization;
-    acl:accessTo id:;
-    acl:agentClass acl:AuthenticatedAgent;
-    acl:default id:;
-    acl:mode acl:Read, acl:Write.

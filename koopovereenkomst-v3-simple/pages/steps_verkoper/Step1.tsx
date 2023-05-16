@@ -1,4 +1,3 @@
-import { useSession } from "@inrupt/solid-ui-react";
 import {
   getDate,
   getSolidDataset,
@@ -7,24 +6,20 @@ import {
   getUrl,
   ThingPersisted,
 } from "@inrupt/solid-client";
+import { useSession } from "@inrupt/solid-ui-react";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
 import ConnectSolid from "../../src/ConnectSolid";
 import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
 import { VCARD } from "@inrupt/vocab-common-rdf";
-import { SolidPerson, SolidAddress, loadJson, saveJson } from "../../src/Solid";
+import { SolidAddress, SolidPerson } from "../../src/Solid";
 import { Signing } from "../../src/verifiable/signing";
 
-export function Step1({ handleNext, handleBack = () => { }, setSigning, signing }: {
-  handleNext: any;
-  handleBack?: () => void;
-  setSigning: any;
-  signing: Signing;
-}) {
+export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setSigning }) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);
@@ -40,27 +35,9 @@ export function Step1({ handleNext, handleBack = () => { }, setSigning, signing 
 
     return profile;
   }, [webId, session.fetch]);
-  
+
   const createKeyPair = async () => {
     setSigning(new Signing());
-  }
-  
-  const sign = async () => {
-    const signedDocument = await signing.signDocument();
-    console.log('doc', signedDocument);
-    
-    const verified = await Signing.verifyDocument(signedDocument);
-    console.log('verified', verified);
-    
-    console.log('\n\n\n')
-    const brk_vc = await loadJson("http://localhost:3001/verkoper-vera/credentials/brk-credential.jsonld");
-    const verified2 = await Signing.verifyDocument(brk_vc);
-    console.log('verified2', verified2);
-    
-    const derivedDocument = await signing.deriveProofFromDocument(signedDocument);
-    
-    await saveJson(`${signing.PRIVATE_FOLDER}/signedDocument.jsonld`, signedDocument);
-    await saveJson(`${signing.PUBLIC_FOLDER}/derived.jsonld`, derivedDocument);
   }
 
   const getPersonInfo: (profile: ThingPersisted) => SolidPerson = useCallback(
@@ -96,23 +73,29 @@ export function Step1({ handleNext, handleBack = () => { }, setSigning, signing 
         return { streetAddress, locality, region, postalCode, countryName };
       }, [session.fetch]);
 
+  const checkIfWebIDIsReadyForDemo = async (webId): Promise<void> => {
+    const result = await checkIfWebIDIsReady(webId);
+    setIsReady(result);
+  }
+
+  const loadData = async (): Promise<void> => {
+    const profile = await getProfile();
+
+    const person = getPersonInfo(profile);
+    const eigendom = await getEigendomInfo(profile);
+
+    setPerson(person);
+    setEigendom(eigendom);
+  }
+
+  const next = () => {
+    loadKoekRepo();
+    setSigning();
+    handleNext();
+  }
+
   // Na inloggen, check of het WebID bekend is in de database
   useEffect(() => {
-    async function checkIfWebIDIsReadyForDemo(webId): Promise<void> {
-      const result = await checkIfWebIDIsReady(webId);
-      setIsReady(result);
-    }
-
-    async function loadData(): Promise<void> {
-      const profile = await getProfile();
-
-      const person = getPersonInfo(profile);
-      const eigendom = await getEigendomInfo(profile);
-
-      setPerson(person);
-      setEigendom(eigendom);
-    }
-
     if (isLoggedIn) {
       const result = checkIfWebIDIsReadyForDemo(webId);
       if (result) {
@@ -132,13 +115,15 @@ export function Step1({ handleNext, handleBack = () => { }, setSigning, signing 
       <Typography variant="h1" color="text.primary" align="center">
         Start een nieuwe koopovereenkomst
       </Typography>
+      <Typography variant="h2" color="text.primary" align="center">
+        {stepNr}. Koppelen van je Personal Online Datastore (POD)
+      </Typography>
+
       <Typography variant="body1" color="text.primary" align="center">
-        Om een koopovereenkomst te starten als verkoper, doorloop je verschillende stappen.
+        Om een koopovereenkomst te starten als verkoper,<br />
+        doorloop je verschillende stappen.
       </Typography>
       <Box>
-        <Typography variant="body1" color="text.primary" align="center">
-          Log in met je WebID of mailadres
-        </Typography>
         <ConnectSolid />
       </Box>
 
@@ -155,12 +140,6 @@ export function Step1({ handleNext, handleBack = () => { }, setSigning, signing 
           <pre>
             {JSON.stringify(eigendom, null, 2)}
           </pre>
-          <Button variant="contained" onClick={createKeyPair}>
-            Create/load keypair
-          </Button>
-          <Button variant="contained" onClick={sign}>
-            Sign
-          </Button>
         </Box>
       )}
       {isLoggedIn && isReady == true && (
@@ -169,7 +148,7 @@ export function Step1({ handleNext, handleBack = () => { }, setSigning, signing 
             <Button
               disabled={!isLoggedIn}
               variant="contained"
-              onClick={handleNext}
+              onClick={next}
             >
               Doorgaan
             </Button>

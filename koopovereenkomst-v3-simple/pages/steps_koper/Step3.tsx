@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
 import Image from "../../src/Image";
-import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
+import VC, { SolidVC, VCType } from '../../src/VC';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -73,7 +73,7 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
   }, []);
 
   const handleAkkoord = useCallback(async () => {
-    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(loadedBRPVC);
+    let success = await koek.cmdHdlr.toevoegenKoperPersoonsgegevensRef(loadedBRPVC);
     if (success == true) {
       handleNext();
     }
@@ -89,7 +89,7 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
   return (
     <Box sx={{ flex: 1 }}>
       <Typography variant="h1" color="text.primary" align="center">
-        Start een nieuwe koopovereenkomst
+        Ik wil een huis kopen
       </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
