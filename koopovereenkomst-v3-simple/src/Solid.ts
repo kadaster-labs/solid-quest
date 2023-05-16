@@ -1,7 +1,5 @@
 import {
   WithResourceInfo,
-  createAcl,
-  createAclFromFallbackAcl,
   createContainerAt,
   deleteFile as deleteFileSolid,
   deleteSolidDataset,
@@ -10,10 +8,7 @@ import {
   getSolidDataset,
   getSolidDatasetWithAcl,
   getSourceUrl,
-  hasFallbackAcl,
-  overwriteFile,
-  saveAclFor,
-  setPublicDefaultAccess
+  overwriteFile
 } from "@inrupt/solid-client";
 import { fetch, getDefaultSession } from "@inrupt/solid-client-authn-browser";
 

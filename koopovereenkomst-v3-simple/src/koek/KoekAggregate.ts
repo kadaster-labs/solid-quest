@@ -1,4 +1,3 @@
-import * as jsonld from "jsonld";
 import { GENERAL_CONTEXT } from "./Context";
 
 import dayjs, { Dayjs } from "dayjs";
@@ -19,7 +18,7 @@ export default class KoekAggregate {
   public cmdHdlr: KoekCommandHandler;
 
   private _id: string;
-  private events: Event[];
+  private events: Event[] = [];
 
   public get id(): string {
     return this._id;
@@ -87,17 +86,6 @@ export default class KoekAggregate {
 
   public getDatumVanLevering(): Dayjs {
     return dayjs(this.internalState.datumVanLevering);
-  }
-
-  public async dumpJsonLD(): Promise<object> {
-    const p = new Promise<object>((resolve, reject) => {
-      resolve(this.internalState);
-    });
-    return p;
-  }
-
-  public async dumpNQuads(): Promise<string> {
-    return await jsonld.toRDF(this.internalState, { format: "application/n-quads" });
   }
 
   private appendState(cumState: KoekState, state: KoekState): KoekState {

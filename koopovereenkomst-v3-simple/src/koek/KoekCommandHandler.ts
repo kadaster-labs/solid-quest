@@ -194,110 +194,6 @@ export default class KoekCommandHandler {
         return !data.getekend || !data.getekend.includes(role);
     }
 
-    public async populateWithMockEvents(): Promise<void> {
-        let events = [
-            // {
-            //     type: 'koopovereenkomstGeinitieerd',
-            //     data: {
-            //         template: 'NVM Simple Default Koophuis',
-            //     },
-            //     actor: this.getCurrentActorFromSession(),
-            // },
-            // {
-            //     type: 'kadastraalObjectIdToegevoegd',
-            //     data: {
-            //         kadastraalObjectId: "10020263270000",
-            //     },
-            //     actor: this.getCurrentActorFromSession(),
-            // },
-            // {
-            //     type: 'koopprijsToegevoegd',
-            //     data: {
-            //         // random price between 100k and 1m
-            //         koopprijs: Math.floor(Math.random() * 900000) + 100000,
-            //     },
-            //     actor: this.getCurrentActorFromSession(),
-            // },
-            // {
-            //     type: 'datumVanLeveringToegevoegd',
-            //     data: {
-            //         datumVanLevering: new Date().toISOString(),
-            //     },
-            //     actor: this.getCurrentActorFromSession(),
-            // },
-            // {
-            //     type: 'verkoperRefToegevoegd',
-            //     data: {
-            //         verkoperRefs: ["http://localhost:3001/verkoper-vera/credentials/brp-credential.jsonld"],
-            //     },
-            //     actor: this.getCurrentActorFromSession(),
-            // },
-            {
-                type: 'koperRefToegevoegd',
-                data: {
-                    koperRefs: ["http://localhost:3001/koper-koos/credentials/brp-credential.jsonld"],
-                },
-                actor: 'koper-koos',
-            },
-            {
-                type: 'conceptKoopovereenkomstKoperOpgeslagen',
-                data: {},
-                actor: 'koper-koos',
-            },
-            {
-                type: 'conceptKoopovereenkomstKoperOpgeslagen',
-                data: {},
-                actor: this.actor,
-            },
-            {
-                type: 'conceptKoopovereenkomstGetekend',
-                data: {},
-                actor: this.actor,
-            },
-            {
-                type: 'conceptKoopovereenkomstGetekend',
-                data: {},
-                actor: 'koper-koos',
-            },
-            {
-                type: 'getekendeKoopovereenkomstVerkoperOpgeslagen',
-                data: {},
-                actor: this.actor,
-            },
-            {
-                type: 'getekendeKoopovereenkomstVerkoperOpgeslagen',
-                data: {},
-                actor: 'koper-koos',
-            },
-            {
-                type: 'getekendeKoopovereenkomstKoperTerInschrijvingAangebodenBijKadaster',
-                data: {},
-                actor: 'koper-koos',
-            },
-        ];
-
-        for (let seq = 0; seq < events.length; seq++) {
-            // const id = uuidv4();
-
-            // const event: Event = {
-            //     aggregateId: this.aggregateId,
-            //     id,
-            //     iri: undefined,
-            //     type: events[seq].type,
-            //     seq: seq,
-            //     actor: events[seq].actor,
-            //     label: `${seq}-${events[seq].actor}-${events[seq].type}`,
-            //     time: new Date().toISOString(),
-            //     ...events[seq].data
-            // }
-
-            let event = this.buildEvent(events[seq].type, events[seq].actor, events[seq].data)
-            await this.addEvent(event);
-        }
-        await this.koek.processEvents()
-        await this.repo.saveAggregate(this.aggregateId, this.koek.getEvents());
-    }
-
     private async addEvent(event: Event, save = true): Promise<void> {
         if (save) {
             let filePath = await this.repo.saveEvent(event);
@@ -330,7 +226,12 @@ export default class KoekCommandHandler {
     private getCurrentActorFromWebId(): string {
         let actor: string;
         try {
-            actor = this.webId.split("3001")[1].split("/")[1];
+            if (this.webId.includes("localhost")) { 
+                actor = this.webId.split("3001")[1].split("/")[1]; 
+            }
+            else if (this.webId.includes("solidcommunity.net")) { 
+                actor = this.webId.split(".solidcommunity.net")[1].split("//")[1]; 
+            }
         } catch (error) {
             console.log(`error extracting POD path`, error);
             actor = 'error';

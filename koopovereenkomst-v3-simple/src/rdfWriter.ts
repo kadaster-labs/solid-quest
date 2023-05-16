@@ -96,7 +96,6 @@ export function event2RDF(eventData: Event, options): string {
     }
     if (eventData.koperRefs) {
       eventData.koperRefs.forEach(ref => {
-        console.log('adding named node for koper', ref);
         store.add(dataNode, ns.zvg('koper'), $rdf.namedNode(ref), dataNode);
       });
     }

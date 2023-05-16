@@ -47,7 +47,6 @@ export default function BRKadaster() {
                     </Box>
                 </Box>
             </Box>
-
         </Layout>
     );
 }

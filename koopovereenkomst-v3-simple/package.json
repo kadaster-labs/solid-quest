@@ -30,6 +30,7 @@
     "@solid/query-ldflex": "^2.11.3",
     "axios": "^1.4.0",
     "bs58": "^5.0.0",
+    "confetti-js": "^0.0.18",
     "dayjs": "^1.11.7",
     "gh-pages": "^4.0.0",
     "isomorphic-fetch": "^3.0.0",
