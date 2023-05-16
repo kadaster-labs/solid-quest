@@ -137,7 +137,7 @@ export class Signing {
         });
     }
 
-    async verifyDocument(signedDocument: any): Promise<boolean> {
+    static async verifyDocument(signedDocument: any): Promise<boolean> {
         console.log( 'verifying document', signedDocument)
         return await verify(signedDocument, {
             suite: new BbsBlsSignature2020(),

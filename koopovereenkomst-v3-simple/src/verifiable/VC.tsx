@@ -8,7 +8,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { deleteFile, getAllFileUrls, getFile, getRootContainerURL, saveJson } from "../Solid";
-import { verifyVC } from "./verify";
+import { Signing } from "./signing";
 
 
 export enum VCType {
@@ -60,7 +60,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
     const updatedVcs = [];
     for (let i = 0; i < vcs.length; i++) {
       const { vc } = vcs[i];
-      const verificationResult = await verifyVC(vc);
+      const verificationResult = await Signing.verifyDocument(vc);
       console.log("refreshing status", verificationResult);
       updatedVcs.push({ ...vcs[i], status: verificationResult });
     }
@@ -122,7 +122,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
 
     console.log("Recieved response", result);
 
-    return result.verifiableCredential;
+    return result;
   };
 
   const downloadVC = async () => {

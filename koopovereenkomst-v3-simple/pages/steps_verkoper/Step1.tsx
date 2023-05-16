@@ -49,12 +49,12 @@ export function Step1({ handleNext, handleBack = () => { }, setSigning, signing 
     const signedDocument = await signing.signDocument();
     console.log('doc', signedDocument);
     
-    const verified = await signing.verifyDocument(signedDocument);
+    const verified = await Signing.verifyDocument(signedDocument);
     console.log('verified', verified);
     
     console.log('\n\n\n')
     const brk_vc = await loadJson("http://localhost:3001/verkoper-vera/credentials/brk-credential.jsonld");
-    const verified2 = await signing.verifyDocument(brk_vc);
+    const verified2 = await Signing.verifyDocument(brk_vc);
     console.log('verified2', verified2);
     
     const derivedDocument = await signing.deriveProofFromDocument(signedDocument);
