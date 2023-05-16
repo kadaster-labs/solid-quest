@@ -5,7 +5,7 @@ import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
 import ConnectSolid from "../src/ConnectSolid";
 import Layout from "../src/Layout";
-import VC, { VCType } from "../src/VC";
+import VC, { VCType } from "../src/verifiable/VC";
 
 export default function BRKadaster() {
 

@@ -1,17 +1,21 @@
-import { fetch, getDefaultSession } from "@inrupt/solid-client-authn-browser";
 import {
+  WithResourceInfo,
+  createAcl,
+  createAclFromFallbackAcl,
   createContainerAt,
   deleteFile as deleteFileSolid,
   deleteSolidDataset,
   getContainedResourceUrlAll,
   getFile as getFileSolid,
   getSolidDataset,
+  getSolidDatasetWithAcl,
   getSourceUrl,
-  saveFileInContainer,
+  hasFallbackAcl,
   overwriteFile,
-  WithResourceInfo,
-  WithServerResourceInfo,
+  saveAclFor,
+  setPublicDefaultAccess
 } from "@inrupt/solid-client";
+import { fetch, getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
 
 export interface SolidPerson {
@@ -42,6 +46,7 @@ export function getRootContainerURL() {
 }
 
 export async function deleteRecursively(dataset) {
+  console.log(dataset);
   const containedResourceUrls = getContainedResourceUrlAll(dataset);
   const containedDatasets = await Promise.all(
     containedResourceUrls.map(async (resourceUrl) => {
@@ -144,6 +149,32 @@ export async function saveTurtle(filepath: string, text: string, waitUntilAvaila
   return savedFile;
 };
 
+export async function saveText(filepath: string, text: string, waitUntilAvailable = true): Promise<string> {
+  console.log("text file", text);
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+
+  const savedFile = await saveFile(filepath, blob, "text/plain;charset=utf-8", waitUntilAvailable);
+  if (savedFile && waitUntilAvailable) {
+    await watchFileAccessible(savedFile);
+  }
+
+  return savedFile;
+};
+
+export async function loadText(filepath: string): Promise<string> {
+  console.log("loadText", filepath)
+  const file = await getFile(filepath);
+  const text = await file.text();
+  return text;
+}
+
+export async function loadJson(filepath: string): Promise<any> {
+  const file = await getFile(filepath);
+  const text = await file.text();
+  const json = JSON.parse(text);
+  return json;
+}
+
 export async function deleteFile(url: string): Promise<void> {
   return deleteFileSolid(url, { fetch })
 }
@@ -159,6 +190,7 @@ export async function getAllFileUrls(containerUrl: string): Promise<string[]> {
     things = getContainedResourceUrlAll(container);
   } catch (error) {
     // getSolidDataset throws an error if the container does not exist
+    console.error(error);
     return [];
   }
 
@@ -167,9 +199,45 @@ export async function getAllFileUrls(containerUrl: string): Promise<string[]> {
 
 async function createContainerIfNotExistsForFile(filepath: string): Promise<void> {
   const containerUrl = filepath.split('/').slice(0, -1).join('/') + '/';
+  console.log('check if container exists', containerUrl);
   try {
     await getSolidDataset(containerUrl, { fetch });
   } catch (error) {
     await createContainerAt(containerUrl, { fetch });
+  }
+}
+
+export async function createContainer(containerUrl: string, makePublic = false): Promise<void> {
+  console.log('check if container exists', containerUrl);
+  try {
+    await getSolidDataset(containerUrl, { fetch });
+  } catch (error) {
+    await createContainerAt(containerUrl, { fetch });
+  }
+
+  if (makePublic) {
+    // https://docs.inrupt.com/developer-tools/javascript/client-libraries/tutorial/manage-wac/#change-access-to-a-resource
+    console.log("make public", containerUrl);
+    
+    // Step 1: Create ACL
+    const containerWithAcl = await getSolidDatasetWithAcl(containerUrl, { fetch });
+    
+    let resourceAcl;
+    if (hasFallbackAcl(containerWithAcl)) {
+      resourceAcl = createAclFromFallbackAcl(containerWithAcl as any);
+    } else {
+      resourceAcl = createAcl(containerWithAcl as any);
+    }
+    console.log("acl dataset", resourceAcl);
+    
+    // Set access for items in this container
+    // https://docs.inrupt.com/developer-tools/javascript/client-libraries/reference/glossary/#term-Default-access
+    const updatedAcl = setPublicDefaultAccess(
+      resourceAcl,
+      { read: true, append: false, write: false, control: false },
+    );
+    
+    const saved = await saveAclFor(containerWithAcl as any, updatedAcl, { fetch });
+    console.log("saved acl", saved);
   }
 }

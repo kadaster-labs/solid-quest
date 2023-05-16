@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
 import Image from "../../src/Image";
-import VC, { SolidVC, VCType } from '../../src/VC';
+import VC, { SolidVC, VCType } from '../../src/verifiable/VC';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';

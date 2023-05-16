@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { deleteFile, getAllFileUrls, getFile, getRootContainerURL, saveJson } from "./Solid";
+import { deleteFile, getAllFileUrls, getFile, getRootContainerURL, saveJson } from "../Solid";
 import { verifyVC } from "./verify";
 
 
