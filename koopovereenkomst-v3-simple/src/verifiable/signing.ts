@@ -4,7 +4,7 @@ import {
 import { BbsBlsSignature2020, BbsBlsSignatureProof2020, Bls12381G2KeyPair, deriveProof } from "@mattrglobal/jsonld-signatures-bbs";
 import axios from 'axios';
 import bs58 from 'bs58';
-import { extendContextLoader, purposes, sign, verify } from "jsonld-signatures";
+import { extendContextLoader, purposes, verify } from "jsonld-signatures";
 import { createContainer, getRootContainerURL, loadJson, loadText, saveJson, saveText } from "../Solid";
 
 import bbsContext from "./data/bbs.json";
@@ -152,7 +152,10 @@ export class Signing {
 
         console.log("Verification result");
         console.log(JSON.stringify(verified, null, 2));
-        
-        return derivedProof
+
+        const url = `${this.PUBLIC_FOLDER}/persoonsgegevens_ZKP.json`;
+        await saveJson(url, derivedProof, true);
+
+        return {url, vc: derivedProof}
     }
 }

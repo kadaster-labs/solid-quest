@@ -15,6 +15,7 @@ import TableRow from '@mui/material/TableRow';
 import Link from "../../src/Link";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
+import { Signing } from "../../src/verifiable/signing";
 
 function createData(
   name: string,
@@ -28,10 +29,11 @@ interface StepProps {
   handleNext: () => void;
   handleBack: () => void;
   koek: KoekAggregate;
+  signing: Signing;
 }
 
-export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek }: StepProps) {
-  const [loadedBRPVC, setLoadedBRPVC] = useState({} as any);
+export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek, signing }: StepProps) {
+  const [loadedBRPVC, setLoadedBRPVC] = useState({} as SolidVC);
 
   const [rows, setRows] = useState([] as Array<any>);
 
@@ -43,7 +45,7 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
     // resulting in an infinite loop.
 
     if (vcs.length === 0) {
-      setLoadedBRPVC({});
+      setLoadedBRPVC({} as SolidVC);
       return;
     }
 
@@ -95,7 +97,7 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
         {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>
 
-      <VC type={VCType.BRP} onChange={updateVCs} />
+      <VC type={VCType.BRP} onChange={updateVCs} signing={signing} />
 
       <hr />
       {Object.keys(loadedBRPVC).length === 0 ?
