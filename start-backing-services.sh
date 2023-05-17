@@ -29,4 +29,4 @@ fi
 
 echo "Starting backing services for development ..."
 echo
-$cli_command up solid-pod-provider mock-overheid-server vc-api $build_flag
+$cli_command up solid-pod-provider mock-overheid-server $build_flag
