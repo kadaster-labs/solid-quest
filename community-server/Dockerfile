@@ -5,11 +5,11 @@ FROM node:16-alpine
 WORKDIR /app
 
 # Recipes from https://github.com/CommunitySolidServer/recipes
-COPY ./package*.json /app
+COPY ./package*.json /app/
 
 RUN npm ci
 
-COPY ./config-*.json /app
+COPY ./config-*.json /app/
 
 EXPOSE 3000
 
