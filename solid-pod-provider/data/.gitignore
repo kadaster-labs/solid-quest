@@ -1,2 +1,5 @@
 .internal/idp
 credentials/
+# generated keys
+public/
+private/
