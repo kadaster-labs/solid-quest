@@ -14,6 +14,9 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+COPY patches ./patches
+RUN npx patch-package
+
 
 # Rebuild the source code only when needed
 FROM node:16-alpine AS builder

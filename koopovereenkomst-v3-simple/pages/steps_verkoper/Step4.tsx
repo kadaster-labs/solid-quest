@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { useCallback, useState } from "react";
-import VC, { SolidVC, VCType } from '../../src/VC';
+import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
 import Image from "../../src/Image";
 import KadasterKnowledgeGraph from "../../src/KadasterKnowledgeGraph";

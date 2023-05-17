@@ -7,8 +7,8 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { deleteFile, getAllFileUrls, getFile, getRootContainerURL, saveJson } from "./Solid";
-import { verifyVC } from "./verify";
+import { deleteFile, getAllFileUrls, getFile, getRootContainerURL, saveJson } from "../Solid";
+import { Signing } from "./signing";
 
 
 export enum VCType {
@@ -37,7 +37,13 @@ const CredentialsContainer = function() {
   return `${getRootContainerURL()}/credentials`;
 }
 
-export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false }) {
+interface VCProps {
+  type?: VCType;
+  onChange?: (vcs: SolidVC[]) => void;
+  enableDownload?: boolean;
+  signing?: Signing;
+}
+export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false, signing }: VCProps) {
   // onChange lets us let the parent know the state of the VC
   // this is not the best way to do this, but it works for now
   // According to the React docs, we should use a state management library
@@ -60,7 +66,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
     const updatedVcs = [];
     for (let i = 0; i < vcs.length; i++) {
       const { vc } = vcs[i];
-      const verificationResult = await verifyVC(vc);
+      const verificationResult = await Signing.verifyDocument(vc);
       updatedVcs.push({ ...vcs[i], status: verificationResult });
     }
     setVCs(updatedVcs);
@@ -121,7 +127,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
 
     console.log("Recieved response", result);
 
-    return result.verifiableCredential;
+    return result;
   };
 
   const downloadVC = async () => {
@@ -136,6 +142,11 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
 
   const refreshVCs = async () => {
     await initializeVCs();
+  };
+
+  const createZKP = async () => {
+    const { vc } = vcs[0];
+    await signing.deriveProofFromDocument(vc);
   };
 
   const deleteVCs = async () => {
@@ -171,6 +182,9 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
           </Link>
           <Button color="secondary" onClick={refreshVCs}>
             Status verversen
+          </Button>
+          <Button color="secondary" onClick={createZKP}>
+            Create ZKP
           </Button>
           <Button color="secondary" onClick={deleteVCs}>
             VC Verwijderen

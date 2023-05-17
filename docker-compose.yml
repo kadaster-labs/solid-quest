@@ -10,16 +10,8 @@ services:
   mock-overheid-server:
     build:
       context: mock-overheid-server
-    environment:
-      - VC_API_URL=http://vc-api:8081
     ports:
       - 8080:8080
-
-  vc-api:
-    build:
-      context: vc-api
-    ports:
-      - 8081:8081
 
   solid-pod-provider:
     build:

@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Event } from "../../src/koek/Event";
 import KoekAggregate from "./KoekAggregate";
 import KoekRepository from "./KoekRepository";
+import { SolidVC } from "../verifiable/VC";
 
 
 export default class KoekCommandHandler {
@@ -35,7 +36,7 @@ export default class KoekCommandHandler {
         return true;
     }
 
-    public async toevoegenVerkoperPersoonsgegevensRef(vc: { url: string, vc: any, status: any }): Promise<boolean> {
+    public async toevoegenVerkoperPersoonsgegevensRef(vc: SolidVC): Promise<boolean> {
 
         if (this.isNotYetVerkoper(vc.url)) {
             console.log('[%s] add verkoper vc ref url', this.aggregateId, vc.url);
@@ -62,7 +63,7 @@ export default class KoekCommandHandler {
         return refs.filter((e) => e.verkoperRefs.includes(url)).length == 0;
     }
 
-    public async toevoegenKoperPersoonsgegevensRef(vc: { url: string, vc: any, status: any }): Promise<boolean> {
+    public async toevoegenKoperPersoonsgegevensRef(vc: SolidVC): Promise<boolean> {
 
         if (this.isNotYetKoper(vc.url)) {
             console.log('[%s] add koper vc ref url', this.aggregateId, vc.url);
@@ -89,7 +90,7 @@ export default class KoekCommandHandler {
         return refs.filter((e) => e.koperRefs.includes(url)).length == 0;
     }
 
-    public async toevoegenEigendomRef(vc: { url: string, vc: any, status: any }): Promise<boolean> {
+    public async toevoegenEigendomRef(vc: SolidVC): Promise<boolean> {
 
         if (this.doesNotContainEigendomYet(vc.url)) {
             console.log('[%s] add eigendom vc ref url', this.aggregateId, vc.url);

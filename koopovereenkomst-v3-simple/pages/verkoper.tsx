@@ -21,6 +21,7 @@ import Step4 from "./steps_verkoper/Step4";
 import Step5 from "./steps_verkoper/Step5";
 import Step6 from "./steps_verkoper/Step6";
 import Step7 from "./steps_verkoper/Step7";
+import { Signing } from "../src/verifiable/signing";
 
 const steps = [
   "POD koppelen",
@@ -42,6 +43,8 @@ export default function Verkoper() {
   const [koekRepo, setKoekRepo] = useState(null as KoekRepository);
   const [koek, setActiveKoek] = useState(null as KoekAggregate);
   const [isKoekCompleted, setKoekCompleted] = useState(false);
+  
+  const [signing, setSigning] = React.useState(null as Signing);
 
   const isStepOptional = (step: number) => {
     // return step === 1;
@@ -75,6 +78,10 @@ export default function Verkoper() {
     let repo = new KoekRepository();
     setKoekRepo(repo);
   }, []);
+  
+  const _setSigning = useCallback(() => {
+    setSigning(new Signing());
+  }, []);
 
   const selectKoek = useCallback(async (id) => {
     setActiveKoek(await koekRepo.load(id, getWebId()));
@@ -87,11 +94,11 @@ export default function Verkoper() {
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
-        return <Step1 stepNr={props.value + 1} handleNext={handleNext} loadKoekRepo={loadKoekRepo} />;
+        return <Step1 stepNr={props.value + 1} handleNext={handleNext} loadKoekRepo={loadKoekRepo} setSigning={_setSigning} />;
       case 1:
         return <Step2 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} repo={koekRepo} />;
       case 2:
-        return <Step3 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
+        return <Step3 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} signing={signing} />;
       case 3:
         return <Step4 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 4:

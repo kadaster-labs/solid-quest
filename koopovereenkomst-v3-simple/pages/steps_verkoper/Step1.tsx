@@ -17,8 +17,9 @@ import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
 import { VCARD } from "@inrupt/vocab-common-rdf";
 import { SolidAddress, SolidPerson } from "../../src/Solid";
+import { Signing } from "../../src/verifiable/signing";
 
-export default function Step1({ stepNr = 1, handleNext, loadKoekRepo }) {
+export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setSigning }) {
   const { session } = useSession();
 
   const [isReady, setIsReady] = useState(null as boolean);
@@ -34,6 +35,10 @@ export default function Step1({ stepNr = 1, handleNext, loadKoekRepo }) {
 
     return profile;
   }, [webId, session.fetch]);
+
+  const createKeyPair = async () => {
+    setSigning(new Signing());
+  }
 
   const getPersonInfo: (profile: ThingPersisted) => SolidPerson = useCallback(
     (profile) => {
@@ -85,6 +90,7 @@ export default function Step1({ stepNr = 1, handleNext, loadKoekRepo }) {
 
   const next = () => {
     loadKoekRepo();
+    setSigning();
     handleNext();
   }
 
