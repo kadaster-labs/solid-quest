@@ -41,7 +41,7 @@ interface VCProps {
   type?: VCType;
   onChange?: (vcs: SolidVC[]) => void;
   enableDownload?: boolean;
-  signing: Signing;
+  signing?: Signing;
 }
 export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false, signing }: VCProps) {
   // onChange lets us let the parent know the state of the VC
