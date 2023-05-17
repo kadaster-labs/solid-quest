@@ -1,3 +1,4 @@
+import { useSession } from "@inrupt/solid-ui-react";
 import Head from "next/head";
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -5,7 +6,6 @@ import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import Typography from "@mui/material/Typography";
 
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Layout from "../src/Layout";
@@ -30,40 +30,46 @@ const steps = [
   "Koopdetails",
   "Overzicht",
   "Tekenen",
-  // "Afgerond",
+];
+
+interface StepEvents {
+  step: number;
+  events: string[]
+}
+
+const eventsPerStep: StepEvents[] = [
+  { step: 1, events: ['koopovereenkomstGeinitieerd'] },
+  { step: 2, events: ['verkoperRefToegevoegd'] },
+  { step: 3, events: ['eigendomRefToegevoegd'] },
+  { step: 4, events: ['koopprijsToegevoegd', 'datumVanLeveringToegevoegd',] },
+  { step: 5, events: ['conceptKoopovereenkomstGetekend'] },
+  { step: 6, events: ['conceptKoopovereenkomstGetekend'] },
 ];
 
 export default function Verkoper() {
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
+  const { session } = useSession();
+  let isLoggedIn = session.info.isLoggedIn;
+
   const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set<number>());
 
   const [koekRepo, setKoekRepo] = useState(null as KoekRepository);
   const [koek, setActiveKoek] = useState(null as KoekAggregate);
   const [isKoekCompleted, setKoekCompleted] = useState(false);
-
-  const isStepOptional = (step: number) => {
-    // return step === 1;
-    return false;
-  };
-
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
 
   const handleNext = () => {
     if (isKoekCompleted) {
       setActiveStep(6);
     }
     else {
-      let newSkipped = skipped;
-      if (isStepSkipped(activeStep)) {
-        newSkipped = new Set(newSkipped.values());
-        newSkipped.delete(activeStep);
-      }
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      setSkipped(newSkipped);
+      setActiveStep((prevActiveStep) => {
+        let nextActiveStep = prevActiveStep + 1;
+        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < 6)) {
+          nextActiveStep = nextActiveStep + 1;
+        }
+        return nextActiveStep;
+      });
     }
   };
 
@@ -83,6 +89,26 @@ export default function Verkoper() {
   const navigateToMyKoeks = useCallback(() => {
     setActiveStep(1);
   }, []);
+
+  const isStepCompleted = (index) => {
+    if (!isLoggedIn) {
+      return false;
+    }
+    else {
+      let result: boolean = Boolean(koek);
+      let curStep = eventsPerStep.filter((se) => se.step === index);
+      if (curStep.length === 0) {
+        result = true;
+      }
+      else if (koek && curStep.length === 1) {
+        let curStepEvents = curStep[0].events;
+        let events = koek.getEvents().filter((e) => e.actor === 'verkoper-vera').map((e) => e.type);
+        result = curStepEvents.every((t) => events.includes(t));
+        // console.log('[%s] step %s is completed: %s (events: [%s] in [%s])', koek?.id, index, result, eventsPerStep.filter((se) => se.step === index).map((s) => s.events), events);
+      }
+      return result;
+    }
+  }
 
   function ActiveStep(props) {
     switch (props.value) {
@@ -128,18 +154,10 @@ export default function Verkoper() {
             minHeight: "4rem",
           }} activeStep={activeStep}>
           {steps.map((label, index) => {
-            const stepProps: { completed?: boolean } = { completed: isKoekCompleted };
+            const stepProps: { completed?: boolean } = { completed: isStepCompleted(index) };
             const labelProps: {
               optional?: React.ReactNode;
             } = {};
-            if (isStepOptional(index)) {
-              labelProps.optional = (
-                <Typography variant="caption">Optional</Typography>
-              );
-            }
-            if (isStepSkipped(index)) {
-              stepProps.completed = false;
-            }
             return (
               <Step key={label} {...stepProps}>
                 <StepLabel {...labelProps}>{label}</StepLabel>
