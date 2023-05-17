@@ -143,7 +143,7 @@ export default class KoekCommandHandler {
     }
 
     public async koopprijsVastgesteld(koopprijs: number): Promise<boolean> {
-        if (this.isDifferentKoopprijs(koopprijs)) {
+        if (koopprijs > 0 && this.isDifferentKoopprijs(koopprijs)) {
             console.log('[%s] store koopprijs', this.aggregateId, koopprijs);
             let eventType = this.koek.data.koopprijs > 0 ? 'koopprijsGewijzigd' : 'koopprijsToegevoegd';
             let event = this.buildEvent(
@@ -226,11 +226,11 @@ export default class KoekCommandHandler {
     private getCurrentActorFromWebId(): string {
         let actor: string;
         try {
-            if (this.webId.includes("localhost")) { 
-                actor = this.webId.split("3001")[1].split("/")[1]; 
+            if (this.webId.includes("localhost")) {
+                actor = this.webId.split("3001")[1].split("/")[1];
             }
-            else if (this.webId.includes("solidcommunity.net")) { 
-                actor = this.webId.split(".solidcommunity.net")[1].split("//")[1]; 
+            else if (this.webId.includes("solidcommunity.net")) {
+                actor = this.webId.split(".solidcommunity.net")[1].split("//")[1];
             }
         } catch (error) {
             console.log(`error extracting POD path`, error);
