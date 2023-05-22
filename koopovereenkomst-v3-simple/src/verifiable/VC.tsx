@@ -20,30 +20,27 @@ const VCInfo = {
   [VCType.BRP]: {
     filename: "brp-credential.jsonld",
     apiPath: "brp",
+    visibility: "private",
   },
   [VCType.BRK]: {
     filename: "brk-credential.jsonld",
     apiPath: "brk",
+    visibility: "public",
   },
 };
 
 export type SolidVC = {
   url: string;
   vc: any;
-  status: any;
+  status?: any;
 };
-
-const CredentialsContainer = function() {
-  return `${getRootContainerURL()}/credentials`;
-}
 
 interface VCProps {
   type?: VCType;
   onChange?: (vcs: SolidVC[]) => void;
   enableDownload?: boolean;
-  signing?: Signing;
 }
-export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false, signing }: VCProps) {
+export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false }: VCProps) {
   // onChange lets us let the parent know the state of the VC
   // this is not the best way to do this, but it works for now
   // According to the React docs, we should use a state management library
@@ -54,6 +51,16 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
 
   const [vcs, _setVcs] = useState([] as SolidVC[]);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const CredentialsContainer = function() {
+    if (VCInfo[type].visibility === "private") {
+      return `${getRootContainerURL()}/private/credentials`;
+    } else if (VCInfo[type].visibility === "public") {
+      return `${getRootContainerURL()}/public/credentials`;
+    } else {
+      throw new Error(`Unknown VC type ${type}`);
+    }
+  }
 
   const setVCs = useCallback(async (vcs: any) => {
     onChange(vcs);
@@ -144,11 +151,6 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
     await initializeVCs();
   };
 
-  const createZKP = async () => {
-    const { vc } = vcs[0];
-    await signing.deriveProofFromDocument(vc);
-  };
-
   const deleteVCs = async () => {
     for (let i = 0; i < vcs.length; i++) {
       const { url } = vcs[i];
@@ -182,9 +184,6 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
           </Link>
           <Button color="secondary" onClick={refreshVCs}>
             Status verversen
-          </Button>
-          <Button color="secondary" onClick={createZKP}>
-            Create ZKP
           </Button>
           <Button color="secondary" onClick={deleteVCs}>
             VC Verwijderen

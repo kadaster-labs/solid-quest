@@ -1,15 +1,15 @@
 {
-    "@context": [
-      "https://www.w3.org/2018/credentials/v1",
-      "https://w3id.org/security/bbs/v1",
-      "http://localhost:8080/contexts/brk-credentials.json"
-    ],
-    "type": ["VerifiableCredential", "IdentificatieCredential"],
-    "credentialSubject": {
-      "@explicit": true,
-      "type": [],
-      "webID": {},
-      "naam": {},
-      "aanduidingNaamgebruik": {}
-    }
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/security/bbs/v1",
+    "http://localhost:8080/contexts/brp-credentials.json"
+  ],
+  "type": ["VerifiableCredential", "IdentificatieCredential"],
+  "credentialSubject": {
+    "@explicit": true,
+    "type": {},
+    "webID": {},
+    "naam": {},
+    "aanduidingNaamgebruik": {}
+  }
 }

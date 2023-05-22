@@ -1,21 +1,22 @@
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
-import Image from "../../src/Image";
-import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
+import Button from "@mui/material/Button";
 import Paper from '@mui/material/Paper';
+import Stack from "@mui/material/Stack";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
+import Typography from "@mui/material/Typography";
+import { Box } from "@mui/system";
+
+import Image from "../../src/Image";
 import Link from "../../src/Link";
+import { useVerkoper } from "../../src/Verkoper";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
-import { Signing } from "../../src/verifiable/signing";
+import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
 function createData(
   name: string,
@@ -29,10 +30,11 @@ interface StepProps {
   handleNext: () => void;
   handleBack: () => void;
   koek: KoekAggregate;
-  signing: Signing;
 }
 
-export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek, signing }: StepProps) {
+export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek }: StepProps) {
+  const verkoper = useVerkoper();
+  
   const [loadedBRPVC, setLoadedBRPVC] = useState({} as SolidVC);
 
   const [rows, setRows] = useState([] as Array<any>);
@@ -75,14 +77,16 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
   }, []);
 
   const handleAkkoord = useCallback(async () => {
-    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(loadedBRPVC);
+    const derived = await verkoper.signing.deriveProofFromDocument(loadedBRPVC.vc);
+
+    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(derived);
     if (success == true) {
       handleNext();
     }
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [loadedBRPVC, handleNext, koek]);
+  }, [loadedBRPVC, handleNext, koek, verkoper.signing]);
 
   useEffect(() => {
 
@@ -97,7 +101,7 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
         {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>
 
-      <VC type={VCType.BRP} onChange={updateVCs} signing={signing} />
+      <VC type={VCType.BRP} onChange={updateVCs} />
 
       <hr />
       {Object.keys(loadedBRPVC).length === 0 ?

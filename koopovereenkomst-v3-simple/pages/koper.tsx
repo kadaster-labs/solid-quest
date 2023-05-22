@@ -40,7 +40,7 @@ const eventsPerStep: StepEvents[] = [
   { step: 4, events: ['conceptKoopovereenkomstGetekend',] },
 ];
 
-export default function Koper() {
+export default function KoperFlow() {
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
   let koekRepo = new KoekRepository();
