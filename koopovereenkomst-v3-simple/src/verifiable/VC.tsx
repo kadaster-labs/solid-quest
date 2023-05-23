@@ -16,6 +16,9 @@ export enum VCType {
   BRK = "Basisregistratie Kadaster",
 }
 
+// BRK VC does not support data minimization yet. Therefore, it is stored in public folder.
+// BRP VC supports data minimization. Therefore, the VC is stored in private folder, and
+// only the ZKP proof is shared with the buyer.
 const VCInfo = {
   [VCType.BRP]: {
     filename: "brp-credential.jsonld",
@@ -41,18 +44,21 @@ interface VCProps {
   enableDownload?: boolean;
 }
 export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false }: VCProps) {
-  // onChange lets us let the parent know the state of the VC
-  // this is not the best way to do this, but it works for now
-  // According to the React docs, we should use a state management library
-  // or 'lift the state up' to the parent component
-
   const { session } = useSession();
   const { webId } = session.info;
 
   const [vcs, _setVcs] = useState([] as SolidVC[]);
   const [isLoading, setIsLoading] = useState(false);
   
-  const CredentialsContainer = function() {
+  const CredentialsContainer = useCallback(() => {
+    // Verkoper actors can perform data minimization. Their VCs are stored in a private folder,
+    // and only share the ZKP proof with the buyer.
+    // Koper actor (koos) is a special case, as it is hardcoded in the app for demo purposes.
+    // No data minimization is performed for koos, so VC has to be accessible from public folder.
+    if (webId === 'http://localhost:3001/koper-koos/profile/card#me') {
+      return `${getRootContainerURL()}/public/credentials`;
+    }
+    
     if (VCInfo[type].visibility === "private") {
       return `${getRootContainerURL()}/private/credentials`;
     } else if (VCInfo[type].visibility === "public") {
@@ -60,7 +66,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
     } else {
       throw new Error(`Unknown VC type ${type}`);
     }
-  }
+  }, [type, webId]);
 
   const setVCs = useCallback(async (vcs: any) => {
     onChange(vcs);
@@ -88,7 +94,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
       }
     }
     return vcs;
-  }, [type]);
+  }, [CredentialsContainer, type]);
 
   const loadVCs = useCallback(async (urls: string[]) => {
       const vcs = [];
@@ -125,7 +131,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
         webId
       )}`
     );
-    let result;
+    let result: any;
     if (response.status >= 200 && response.status < 300) {
       result = await response.json();
     } else {
