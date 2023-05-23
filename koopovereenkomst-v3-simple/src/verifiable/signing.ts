@@ -6,7 +6,7 @@ import axios from 'axios';
 import bs58 from 'bs58';
 import { extendContextLoader, purposes, verify } from "jsonld-signatures";
 
-import { createContainer, getRootContainerURL, loadJson, loadText, saveJson, saveText } from "../Solid";
+import { createContainerIfNotExists, getRootContainerURL, loadJson, loadText, saveJson, saveText } from "../Solid";
 import bbsContext from "./data/bbs.json";
 import credentialContext from "./data/credentialsContext.json";
 import revealDocument from "./data/deriveProofFrame.json";
@@ -92,8 +92,8 @@ export class Signing {
 
     async createSigningContainers(): Promise<void> {
         //Create the public and private folders
-        await createContainer(`${this.PUBLIC_FOLDER}/`, true);
-        await createContainer(`${this.PRIVATE_FOLDER}/`, false);
+        await createContainerIfNotExists(`${this.PUBLIC_FOLDER}/`);
+        await createContainerIfNotExists(`${this.PRIVATE_FOLDER}/`, { isPublic: false });
     }
 
     async createSigningKeyPair(): Promise<Bls12381G2KeyPair> {
