@@ -13,6 +13,7 @@ import { Box } from "@mui/system";
 
 import Image from "../../src/Image";
 import Link from "../../src/Link";
+import MinimalizationModal from "../../src/MinimalizationModal";
 import { useVerkoper } from "../../src/Verkoper";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
@@ -34,10 +35,12 @@ interface StepProps {
 
 export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek }: StepProps) {
   const verkoper = useVerkoper();
-  
-  const [loadedBRPVC, setLoadedBRPVC] = useState({} as SolidVC);
 
+  const [loadedBRPVC, setLoadedBRPVC] = useState({} as SolidVC);
   const [rows, setRows] = useState([] as Array<any>);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [derivedVC, setDerivedVC] = useState({} as SolidVC);
 
   const [vcValid, setVcValid] = useState(false);
 
@@ -76,17 +79,31 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
     ]);
   }, []);
 
-  const handleAkkoord = useCallback(async () => {
+  const handleDataminimization = async () => {
     const derived = await verkoper.signing.deriveProofFromDocument(loadedBRPVC.vc);
+    setDerivedVC(derived);
+    setModalOpen(true);
+  };
 
-    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(derived);
+  const handleModalClose = (reason: "dismiss" | "accept") => {
+    setModalOpen(false);
+
+    if (reason === 'dismiss') {
+      return;
+    }
+
+    handleAkkoord();
+  };
+
+  const handleAkkoord = useCallback(async () => {
+    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(derivedVC);
     if (success == true) {
       handleNext();
     }
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [loadedBRPVC, handleNext, koek, verkoper.signing]);
+  }, [handleNext, koek, derivedVC]);
 
   useEffect(() => {
 
@@ -147,10 +164,18 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
         </Box>
       }
 
+      { Object.keys(loadedBRPVC).length !== 0 && Object.keys(derivedVC).length !== 0 &&
+        <MinimalizationModal
+          data={{ before: loadedBRPVC.vc.credentialSubject, after: derivedVC.vc.credentialSubject }}
+          open={modalOpen}
+          onClose={handleModalClose}
+        />
+      }
+
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleAkkoord} disabled={!vcValid}>Akkoord</Button>}
+        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleDataminimization} disabled={!vcValid}>Volgende</Button>}
       </Stack>
     </Box>
   );
