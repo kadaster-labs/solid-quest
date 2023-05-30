@@ -91,16 +91,16 @@ Elke vorm van disclosure biedt verschillende gradaties van openbaarmaking van in
 
 ### Alternatieven voor Verifiable Credentials
 
-Naast Verifiable Credentials (VCs) zijn er ook andere oplossingen beschikbaar die vergelijkbare functionaliteit bieden. Een van deze alternatieven is [Yifi](https://www.yivi.app) (voorheen bekend als IRMA), een product (app) waarmee attributen kunnen worden geladen en waarover gebruikers zelf controle hebben. Yifi maakt gebruik van "disclosure proofs" die enige overeenkomsten vertonen met VCs (zie hoofdstuk [Cryptographic Entities](https://irma.app/docs/overview/#cryptographic-entities)). Deze "disclosure proofs" maken het mogelijk om claims te verifiëren, maar verschillen op bepaalde punten van VCs.
+Naast Verifiable Credentials (VCs) zijn er ook andere oplossingen beschikbaar die vergelijkbare functionaliteit bieden. Een van deze alternatieven is [Yivi](https://www.yivi.app) (voorheen bekend als IRMA), een product (app) waarmee attributen kunnen worden geladen en waarover gebruikers zelf controle hebben. Yivi maakt gebruik van "disclosure proofs" die enige overeenkomsten vertonen met VCs (zie hoofdstuk [Cryptographic Entities](https://irma.app/docs/overview/#cryptographic-entities)). Deze "disclosure proofs" maken het mogelijk om claims te verifiëren, maar verschillen op bepaalde punten van VCs.
 
 <div align="center">
   <img src="images/VC_IRMA.png" alt="Venn diagram voor overlap en verschillen tussen VCs en IRMA" width="600">
   <p><em>Bron: <a href="https://research.ou.nl/ws/portalfiles/portal/31027221/Ostkamp_D_IM9906_AF_SE_scriptie_Pure.pdf">IRMA and Verifiable Credentials What is their relation?</a></em></p>
 </div>
 
-Een belangrijk aspect waar zowel VCs als Yifi zich op richten, is de integriteit van gegevens en de mogelijkheid om te verifiëren dat attributen niet onrechtmatig worden gewijzigd. Bij VCs wordt de credential ondertekend door de uitgevende partij (issuer) en kan deze door iedereen worden geverifieerd op basis van de bijgeleverde proof, meestal een verwijzing naar de public key van de issuer. Bij Yifi voegt de Yifi-server zelf een handtekening toe aan de attributen, die bekendstaan als "disclosure proofs". Hierdoor kunnen non-Yifi-applicaties de attributen niet verifiëren, maar alleen de Yifi-servers zelf.
+Een belangrijk aspect waar zowel VCs als Yivi zich op richten, is de integriteit van gegevens en de mogelijkheid om te verifiëren dat attributen niet onrechtmatig worden gewijzigd. Bij VCs wordt de credential ondertekend door de uitgevende partij (issuer) en kan deze door iedereen worden geverifieerd op basis van de bijgeleverde proof, meestal een verwijzing naar de public key van de issuer. Bij Yivi voegt de Yivi-server zelf een handtekening toe aan de attributen, die bekendstaan als "disclosure proofs". Hierdoor kunnen non-Yivi-applicaties de attributen niet verifiëren, maar alleen de Yivi-servers zelf.
 
-Het doel van VC is om een open standaard te creëren voor het uitwisselen van credentials. Op dit moment is Yifi niet compatibel met VC en werkt het alleen binnen het Yifi-ecosysteem zelf. Er lijken echter meer demo's beschikbaar te zijn die gebruikmaken van Yifi, omdat het al verder ontwikkeld lijkt te zijn. VC bevindt zich nog steeds in een meer ontwikkelingsfase.
+Het doel van VC is om een open standaard te creëren voor het uitwisselen van credentials. Op dit moment is Yivi niet compatibel met VC en werkt het alleen binnen het Yivi-ecosysteem zelf. Er lijken echter meer demo's beschikbaar te zijn die gebruikmaken van Yivi, omdat het al verder ontwikkeld lijkt te zijn. VC bevindt zich nog steeds in een meer ontwikkelingsfase.
 
 ## Europese Digitale Identiteit (EDI)
 ### Wat houdt EDI in?
