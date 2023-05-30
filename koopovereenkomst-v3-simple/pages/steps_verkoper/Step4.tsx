@@ -11,7 +11,8 @@ import Link from "../../src/Link";
 import Events from "../../src/ui-components/Events";
 
 export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, koek }) {
-  const [loadedBRKVCs, setLoadedBRKVCs] = useState([] as any);
+  const [loadedBRKVCs, setLoadedBRKVCs] = useState([] as SolidVC[]);
+  const [vcValid, setVcValid] = useState(false);
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
     setLoadedBRKVCs(vcs);
@@ -27,6 +28,8 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
       throw new Error(`Toevoegen eigendom VC is niet gelukt! (check console voor errors)`);
     }
   }, [loadedBRKVCs, handleNext, koek]);
+
+  // TODO useEffect with check VC and setVcValid
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -78,7 +81,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {loadedBRKVCs.length !== 0 && <Button variant="contained" onClick={handleAkkoord}>Akkoord</Button>}
+        {loadedBRKVCs.length !== 0 && <Button variant="contained" onClick={handleAkkoord} disabled={!vcValid}>Akkoord</Button>}
       </Stack>
     </Box>
   );
