@@ -50,7 +50,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   const [vcs, _setVcs] = useState([] as SolidVC[]);
   const [isLoading, setIsLoading] = useState(false);
   
-  const CredentialsContainer = useCallback(() => {
+  const credentialsContainer = useCallback(() => {
     // Verkoper actors can perform data minimization. Their VCs are stored in a private folder,
     // and only share the ZKP proof with the buyer.
     // Koper actor (koos) is a special case, as it is hardcoded in the app for demo purposes.
@@ -86,7 +86,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   }, [setVCs]);
 
   const listVCs = useCallback(async () => {
-    const resources = await getAllFileUrls(CredentialsContainer());
+    const resources = await getAllFileUrls(credentialsContainer());
     const vcs = [];
     for (let i = 0; i < resources.length; i++) {
       if (resources[i].endsWith(VCInfo[type].filename)) {
@@ -94,7 +94,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
       }
     }
     return vcs;
-  }, [CredentialsContainer, type]);
+  }, [credentialsContainer, type]);
 
   const loadVCs = useCallback(async (urls: string[]) => {
       const vcs = [];
@@ -146,7 +146,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   const downloadVC = async () => {
     setIsLoading(true);
     const vc = await vcAPI(VCInfo[type].apiPath);
-    await saveJson(`${CredentialsContainer()}/${VCInfo[type].filename}`, vc, true);
+    await saveJson(`${credentialsContainer()}/${VCInfo[type].filename}`, vc, true);
 
     await initializeVCs();
 

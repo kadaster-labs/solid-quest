@@ -13,10 +13,10 @@ import { Box } from "@mui/system";
 
 import Image from "../../src/Image";
 import Link from "../../src/Link";
-import MinimalizationModal from "../../src/MinimalizationModal";
 import { useVerkoper } from "../../src/Verkoper";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
+import MinimalizationModal from "../../src/ui-components/MinimalizationModal";
 import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
 function createData(
