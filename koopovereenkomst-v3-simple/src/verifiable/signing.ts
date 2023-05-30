@@ -5,12 +5,13 @@ import { BbsBlsSignature2020, BbsBlsSignatureProof2020, Bls12381G2KeyPair, deriv
 import axios from 'axios';
 import bs58 from 'bs58';
 import { extendContextLoader, purposes, verify } from "jsonld-signatures";
-import { createContainer, getRootContainerURL, loadJson, loadText, saveJson, saveText } from "../Solid";
 
+import { createContainerIfNotExists, getRootContainerURL, loadJson, loadText, saveJson, saveText } from "../Solid";
 import bbsContext from "./data/bbs.json";
 import credentialContext from "./data/credentialsContext.json";
 import revealDocument from "./data/deriveProofFrame.json";
 import suiteContext from "./data/suiteContext.json";
+import { SolidVC } from "./VC";
 
 
 /* eslint-disable-next-line */
@@ -57,8 +58,8 @@ const documentLoader = extendContextLoader(customDocLoader);
 export class Signing {
     private readonly KEYPAIR_NAME = 'keypair1';
 
-    public readonly PUBLIC_FOLDER = `${getRootContainerURL()}/public`;
-    public readonly PRIVATE_FOLDER = `${getRootContainerURL()}/private`;
+    public readonly PUBLIC_FOLDER = `${getRootContainerURL()}/public/keys`;
+    public readonly PRIVATE_FOLDER = `${getRootContainerURL()}/private/keys`;
 
     private keyPair: Bls12381G2KeyPair;
 
@@ -91,8 +92,8 @@ export class Signing {
 
     async createSigningContainers(): Promise<void> {
         //Create the public and private folders
-        await createContainer(`${this.PUBLIC_FOLDER}/`, true);
-        await createContainer(`${this.PRIVATE_FOLDER}/`, false);
+        await createContainerIfNotExists(`${this.PUBLIC_FOLDER}/`);
+        await createContainerIfNotExists(`${this.PRIVATE_FOLDER}/`, { isPublic: false });
     }
 
     async createSigningKeyPair(): Promise<Bls12381G2KeyPair> {
@@ -133,7 +134,7 @@ export class Signing {
         });
     }
 
-    async deriveProofFromDocument(signedDocument: any): Promise<any> {
+    async deriveProofFromDocument(signedDocument: any): Promise<SolidVC> {
         //Derive a proof
         const derivedProof = await deriveProof(signedDocument, revealDocument, {
             suite: new BbsBlsSignatureProof2020(),
@@ -153,7 +154,7 @@ export class Signing {
         console.log("Verification result");
         console.log(JSON.stringify(verified, null, 2));
 
-        const url = `${this.PUBLIC_FOLDER}/persoonsgegevens_ZKP.json`;
+        const url = `${getRootContainerURL()}/public/credentials/brp_zkp.json`;
         await saveJson(url, derivedProof, true);
 
         return {url, vc: derivedProof}

@@ -1,21 +1,23 @@
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
-import Image from "../../src/Image";
-import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
+import Button from "@mui/material/Button";
 import Paper from '@mui/material/Paper';
+import Stack from "@mui/material/Stack";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
+import Typography from "@mui/material/Typography";
+import { Box } from "@mui/system";
+
+import Image from "../../src/Image";
 import Link from "../../src/Link";
+import { useVerkoper } from "../../src/Verkoper";
 import KoekAggregate from "../../src/koek/KoekAggregate";
 import Events from "../../src/ui-components/Events";
-import { Signing } from "../../src/verifiable/signing";
+import MinimalizationModal from "../../src/ui-components/MinimalizationModal";
+import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
 function createData(
   name: string,
@@ -29,13 +31,16 @@ interface StepProps {
   handleNext: () => void;
   handleBack: () => void;
   koek: KoekAggregate;
-  signing: Signing;
 }
 
-export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek, signing }: StepProps) {
-  const [loadedBRPVC, setLoadedBRPVC] = useState({} as SolidVC);
+export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, koek }: StepProps) {
+  const verkoper = useVerkoper();
 
+  const [loadedBRPVC, setLoadedBRPVC] = useState({} as SolidVC);
   const [rows, setRows] = useState([] as Array<any>);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [derivedVC, setDerivedVC] = useState({} as SolidVC);
 
   const [vcValid, setVcValid] = useState(false);
 
@@ -74,15 +79,31 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
     ]);
   }, []);
 
+  const handleDataminimization = async () => {
+    const derived = await verkoper.signing.deriveProofFromDocument(loadedBRPVC.vc);
+    setDerivedVC(derived);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = (reason: "dismiss" | "accept") => {
+    setModalOpen(false);
+
+    if (reason === 'dismiss') {
+      return;
+    }
+
+    handleAkkoord();
+  };
+
   const handleAkkoord = useCallback(async () => {
-    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(loadedBRPVC);
+    let success = await koek.cmdHdlr.toevoegenVerkoperPersoonsgegevensRef(derivedVC);
     if (success == true) {
       handleNext();
     }
     else {
       throw new Error(`Toevoegen persoonsgegevens VC is niet gelukt! (check console voor errors)`);
     }
-  }, [loadedBRPVC, handleNext, koek]);
+  }, [handleNext, koek, derivedVC]);
 
   useEffect(() => {
 
@@ -97,7 +118,7 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
         {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>
 
-      <VC type={VCType.BRP} onChange={updateVCs} signing={signing} />
+      <VC type={VCType.BRP} onChange={updateVCs} />
 
       <hr />
       {Object.keys(loadedBRPVC).length === 0 ?
@@ -143,10 +164,18 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
         </Box>
       }
 
+      { Object.keys(loadedBRPVC).length !== 0 && Object.keys(derivedVC).length !== 0 &&
+        <MinimalizationModal
+          data={{ before: loadedBRPVC.vc.credentialSubject, after: derivedVC.vc.credentialSubject }}
+          open={modalOpen}
+          onClose={handleModalClose}
+        />
+      }
+
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleAkkoord} disabled={!vcValid}>Akkoord</Button>}
+        {Object.keys(loadedBRPVC).length !== 0 && <Button variant="contained" onClick={handleDataminimization} disabled={!vcValid}>Volgende</Button>}
       </Stack>
     </Box>
   );

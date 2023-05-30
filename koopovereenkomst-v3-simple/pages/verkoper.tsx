@@ -1,4 +1,5 @@
 import { useSession } from "@inrupt/solid-ui-react";
+import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Head from "next/head";
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -7,8 +8,8 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 
-import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Layout from "../src/Layout";
+import { Verkoper, VerkoperProvider } from "../src/Verkoper";
 import { SOLID_ZVG_CONTEXT } from "../src/koek/Context";
 import KoekAggregate from '../src/koek/KoekAggregate';
 import KoekRepository from "../src/koek/KoekRepository";
@@ -21,7 +22,6 @@ import Step4 from "./steps_verkoper/Step4";
 import Step5 from "./steps_verkoper/Step5";
 import Step6 from "./steps_verkoper/Step6";
 import Step7 from "./steps_verkoper/Step7";
-import { Signing } from "../src/verifiable/signing";
 
 const steps = [
   "POD koppelen",
@@ -47,7 +47,7 @@ const eventsPerStep: StepEvents[] = [
   { step: 6, events: ['conceptKoopovereenkomstGetekend'] },
 ];
 
-export default function Verkoper() {
+export default function VerkoperFlow() {
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
   const { session } = useSession();
@@ -58,8 +58,8 @@ export default function Verkoper() {
   const [koekRepo, setKoekRepo] = useState(null as KoekRepository);
   const [koek, setActiveKoek] = useState(null as KoekAggregate);
   const [isKoekCompleted, setKoekCompleted] = useState(false);
-  
-  const [signing, setSigning] = React.useState(null as Signing);
+
+  const [verkoper, setVerkoper] = useState(null as Verkoper);
 
   const handleNext = () => {
     if (isKoekCompleted) {
@@ -83,10 +83,6 @@ export default function Verkoper() {
   const loadKoekRepo = useCallback(() => {
     let repo = new KoekRepository();
     setKoekRepo(repo);
-  }, []);
-  
-  const _setSigning = useCallback(() => {
-    setSigning(new Signing());
   }, []);
 
   const selectKoek = useCallback(async (id) => {
@@ -120,11 +116,11 @@ export default function Verkoper() {
   function ActiveStep(props) {
     switch (props.value) {
       case 0:
-        return <Step1 stepNr={props.value + 1} handleNext={handleNext} loadKoekRepo={loadKoekRepo} setSigning={_setSigning} />;
+        return <Step1 stepNr={props.value + 1} handleNext={handleNext} loadKoekRepo={loadKoekRepo} setVerkoper={setVerkoper} />;
       case 1:
         return <Step2 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} selectKoek={selectKoek} koek={koek} repo={koekRepo} />;
       case 2:
-        return <Step3 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} signing={signing} />;
+        return <Step3 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 3:
         return <Step4 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 4:
@@ -154,7 +150,9 @@ export default function Verkoper() {
       <Box
         sx={{ display: 'flex', flex: 1, flexDirection: 'column', height: '100%', width: '100%', marginTop: 4 }}
       >
-        <ActiveStep value={activeStep} />
+        <VerkoperProvider verkoper={verkoper}>
+          <ActiveStep value={activeStep} />
+        </VerkoperProvider>
         <Stepper
           sx={{
             width: "100%",

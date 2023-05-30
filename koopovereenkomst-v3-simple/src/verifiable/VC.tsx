@@ -16,44 +16,57 @@ export enum VCType {
   BRK = "Basisregistratie Kadaster",
 }
 
+// BRK VC does not support data minimization yet. Therefore, it is stored in public folder.
+// BRP VC supports data minimization. Therefore, the VC is stored in private folder, and
+// only the ZKP proof is shared with the buyer.
 const VCInfo = {
   [VCType.BRP]: {
     filename: "brp-credential.jsonld",
     apiPath: "brp",
+    visibility: "private",
   },
   [VCType.BRK]: {
     filename: "brk-credential.jsonld",
     apiPath: "brk",
+    visibility: "public",
   },
 };
 
 export type SolidVC = {
   url: string;
   vc: any;
-  status: any;
+  status?: any;
 };
-
-const CredentialsContainer = function() {
-  return `${getRootContainerURL()}/credentials`;
-}
 
 interface VCProps {
   type?: VCType;
   onChange?: (vcs: SolidVC[]) => void;
   enableDownload?: boolean;
-  signing?: Signing;
 }
-export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false, signing }: VCProps) {
-  // onChange lets us let the parent know the state of the VC
-  // this is not the best way to do this, but it works for now
-  // According to the React docs, we should use a state management library
-  // or 'lift the state up' to the parent component
-
+export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {}, enableDownload = false }: VCProps) {
   const { session } = useSession();
   const { webId } = session.info;
 
   const [vcs, _setVcs] = useState([] as SolidVC[]);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const credentialsContainer = useCallback(() => {
+    // Verkoper actors can perform data minimization. Their VCs are stored in a private folder,
+    // and only share the ZKP proof with the buyer.
+    // Koper actor (koos) is a special case, as it is hardcoded in the app for demo purposes.
+    // No data minimization is performed for koos, so VC has to be accessible from public folder.
+    if (webId === 'http://localhost:3001/koper-koos/profile/card#me') {
+      return `${getRootContainerURL()}/public/credentials`;
+    }
+    
+    if (VCInfo[type].visibility === "private") {
+      return `${getRootContainerURL()}/private/credentials`;
+    } else if (VCInfo[type].visibility === "public") {
+      return `${getRootContainerURL()}/public/credentials`;
+    } else {
+      throw new Error(`Unknown VC type ${type}`);
+    }
+  }, [type, webId]);
 
   const setVCs = useCallback(async (vcs: any) => {
     onChange(vcs);
@@ -73,7 +86,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   }, [setVCs]);
 
   const listVCs = useCallback(async () => {
-    const resources = await getAllFileUrls(CredentialsContainer());
+    const resources = await getAllFileUrls(credentialsContainer());
     const vcs = [];
     for (let i = 0; i < resources.length; i++) {
       if (resources[i].endsWith(VCInfo[type].filename)) {
@@ -81,7 +94,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
       }
     }
     return vcs;
-  }, [type]);
+  }, [credentialsContainer, type]);
 
   const loadVCs = useCallback(async (urls: string[]) => {
       const vcs = [];
@@ -118,7 +131,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
         webId
       )}`
     );
-    let result;
+    let result: any;
     if (response.status >= 200 && response.status < 300) {
       result = await response.json();
     } else {
@@ -133,7 +146,7 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
   const downloadVC = async () => {
     setIsLoading(true);
     const vc = await vcAPI(VCInfo[type].apiPath);
-    await saveJson(`${CredentialsContainer()}/${VCInfo[type].filename}`, vc, true);
+    await saveJson(`${credentialsContainer()}/${VCInfo[type].filename}`, vc, true);
 
     await initializeVCs();
 
@@ -142,11 +155,6 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
 
   const refreshVCs = async () => {
     await initializeVCs();
-  };
-
-  const createZKP = async () => {
-    const { vc } = vcs[0];
-    await signing.deriveProofFromDocument(vc);
   };
 
   const deleteVCs = async () => {
@@ -182,9 +190,6 @@ export default function VC({ type = VCType.BRP, onChange = (vcs: SolidVC[]) => {
           </Link>
           <Button color="secondary" onClick={refreshVCs}>
             Status verversen
-          </Button>
-          <Button color="secondary" onClick={createZKP}>
-            Create ZKP
           </Button>
           <Button color="secondary" onClick={deleteVCs}>
             VC Verwijderen
