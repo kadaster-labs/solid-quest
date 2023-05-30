@@ -1,12 +1,14 @@
+<!-- omit from toc -->
 # SOLID Quest - Achtergrondinformatie
 
 Dit bestand is een verzameling van de kennis en terminologie die we hebben vergaard tijdens onze quest:
 - [Data PODs vs data spaces](#data-pods-vs-data-spaces)
 - [WebID](#webid)
-- [Verifiable Credentials](#verifiable-credentials-vcs)
+- [Verifiable Credentials](#verifiable-credentials)
   - [Verifiable Data Registry](#verifiable-data-registry)
-  - [VCs vs IRMA](#vcs-vs-irma)
-- [Europese Digitale Identiteit](#europese-digitale-identiteit-edi) 
+  - [Data Minimalisatie](#data-minimalisatie)
+  - [Alternatieven voor Verifiable Credentials](#alternatieven-voor-verifiable-credentials)
+- [Europese Digitale Identiteit (EDI)](#europese-digitale-identiteit-edi)
   - [Wat houdt EDI in?](#wat-houdt-edi-in)
   - [Welke stappen gaan er in 2023 genomen worden?](#welke-stappen-gaan-er-in-2023-genomen-worden)
   - [Wat betekent dit voor het Kadaster?](#wat-betekent-dit-voor-het-kadaster)
@@ -37,24 +39,68 @@ Een WebID duidt op meerdere 'dingen'. Het is:
 1. een document dat een 'resource' beschrijft; dat kan een beschrijving van de mens zijn, zijn profiel dus, maar ook een organisatie, een service (bot)
 1. een service voor authenticatie en deels autorisatie (OpenID Connect / OAuth2)
 
-## Verifiable Credentials (VCs)
+## Verifiable Credentials
 
-Verifiable Credentials (VCs) zijn een open standaard voor digitale attributen/referenties. Op de pagina van [W3C](https://www.w3.org/TR/vc-data-model/) kan je veel informatie vinden over VCs. Hun definitie van een VC is als volgt: "A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified." Waarbij een credential een "set of one or more claims made by an issuer" is. Vanuit een VC kan een Verifiable Presentation worden gemaakt. 
+Verifiable Credentials (VCs) zijn een open standaard voor digitale attributen/referenties. Op de pagina van [W3C](https://www.w3.org/TR/vc-data-model/) kan je veel informatie vinden over VCs. Hun definitie van een VC is als volgt: "A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified." Waarbij een credential een "set of one or more claims made by an issuer" is. Vanuit een VC kan een Verifiable Presentation worden gemaakt.
 
-Schematische weergave
-![VC](images/VC.png)
+<div align="center">
+  <img src="images/VC_claim.png" width="400">
+  <p><em>Een eenvoudige claim die aangeeft dat Vera eigenaar is van het perceel met identificatie "APD01-U-9833".</em></p>
+</div>
+
+VCs bevatten verschillende componenten. Een VC bestaat uit een set van één of meer claims, die beweringen bevatten over specifieke kenmerken of attributen van de entiteit. Deze claims kunnen betrekking hebben op zaken zoals persoonlijke identiteit, eigendomsrechten, professionele kwalificaties en meer.
+
+Een belangrijk onderdeel van een VC is de issuer, de entiteit die de VC uitgeeft. De issuer voegt zijn digitale handtekening toe aan de VC, waardoor de authenticiteit en integriteit van de VC kunnen worden geverifieerd.
+
+<div align="center">
+  <img src="images/VC_structure.png">
+  <p><em>Voorbeeld van een informatiegraaf van een eenvoudige VC</em></p>
+</div>
+
+Een voorbeeld van een eenvoudige VC is een claim die aangeeft dat Vera eigenaar is van het perceel met identificatie "APD01-U-9833". Deze claim wordt ondersteund door een digitale handtekening van de issuer, wat de verifieerbaarheid van de claim mogelijk maakt.
+
+Op deze manier stellen VCs entiteiten in staat om betrouwbare digitale referenties te verkrijgen en te delen, waardoor het vertrouwen en de veiligheid in digitale transacties en identiteitsverificatie worden vergroot.
 
 ### Verifiable Data Registry
 
-Om de integriteit van VCs te waarborgen wil je er zeker van zijn dat een bepaalde VC is uitgegeven, door een issuer die daartoe bevoegd is, én niet is ingetrokken. Hier kan een Verifiable Data Registry, zoals bovenstaand afgebeeld, een cruciale rol spelen. In dit register wordt de metadata van uitgegeven VCs (het bewijs) weggeschreven. Dit zegt dus alleen iets over de herkomst van een VC en niets over de inhoudelijke juistheid van een VC. Het register kan zowel decentraal als centraal worden beheerd. Dataminimalisatie kan (en moet) in beide gevallen toegepast worden. Voor meer informatie, zie: [Issue: Verifiable Data Registry](https://github.com/kadaster-labs/solid-quest/issues/54))
+De Verifiable Data Registry (VDR) is een conceptueel element binnen een VC-ecosysteem en fungeert als scheidsrechter of mediator tussen de verschillende partijen. Het speelt een essentiële rol bij het creëren en verifiëren van VC's en andere relevante gegevens, waardoor er vertrouwen ontstaat binnen het ecosysteem. Een VDR kan informatie bevatten over VC-schema's, geregistreerde issuers en intrekkingslijsten. Het kan ook transacties en uitgegeven VC's bijhouden, waarbij de persoonlijke gegevens zelf niet worden opgeslagen.
 
-### VCs vs IRMA
+<div align="center">
+  <img src="images/VC.png" alt="The rollen and informatieflows die de basis vormen voor de Verifiable Credentials specificatie." width="600">
+  <p><em>Schematische weergave. Bron <a href="https://www.w3.org/TR/vc-data-model/#ref-for-dfn-verifiable-data-registries-1">Verifiable Credentials Data Model v1.1</a></em></p>
+</div>
 
-[IRMA](https://irma.app/) is een product (app) waarbinnen je attributen kunt laden en daar zelf controle over hebt. IRMA werkt met "disclosure proof" die lijken op VCs (zie hoofdstuk [Cryptographic Entities](https://irma.app/docs/overview/#cryptographic-entities). De 'disclosure proofs' maken IRMA inderdaad verifieerbaar, maar is niet helemaal hetzelfde als een VC. Waar het hier bij beiden over gaat is de data integriteit, het kunnen verifiëren dat je niet zelf aan de attributen loopt te sleutelen. Binnen VC signeert de issuer de credential die die uitgeeft. Iedereen kan die vervolgens verifiëren op basis van de meegeleverde proof, meestal een verwijzing naar de public key van de issuer. Binnen IRMA is het de IRMA server zelf die een signature toevoegd, de disclosure proof. Dat maakt het ook dat non-IRMA applicaties niet de IRMA attributen kan verifieren, maar alleen IRMA servers dat zelf kunnen, in tegenstelling tot VC. 
+Verschillende VC-ecosystemen zullen verschillende VDR's hebben, waarbij de onderliggende technologie kan variëren. Mogelijke implementaties van een VDR omvatten vertrouwde databases, gedecentraliseerde databases, overheids-ID-databases en gedistribueerde ledgers. Het is ook mogelijk dat binnen één ecosysteem meerdere VDR's worden gebruikt om verschillende aspecten van de VC-uitwisseling te ondersteunen. De keuze voor een specifieke VDR hangt af van de context en de vereisten van het systeem. Het belangrijkste is dat de VDR zorgt voor een betrouwbaar en veilig beheer van VC-gerelateerde informatie en bijdraagt aan het vertrouwen tussen de betrokken partijen.
 
-![VC_IRMA](images/VC_IRMA.png)
+Een Verifiable Data Registry wordt vaak gebruikt bij de intrekking (revocation) van VCs. Intrekking verwijst naar het vroegtijdig beëindigen van de geldigheid van een verifieerbare referentie. Door het gebruik van een Verifiable Data Registry kan informatie over ingetrokken VCs worden bijgehouden. Bij het verifiëren van een VC kan de verifiërende partij het register raadplegen om te controleren of de VC nog steeds geldig is.
 
-Het doel van VC is om een open standaard te creeëren om credentials uit te kunnen wisselen. Op dit moment is IRMA niet compatible met VC en werkt dus alleen binnen het IRMA ecosysteem zelf. Er lijken meer demo's te zijn i.c.m. met IRMA, omdat die al verder lijkt te zijn. VC is echt nog meer in ontwikkeling.
+
+### Data Minimalisatie
+
+Data minimalisatie is een essentieel principe binnen Verifiable Credentials (VCs) dat tot doel heeft de hoeveelheid persoonlijke gegevens te minimaliseren die worden verzameld, verwerkt en opgeslagen. Het minimaliseren van gegevens heeft als doel de privacy van gebruikers te beschermen en het risico op ongeoorloofde toegang tot gevoelige informatie te verminderen. Binnen VCs worden alleen de noodzakelijke gegevens opgenomen om een specifieke claim te ondersteunen, waardoor overbodige persoonlijke gegevens worden geëlimineerd. Dit draagt bij aan het beperken van potentiële gegevensinbreuken en het minimaliseren van de blootstelling van persoonlijke informatie, waardoor de privacy van individuen beter wordt beschermd. Door bewust om te gaan met gegevensverzameling en -gebruik kunnen we de voordelen van Verifiable Credentials realiseren terwijl we de privacy en veiligheid waarborgen.
+
+Verschillende vormen van disclosure-methoden, manieren om informatie selectief te onthullen zonder volledige details prijs te geven, worden gebruikt binnen Verifiable Credentials om informatie te delen. Hier zijn drie belangrijke vormen van disclosure:
+
+1. **Full Disclosure**: Het delen van gegevens is momenteel een alles-of-niets proces, zowel online als offline. Veel digitale identiteitssystemen onthullen alle attributen in een digitale credential, waardoor het risico op impersonatie ontstaat.
+
+2. **Selective Disclosure**: Selective disclosure houdt in dat de holder alleen specifieke delen van de informatie onthult aan de verifiërende partij, terwijl andere delen verborgen blijven. Hierdoor kan de holder selectief informatie onthullen op basis van de vereisten van de verifiërende partij.
+
+3. **Predicate Proof**: Predicate disclosure houdt in dat de holder bewijst dat een bepaalde claim voldoet aan een bepaalde voorwaarde, zonder de specifieke details van de claim bekend te maken. Hierdoor kan een verifieerbare referentie met een geboortedatumclaim bijvoorbeeld worden gebruikt om te bewijzen dat iemand ouder is dan 18 jaar, zonder de geboortedatum prijs te geven. 
+
+Elke vorm van disclosure biedt verschillende gradaties van openbaarmaking van informatie, afhankelijk van de vereisten en behoeften van de partijen die betrokken zijn bij het verificatieproces.
+
+### Alternatieven voor Verifiable Credentials
+
+Naast Verifiable Credentials (VCs) zijn er ook andere oplossingen beschikbaar die vergelijkbare functionaliteit bieden. Een van deze alternatieven is [Yifi](https://www.yivi.app) (voorheen bekend als IRMA), een product (app) waarmee attributen kunnen worden geladen en waarover gebruikers zelf controle hebben. Yifi maakt gebruik van "disclosure proofs" die enige overeenkomsten vertonen met VCs (zie hoofdstuk [Cryptographic Entities](https://irma.app/docs/overview/#cryptographic-entities)). Deze "disclosure proofs" maken het mogelijk om claims te verifiëren, maar verschillen op bepaalde punten van VCs.
+
+<div align="center">
+  <img src="images/VC_IRMA.png" alt="Venn diagram voor overlap en verschillen tussen VCs en IRMA" width="600">
+  <p><em>Bron: <a href="https://research.ou.nl/ws/portalfiles/portal/31027221/Ostkamp_D_IM9906_AF_SE_scriptie_Pure.pdf">IRMA and Verifiable Credentials What is their relation?</a></em></p>
+</div>
+
+Een belangrijk aspect waar zowel VCs als Yifi zich op richten, is de integriteit van gegevens en de mogelijkheid om te verifiëren dat attributen niet onrechtmatig worden gewijzigd. Bij VCs wordt de credential ondertekend door de uitgevende partij (issuer) en kan deze door iedereen worden geverifieerd op basis van de bijgeleverde proof, meestal een verwijzing naar de public key van de issuer. Bij Yifi voegt de Yifi-server zelf een handtekening toe aan de attributen, die bekendstaan als "disclosure proofs". Hierdoor kunnen non-Yifi-applicaties de attributen niet verifiëren, maar alleen de Yifi-servers zelf.
+
+Het doel van VC is om een open standaard te creëren voor het uitwisselen van credentials. Op dit moment is Yifi niet compatibel met VC en werkt het alleen binnen het Yifi-ecosysteem zelf. Er lijken echter meer demo's beschikbaar te zijn die gebruikmaken van Yifi, omdat het al verder ontwikkeld lijkt te zijn. VC bevindt zich nog steeds in een meer ontwikkelingsfase.
 
 ## Europese Digitale Identiteit (EDI)
 ### Wat houdt EDI in?
@@ -73,7 +119,7 @@ Europa gaat onderhandelen over de herziening van de eIDAS-verordening. Het betro
 Overeenstemming over en publicatie van de eIDAS-verordening wordt eind 2023 verwacht.
 
 In Nederland bestaat het [programma EDI Stelsel NL](https://edi.pleio.nl/). Dit programma zal een werkende eerste versie van een Nederlandse [open source wallet](https://github.com/MinBZK/nl-wallet-demo-app) neerzetten in 2023. Bij het ontwikkelen van die wallet staat co-creatie voorop, waarbij het bedrijfsleven, de wetenschap en ieder ander die zich betrokken voelt uitgenodigd wordt om concrete bijdragen te leveren.
-	
+ 
 ### Wat betekent dit voor het Kadaster?
 De Nederlandse overheid heeft de [Werkagenda Waardengedreven Digitaliseren](https://www.digitaleoverheid.nl/kabinetsbeleid-digitalisering/werkagenda/) opgesteld. Eén van de programmalijnen luidt: "Iedereen heeft regie op het digitale leven." Daarvoor is regelgeving en beleid nodig, rond wallets en basisvoorzieningen.  
 
