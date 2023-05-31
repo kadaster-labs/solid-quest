@@ -12,7 +12,7 @@ pro:card a foaf:PersonalProfileDocument;
 <#me> a foaf:Person;
     rdfs:label "Verkoper Vera";
     vcard:bday "2022-08-19"^^xsd:date;
-    vcard:fn "Vera Veranda";
+    vcard:fn "Vera V";
     vcard:hasAddress <#id1680106718588>;
     vcard:hasEmail <#id1680182536910>;
     solid:oidcIssuer <http://localhost:3001/>;
