@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
 import Image from "../../src/Image";
@@ -16,6 +16,14 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
     setLoadedBRKVCs(vcs);
+
+    let vc = vcs[0];
+    if (vc.status.verified) {
+      setVcValid(true);
+    } else {
+      setVcValid(false);
+    }
+
   }, []);
 
   const handleAkkoord = useCallback(async () => {
@@ -29,7 +37,9 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
     }
   }, [loadedBRKVCs, handleNext, koek]);
 
-  // TODO useEffect with check VC and setVcValid
+  useEffect(() => {
+
+  }, [updateVCs]);
 
   return (
     <Box sx={{ flex: 1 }}>
