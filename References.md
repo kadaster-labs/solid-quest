@@ -21,6 +21,10 @@ In dit bestand vind je alle links naar (achtergrond)informatie die wij hebben ve
   - [TNO on Internation Data Spaces](https://www.tno.nl/en/technology-science/technologies/international-data-spaces)
   - [iSHARE](https://ishare.eu/) - iSHARE is the European standard for and trust network of international business data sharing in a sovereign way.
   - [Gaia-X](https://gaia-x.eu/) - Gaia-X is a European project and aims to establish a data space ecosystem, whereby data is shared and made available in a trustworthy environment
+- Verifiable Credentials (VC)
+  - [Verifiable Credentials Data Model v1.1](https://www.w3.org/TR/vc-data-model-1.1/) - The official specification
+  - [What Are Verifiable Credentials? Secure Digital Identity Verification](https://www.identity.com/what-are-verifiable-credentials/)
+  - [Verifiable Credentials: The Ultimate Guide 2023](https://www.dock.io/post/verifiable-credentials)
 - Europese Digitale Identiteit (EDI)
   - [Pleio omgeving EDI](https://edi.pleio.nl/) - de ‘hub’ waar nieuws en relevante informatie over de NL wallet wordt gedeeld
   - [Github NL wallet](https://github.com/MinBZK/nl-wallet-demo-app) - open source code van de NL wallet. Het doel is om de eerste werkende versie eind 2023 af te hebben.
