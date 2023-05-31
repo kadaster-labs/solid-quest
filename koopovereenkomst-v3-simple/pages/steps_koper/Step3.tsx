@@ -88,9 +88,6 @@ export default function Step3({ stepNr = 3, handleNext, handleBack = () => { }, 
 
   return (
     <Box sx={{ flex: 1 }}>
-      <Typography variant="h1" color="text.primary" align="center">
-        Ik wil een huis kopen
-      </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Koppel je persoonsgegevens aan deze koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
       </Typography>

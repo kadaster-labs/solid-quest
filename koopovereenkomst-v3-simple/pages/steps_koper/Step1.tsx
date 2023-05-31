@@ -95,9 +95,6 @@ export default function Step1({ stepNr = 1, handleNext }) {
 
   return (
     <Box sx={{ flex: 1 }}>
-      <Typography variant="h1" color="text.primary" align="center">
-        Ik wil een huis kopen
-      </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Koppelen van je Personal Online Datastore (POD)
       </Typography>

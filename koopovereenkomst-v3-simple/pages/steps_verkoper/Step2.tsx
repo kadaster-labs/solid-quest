@@ -106,9 +106,6 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
 
   return (
     <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
-      <Typography variant="h1" color="text.primary" align="center">
-        Start een nieuwe koopovereenkomst
-      </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Selecteren koopovereenkomst
       </Typography>
