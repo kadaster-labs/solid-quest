@@ -65,9 +65,17 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
 
   return (
     <Box sx={{ flex: 1 }}>
-      <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
-      </Typography>
+      <div>
+        {finished ? (
+          <Typography variant="h2" color="text.primary" align="center">
+            Proficiat! Je hebt een huis gekocht!
+          </Typography>
+        ) : (
+          <Typography variant="h2" color="text.primary" align="center">
+            {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
+          </Typography>
+        )}
+      </div>
 
       <Modal
         open={showModel}

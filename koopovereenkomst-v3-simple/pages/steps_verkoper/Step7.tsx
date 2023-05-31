@@ -50,9 +50,17 @@ export default function Step7({ stepNr = 7, finished = false, handleNext, handle
 
   return (
     <Box sx={{ flex: 1 }}>
-      <Typography variant="h2" color="text.primary" align="center">
-        {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
-      </Typography>
+      <div>
+        {finished ? (
+          <Typography variant="h2" color="text.primary" align="center">
+            Gefeliciteerd! Het huis is verkocht!
+          </Typography>
+        ) : (
+          <Typography variant="h2" color="text.primary" align="center">
+            {stepNr}. Tekenen koopovereenkomst <Typography variant="body1">#{koek?.id}</Typography>
+          </Typography>
+        )}
+      </div>
 
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
