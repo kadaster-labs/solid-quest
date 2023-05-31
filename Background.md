@@ -5,8 +5,10 @@ Dit bestand is een verzameling van de kennis en terminologie die we hebben verga
 - [Data PODs vs data spaces](#data-pods-vs-data-spaces)
 - [WebID](#webid)
 - [Verifiable Credentials](#verifiable-credentials)
+  - [Structuur van een Verifiable Credential](#structuur-van-een-verifiable-credential)
   - [Verifiable Data Registry](#verifiable-data-registry)
   - [Data Minimalisatie](#data-minimalisatie)
+  - [Verifiable Presentation](#verifiable-presentation)
   - [Alternatieven voor Verifiable Credentials](#alternatieven-voor-verifiable-credentials)
 - [Europese Digitale Identiteit (EDI)](#europese-digitale-identiteit-edi)
   - [Wat houdt EDI in?](#wat-houdt-edi-in)
@@ -41,7 +43,11 @@ Een WebID duidt op meerdere 'dingen'. Het is:
 
 ## Verifiable Credentials
 
-Verifiable Credentials (VCs) zijn een open standaard voor digitale attributen/referenties. Op de pagina van [W3C](https://www.w3.org/TR/vc-data-model/) kan je veel informatie vinden over VCs. Hun definitie van een VC is als volgt: "A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified." Waarbij een credential een "set of one or more claims made by an issuer" is. Vanuit een VC kan een Verifiable Presentation worden gemaakt.
+Verifiable Credentials (VCs) zijn een open standaard voor digitale attributen/referenties. Op de pagina van [W3C](https://www.w3.org/TR/vc-data-model/) kan je veel informatie vinden over VCs. Hun definitie van een VC is als volgt: "A verifiable credential is a tamper-evident credential that has authorship that can be cryptographically verified." Waarbij een credential een "set of one or more claims made by an issuer" is.
+
+> ⚠ De VC standaard is een standaard die nog *working draft* status heeft, dat wil zeggen dat die nog niet klaar is voor productiesystemen. Wel is die volop in ontwikkeling en wordt er voortgang mee gemaakt. Daarbij krijgen VCs ook steeds meer aandacht van verschillende partijen. Betrouwbaar, open en verifieerbaar data uitwisselen wordt steeds belangrijker, en deze standaard lijkt het meest veelbelovend om hier een (grote) rol in te gaat spelen. Daarom is er voor gekozen om VCs verder te onderzoeken.
+
+### Structuur van een Verifiable Credential
 
 <div align="center">
   <img src="images/VC_claim.png" width="400">
@@ -63,7 +69,7 @@ Op deze manier stellen VCs entiteiten in staat om betrouwbare digitale referenti
 
 ### Verifiable Data Registry
 
-De Verifiable Data Registry (VDR) is een conceptueel element binnen een VC-ecosysteem en fungeert als scheidsrechter of mediator tussen de verschillende partijen. Het speelt een essentiële rol bij het creëren en verifiëren van VC's en andere relevante gegevens, waardoor er vertrouwen ontstaat binnen het ecosysteem. Een VDR kan informatie bevatten over VC-schema's, geregistreerde issuers en intrekkingslijsten. Het kan ook transacties en uitgegeven VC's bijhouden, waarbij de persoonlijke gegevens zelf niet worden opgeslagen.
+De Verifiable Data Registry (VDR) is een conceptueel element binnen een VC-ecosysteem en fungeert als scheidsrechter of mediator tussen de verschillende partijen. Het speelt een essentiële rol bij het creëren en verifiëren van VCs en andere relevante gegevens, waardoor er vertrouwen ontstaat binnen het ecosysteem. Een VDR kan informatie bevatten over VC-schema's, geregistreerde issuers en intrekkingslijsten. Het kan ook transacties en uitgegeven VCs bijhouden, waarbij de persoonlijke gegevens zelf niet worden opgeslagen.
 
 <div align="center">
   <img src="images/VC.png" alt="The rollen and informatieflows die de basis vormen voor de Verifiable Credentials specificatie." width="600">
@@ -77,21 +83,24 @@ Een Verifiable Data Registry wordt vaak gebruikt bij de intrekking (revocation) 
 
 ### Data Minimalisatie
 
-Data minimalisatie is een essentieel principe binnen Verifiable Credentials (VCs) dat tot doel heeft de hoeveelheid persoonlijke gegevens te minimaliseren die worden verzameld, verwerkt en opgeslagen. Het minimaliseren van gegevens heeft als doel de privacy van gebruikers te beschermen en het risico op ongeoorloofde toegang tot gevoelige informatie te verminderen. Binnen VCs worden alleen de noodzakelijke gegevens opgenomen om een specifieke claim te ondersteunen, waardoor overbodige persoonlijke gegevens worden geëlimineerd. Dit draagt bij aan het beperken van potentiële gegevensinbreuken en het minimaliseren van de blootstelling van persoonlijke informatie, waardoor de privacy van individuen beter wordt beschermd. Door bewust om te gaan met gegevensverzameling en -gebruik kunnen we de voordelen van Verifiable Credentials realiseren terwijl we de privacy en veiligheid waarborgen.
+Data minimalisatie is een essentieel principe binnen VCs dat tot doel heeft de hoeveelheid persoonlijke gegevens te minimaliseren die worden verzameld, verwerkt en opgeslagen. Het minimaliseren van gegevens heeft als doel de privacy van gebruikers te beschermen en het risico op ongeoorloofde toegang tot gevoelige informatie te verminderen. Binnen VCs worden alleen de noodzakelijke gegevens opgenomen om een specifieke claim te ondersteunen, waardoor overbodige persoonlijke gegevens worden weggelaten. Dit draagt bij aan het beperken van potentiële gegevensinbreuken en het minimaliseren van de blootstelling van persoonlijke informatie, waardoor de privacy van individuen beter wordt beschermd.
 
-Verschillende vormen van disclosure-methoden, manieren om informatie selectief te onthullen zonder volledige details prijs te geven, worden gebruikt binnen Verifiable Credentials om informatie te delen. Hier zijn drie belangrijke vormen van disclosure:
+Verschillende vormen van disclosure-methoden, manieren om informatie te delen, zijn binnen VCs mogelijk. De drie vormen van disclosure zijn:
 
-1. **Full Disclosure**: Het delen van gegevens is momenteel een alles-of-niets proces, zowel online als offline. Veel digitale identiteitssystemen onthullen alle attributen in een digitale credential, waardoor het risico op impersonatie ontstaat.
+1. **Volle Disclosure**: Dit is de meest simpele vorm waarbij de volledige VC wordt gedeeld met de verifier, dus een alles-of-niets actie. Veel digitale identiteitssystemen onthullen nu alle attributen in een digitale credential, wat risico's met zich meebrengt. Hierbij wordt niets van de data geminimaliseerd.
 
-2. **Selective Disclosure**: Selective disclosure houdt in dat de holder alleen specifieke delen van de informatie onthult aan de verifiërende partij, terwijl andere delen verborgen blijven. Hierdoor kan de holder selectief informatie onthullen op basis van de vereisten van de verifiërende partij.
+2. **Selectieve Disclosure**: Selectieve disclosure houdt in dat de holder alleen specifieke delen van de informatie onthult aan de verifiërende partij, terwijl andere delen verborgen blijven. Hierdoor kan de holder selectief informatie onthullen op basis van de vereisten van de verifiërende partij.
 
-3. **Predicate Proof**: Predicate disclosure houdt in dat de holder bewijst dat een bepaalde claim voldoet aan een bepaalde voorwaarde, zonder de specifieke details van de claim bekend te maken. Hierdoor kan een verifieerbare referentie met een geboortedatumclaim bijvoorbeeld worden gebruikt om te bewijzen dat iemand ouder is dan 18 jaar, zonder de geboortedatum prijs te geven. 
+3. **Predicate Proof**: Een predicate proof houdt in dat de holder bewijst dat een bepaalde claim voldoet aan een bepaalde voorwaarde, zonder de specifieke details van de claim bekend te maken. Hierdoor kan een verifieerbare referentie met een geboortedatumclaim bijvoorbeeld worden gebruikt om te bewijzen dat iemand ouder is dan 18 jaar, zonder de geboortedatum prijs te geven. 
 
 Elke vorm van disclosure biedt verschillende gradaties van openbaarmaking van informatie, afhankelijk van de vereisten en behoeften van de partijen die betrokken zijn bij het verificatieproces.
 
+### Verifiable Presentation
+Waar een VCs altijd een bewijs is wat door een issuer wordt uitgegeven, is een Verifiable Presentation (VP) iets wat de holder op diens beurt met een verifier kan delen. De data die met een VP kan worden gedeeld kan simpelweg één of de combinatie van meerdere VCs zijn. Ook is het mogelijk om middels [data minimalisatie](#data-minimalisatie) een deel of een afgeleide van een VC te delen. Dit geeft de holder meer controle over hoe die gegevens uit een VC met verifiers wil delen.
+
 ### Alternatieven voor Verifiable Credentials
 
-Naast Verifiable Credentials (VCs) zijn er ook andere oplossingen beschikbaar die vergelijkbare functionaliteit bieden. Een van deze alternatieven is [Yivi](https://www.yivi.app) (voorheen bekend als IRMA), een product (app) waarmee attributen kunnen worden geladen en waarover gebruikers zelf controle hebben. Yivi maakt gebruik van "disclosure proofs" die enige overeenkomsten vertonen met VCs (zie hoofdstuk [Cryptographic Entities](https://irma.app/docs/overview/#cryptographic-entities)). Deze "disclosure proofs" maken het mogelijk om claims te verifiëren, maar verschillen op bepaalde punten van VCs.
+Naast VCs zijn er ook andere oplossingen beschikbaar die vergelijkbare functionaliteit bieden. Een van deze alternatieven is [Yivi](https://www.yivi.app) (voorheen bekend als IRMA), een product (app) waarmee attributen kunnen worden geladen en waarover gebruikers zelf controle hebben. Yivi maakt gebruik van "disclosure proofs" die enige overeenkomsten vertonen met VCs (zie hoofdstuk [Cryptographic Entities](https://irma.app/docs/overview/#cryptographic-entities)). Deze "disclosure proofs" maken het mogelijk om claims te verifiëren, maar verschillen op bepaalde punten van VCs.
 
 <div align="center">
   <img src="images/VC_IRMA.png" alt="Venn diagram voor overlap en verschillen tussen VCs en IRMA" width="600">
@@ -100,7 +109,7 @@ Naast Verifiable Credentials (VCs) zijn er ook andere oplossingen beschikbaar di
 
 Een belangrijk aspect waar zowel VCs als Yivi zich op richten, is de integriteit van gegevens en de mogelijkheid om te verifiëren dat attributen niet onrechtmatig worden gewijzigd. Bij VCs wordt de credential ondertekend door de uitgevende partij (issuer) en kan deze door iedereen worden geverifieerd op basis van de bijgeleverde proof, meestal een verwijzing naar de public key van de issuer. Bij Yivi voegt de Yivi-server zelf een handtekening toe aan de attributen, die bekendstaan als "disclosure proofs". Hierdoor kunnen non-Yivi-applicaties de attributen niet verifiëren, maar alleen de Yivi-servers zelf.
 
-Het doel van VC is om een open standaard te creëren voor het uitwisselen van credentials. Op dit moment is Yivi niet compatibel met VC en werkt het alleen binnen het Yivi-ecosysteem zelf. Er lijken echter meer demo's beschikbaar te zijn die gebruikmaken van Yivi, omdat het al verder ontwikkeld lijkt te zijn. VC bevindt zich nog steeds in een meer ontwikkelingsfase.
+Het doel van de Verifiable Credentials werkgroep is om een open standaard te creëren voor het uitwisselen van credentials. Op dit moment is Yivi niet compatibel met VC en werkt het alleen binnen het Yivi-ecosysteem zelf. Er lijken echter meer demo's beschikbaar te zijn die gebruikmaken van Yivi, omdat het al verder ontwikkeld lijkt te zijn. VC bevindt zich nog steeds in een meer ontwikkelingsfase.
 
 ## Europese Digitale Identiteit (EDI)
 ### Wat houdt EDI in?
