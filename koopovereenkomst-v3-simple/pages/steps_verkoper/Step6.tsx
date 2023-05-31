@@ -6,6 +6,7 @@ import { Box } from "@mui/system";
 
 import { List, ListItem } from "@mui/material";
 import { useEffect, useState } from "react";
+import Link from "../../src/Link";
 import KoekAggregate from '../../src/koek/KoekAggregate';
 import { koopprijsFormatter } from "../../src/koek/KoekState";
 import Events from "../../src/ui-components/Events";
@@ -14,17 +15,17 @@ interface Step6Props {
   stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
-  navigateToMyKoeks: () => void;
+  reloadKoek: () => void;
   koek: KoekAggregate;
 }
 
-export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMyKoeks, koek }: Step6Props) {
+export default function Step6({ stepNr = 6, handleNext, handleBack, reloadKoek, koek }: Step6Props) {
 
   const [koekComplete, setKoekComplete] = useState<boolean>(false);
 
   useEffect(() => {
     setKoekComplete(koek.isComplete());
-  }, [koek]);
+  }, [koek, reloadKoek]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -34,7 +35,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMy
 
       <Box>
         {koek && <Box>
-          <Typography>Koopovereenkomst #{koek.id}</Typography>
+          <Typography>Koopovereenkomst <Link href={koek?.data.iri} color="text.primary" target="_blank">#{koek?.id}</Link></Typography>
           <List>
             <ListItem>Type: {koek.data.typeKoopovereenkomst}</ListItem>
             <ListItem>Perceelnr: {koek.data.kadastraalObject?.perceelNummer}</ListItem>
@@ -49,7 +50,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMy
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
+        <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>
         <Button variant="contained" onClick={handleNext} disabled={!koekComplete}>Doorgaan</Button>
       </Stack>
     </Box>

@@ -14,10 +14,11 @@ interface StepProps {
   handleNext: () => void;
   handleBack: () => void;
   navigateToMyKoeks: () => void;
+  reloadKoek: () => void;
   koek: KoekAggregate;
 }
 
-export default function Step7({ stepNr = 7, finished = false, handleNext, handleBack, navigateToMyKoeks, koek }: StepProps) {
+export default function Step7({ stepNr = 7, finished = false, handleNext, handleBack, navigateToMyKoeks, reloadKoek, koek }: StepProps) {
 
   const [isGetekendDoorVerkoper, setIsGetekendDoorVerkoper] = useState(finished);
 
@@ -65,6 +66,7 @@ export default function Step7({ stepNr = 7, finished = false, handleNext, handle
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
+        {isGetekendDoorVerkoper && <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>}
         <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
         {!isGetekendDoorVerkoper && <Button variant="contained" onClick={handleAkkoord}>Ondertekenen</Button>}
       </Stack>

@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import VC, { SolidVC, VCType } from "../../src/verifiable/VC";
 
 import Image from "../../src/Image";
@@ -11,10 +11,19 @@ import Link from "../../src/Link";
 import Events from "../../src/ui-components/Events";
 
 export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, koek }) {
-  const [loadedBRKVCs, setLoadedBRKVCs] = useState([] as any);
+  const [loadedBRKVCs, setLoadedBRKVCs] = useState([] as SolidVC[]);
+  const [vcValid, setVcValid] = useState(false);
 
   const updateVCs = useCallback(async (vcs: SolidVC[]) => {
     setLoadedBRKVCs(vcs);
+
+    let vc = vcs[0];
+    if (typeof vc.status !== "string" && vc.status.verified) {
+      setVcValid(true);
+    } else {
+      setVcValid(false);
+    }
+
   }, []);
 
   const handleAkkoord = useCallback(async () => {
@@ -27,6 +36,10 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
       throw new Error(`Toevoegen eigendom VC is niet gelukt! (check console voor errors)`);
     }
   }, [loadedBRKVCs, handleNext, koek]);
+
+  useEffect(() => {
+
+  }, [updateVCs]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -75,7 +88,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {loadedBRKVCs.length !== 0 && <Button variant="contained" onClick={handleAkkoord}>Akkoord</Button>}
+        {loadedBRKVCs.length !== 0 && <Button variant="contained" onClick={handleAkkoord} disabled={!vcValid}>Akkoord</Button>}
       </Stack>
     </Box>
   );

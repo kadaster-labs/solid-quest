@@ -68,7 +68,7 @@ export default function VerkoperFlow() {
     else {
       setActiveStep((prevActiveStep) => {
         let nextActiveStep = prevActiveStep + 1;
-        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < 6)) {
+        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < eventsPerStep.length)) {
           nextActiveStep = nextActiveStep + 1;
         }
         return nextActiveStep;
@@ -88,6 +88,10 @@ export default function VerkoperFlow() {
   const selectKoek = useCallback(async (id) => {
     setActiveKoek(await koekRepo.load(id, getWebId()));
   }, [koekRepo, setKoekRepo, loadKoekRepo]);
+
+  const reloadKoek = useCallback(async () => {
+    await selectKoek(koek.id);
+  }, [selectKoek, koek]);
 
   const navigateToMyKoeks = useCallback(() => {
     setActiveStep(1);
@@ -126,10 +130,10 @@ export default function VerkoperFlow() {
       case 4:
         return <Step5 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 5:
-        return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
+        return <Step6 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} reloadKoek={reloadKoek} />;
       case 6:
       default:
-        return <Step7 stepNr={props.value + 1} finished={isKoekCompleted} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
+        return <Step7 stepNr={props.value + 1} finished={isKoekCompleted} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} reloadKoek={reloadKoek} />;
     }
   }
 

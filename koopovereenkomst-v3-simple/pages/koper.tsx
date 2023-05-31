@@ -55,12 +55,12 @@ export default function KoperFlow() {
 
   const handleNext = () => {
     if (isKoekCompleted) {
-      setActiveStep(6);
+      setActiveStep(4);
     }
     else {
       setActiveStep((prevActiveStep) => {
         let nextActiveStep = prevActiveStep + 1;
-        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < 6)) {
+        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < eventsPerStep.length)) {
           nextActiveStep = nextActiveStep + 1;
         }
         return nextActiveStep;
@@ -101,6 +101,10 @@ export default function KoperFlow() {
     setActiveKoek(await koekRepo.load(id, getWebId()));
   }
 
+  const reloadKoek = async () => {
+    await selectKoek(koek.id);
+  }
+
   const navigateToMyKoeks = useCallback(() => {
     setActiveStep(1);
   }, []);
@@ -123,10 +127,10 @@ export default function KoperFlow() {
       case 2:
         return <Step3 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} />;
       case 3:
-        return <Step4 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} navigateToMyKoeks={navigateToMyKoeks} />;
+        return <Step4 stepNr={props.value + 1} handleNext={handleNext} handleBack={handleBack} koek={koek} reloadKoek={reloadKoek} />;
       case 4:
       default:
-        return <Step5 stepNr={props.value + 1} finished={isKoekCompleted} handleNext={handleNext} handleBack={handleBack} navigateToMyKoeks={navigateToMyKoeks} koek={koek} />;
+        return <Step5 stepNr={props.value + 1} finished={isKoekCompleted} handleNext={handleNext} handleBack={handleBack} navigateToMyKoeks={navigateToMyKoeks} reloadKoek={reloadKoek} koek={koek} />;
     }
   }
 
