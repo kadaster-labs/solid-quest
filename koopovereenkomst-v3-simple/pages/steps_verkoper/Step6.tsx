@@ -14,17 +14,17 @@ interface Step6Props {
   stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
-  navigateToMyKoeks: () => void;
+  reloadKoek: () => void;
   koek: KoekAggregate;
 }
 
-export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMyKoeks, koek }: Step6Props) {
+export default function Step6({ stepNr = 6, handleNext, handleBack, reloadKoek, koek }: Step6Props) {
 
   const [koekComplete, setKoekComplete] = useState<boolean>(false);
 
   useEffect(() => {
     setKoekComplete(koek.isComplete());
-  }, [koek]);
+  }, [koek, reloadKoek]);
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -52,7 +52,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, navigateToMy
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
+        <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>
         <Button variant="contained" onClick={handleNext} disabled={!koekComplete}>Doorgaan</Button>
       </Stack>
     </Box>

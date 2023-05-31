@@ -14,11 +14,11 @@ interface Step4Props {
   stepNr: number;
   handleNext: () => void;
   handleBack: () => void;
-  navigateToMyKoeks: () => void;
+  loadKoek: () => void;
   koek: KoekAggregate;
 }
 
-export default function Step4({ stepNr = 4, handleNext, handleBack, navigateToMyKoeks, koek }: Step4Props) {
+export default function Step4({ stepNr = 4, handleNext, handleBack, loadKoek, koek }: Step4Props) {
 
   const [koekComplete, setKoekComplete] = useState<boolean>(false);
 
@@ -52,7 +52,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack, navigateToMy
 
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        <Button variant="contained" onClick={navigateToMyKoeks}>Deelnemen Koopovereenkomst</Button>
+        <Button variant="contained" sx={{ marginLeft: "1em" }} onClick={loadKoek}>Herladen koopovereenkomst</Button>
         <Button variant="contained" onClick={handleNext} disabled={!koekComplete}>Doorgaan</Button>
       </Stack>
     </Box>

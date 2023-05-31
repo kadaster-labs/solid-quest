@@ -18,7 +18,7 @@ export default function Step4({ stepNr = 4, handleNext, handleBack = () => { }, 
     setLoadedBRKVCs(vcs);
 
     let vc = vcs[0];
-    if (vc.status.verified) {
+    if (typeof vc.status !== "string" && vc.status.verified) {
       setVcValid(true);
     } else {
       setVcValid(false);
