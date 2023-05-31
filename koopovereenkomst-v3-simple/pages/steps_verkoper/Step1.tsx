@@ -17,10 +17,11 @@ import { checkIfWebIDIsReady, registerWebID } from "../../src/mosService";
 
 import { VCARD } from "@inrupt/vocab-common-rdf";
 import { SolidAddress, SolidPerson } from "../../src/Solid";
-import { Signing } from "../../src/verifiable/signing";
+import { useVerkoper, Verkoper } from "../../src/Verkoper";
 
-export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setSigning }) {
+export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setVerkoper }) {
   const { session } = useSession();
+  const verkoper = useVerkoper();
 
   const [isReady, setIsReady] = useState(null as boolean);
   const [person, setPerson] = useState(null as SolidPerson);
@@ -35,10 +36,6 @@ export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setSigning
 
     return profile;
   }, [webId, session.fetch]);
-
-  const createKeyPair = async () => {
-    setSigning(new Signing());
-  }
 
   const getPersonInfo: (profile: ThingPersisted) => SolidPerson = useCallback(
     (profile) => {
@@ -73,12 +70,7 @@ export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setSigning
         return { streetAddress, locality, region, postalCode, countryName };
       }, [session.fetch]);
 
-  const checkIfWebIDIsReadyForDemo = async (webId): Promise<void> => {
-    const result = await checkIfWebIDIsReady(webId);
-    setIsReady(result);
-  }
-
-  const loadData = async (): Promise<void> => {
+  const loadData = useCallback(async (): Promise<void> => {
     const profile = await getProfile();
 
     const person = getPersonInfo(profile);
@@ -86,23 +78,33 @@ export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setSigning
 
     setPerson(person);
     setEigendom(eigendom);
-  }
+  }, [getEigendomInfo, getPersonInfo, getProfile]);
 
   const next = () => {
     loadKoekRepo();
-    setSigning();
     handleNext();
   }
+
+  const checkReady = useCallback(async () => {
+    const isReady = await verkoper.isReadyForDemo();
+      setIsReady(isReady);
+      if (isReady) {
+        loadData();
+      }
+  }, [loadData, verkoper]);
 
   // Na inloggen, check of het WebID bekend is in de database
   useEffect(() => {
     if (isLoggedIn) {
-      const result = checkIfWebIDIsReadyForDemo(webId);
-      if (result) {
-        loadData();
+      if (!verkoper) {
+        setVerkoper(new Verkoper(webId));
+      }
+
+      if (verkoper) {
+        checkReady();
       }
     }
-  }, [getEigendomInfo, getPersonInfo, getProfile, isLoggedIn, webId]);
+  }, [getEigendomInfo, getPersonInfo, getProfile, isLoggedIn, webId, verkoper, setVerkoper, checkReady]);
 
   const registerWebIDForDemo: () => Promise<void> = async () => {
     await registerWebID(webId, person, eigendom);

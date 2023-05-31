@@ -197,29 +197,26 @@ export async function getAllFileUrls(containerUrl: string): Promise<string[]> {
 
 async function createContainerIfNotExistsForFile(filepath: string): Promise<void> {
   const containerUrl = filepath.split('/').slice(0, -1).join('/') + '/';
-  console.log('check if container exists', containerUrl);
-  try {
-    await getSolidDataset(containerUrl, { fetch });
-  } catch (error) {
-    await createContainerAt(containerUrl, { fetch });
-  }
+  const isPrivate = containerUrl.includes('private');
+  await createContainerIfNotExists(containerUrl, { isPublic: !isPrivate });
 }
 
-export async function createContainer(containerUrl: string, makePublic = false): Promise<void> {
+export async function createContainerIfNotExists(containerUrl: string, options = { isPublic: true }): Promise<void> {
   console.log('check if container exists', containerUrl);
   try {
     await getSolidDataset(containerUrl, { fetch });
+    return;
   } catch (error) {
     await createContainerAt(containerUrl, { fetch });
   }
 
-  if (makePublic) {
+  if (options.isPublic) {
     // https://docs.inrupt.com/developer-tools/javascript/client-libraries/tutorial/manage-wac/#change-access-to-a-resource
     console.log("make public", containerUrl);
-    
+
     // Step 1: Create ACL
     const containerWithAcl = await getSolidDatasetWithAcl(containerUrl, { fetch });
-    
+
     let resourceAcl;
     if (hasFallbackAcl(containerWithAcl)) {
       resourceAcl = createAclFromFallbackAcl(containerWithAcl as any);
@@ -227,14 +224,14 @@ export async function createContainer(containerUrl: string, makePublic = false):
       resourceAcl = createAcl(containerWithAcl as any);
     }
     console.log("acl dataset", resourceAcl);
-    
+
     // Set access for items in this container
     // https://docs.inrupt.com/developer-tools/javascript/client-libraries/reference/glossary/#term-Default-access
     const updatedAcl = setPublicDefaultAccess(
       resourceAcl,
       { read: true, append: false, write: false, control: false },
     );
-    
+
     const saved = await saveAclFor(containerWithAcl as any, updatedAcl, { fetch });
     console.log("saved acl", saved);
   }
