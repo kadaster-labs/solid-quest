@@ -6,6 +6,7 @@ import { Box } from "@mui/system";
 
 import { List, ListItem } from "@mui/material";
 import { useEffect, useState } from "react";
+import Link from "../../src/Link";
 import KoekAggregate from '../../src/koek/KoekAggregate';
 import { koopprijsFormatter } from "../../src/koek/KoekState";
 import Events from "../../src/ui-components/Events";
@@ -37,7 +38,7 @@ export default function Step6({ stepNr = 6, handleNext, handleBack, reloadKoek, 
 
       <Box>
         {koek && <Box>
-          <Typography>Koopovereenkomst #{koek.id}</Typography>
+          <Typography>Koopovereenkomst <Link href={koek?.data.iri} color="text.primary" target="_blank">#{koek?.id}</Link></Typography>
           <List>
             <ListItem>Type: {koek.data.typeKoopovereenkomst}</ListItem>
             <ListItem>Perceelnr: {koek.data.kadastraalObject?.perceelNummer}</ListItem>

@@ -15,6 +15,7 @@ interface StepProps {
   handleNext: () => void;
   handleBack: () => void;
   navigateToMyKoeks: () => void;
+  reloadKoek: () => void;
   koek: KoekAggregate;
 }
 
@@ -30,7 +31,7 @@ const style = {
   p: 4,
 };
 
-export default function Step5({ stepNr = 5, finished = false, handleNext, handleBack = () => { }, navigateToMyKoeks, koek }: StepProps) {
+export default function Step5({ stepNr = 5, finished = false, handleNext, handleBack, navigateToMyKoeks, reloadKoek, koek }: StepProps) {
 
   const [showModel, setShowModal] = useState(false);
   const [isGetekendDoorKoper, setIsGetekendDoorKoper] = useState(finished);
@@ -96,6 +97,7 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         {finished && <Button variant="contained" onClick={() => setShowModal(true)}>Inschrijven Openbaar Register</Button>}
+        {!finished && <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>}
         <Button variant="contained" onClick={navigateToMyKoeks}>Terug naar begin</Button>
         {!isGetekendDoorKoper && <Button variant="contained" onClick={handleAkkoord}>Ondertekenen</Button>}
       </Stack>

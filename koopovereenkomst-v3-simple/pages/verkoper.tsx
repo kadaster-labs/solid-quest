@@ -68,7 +68,7 @@ export default function VerkoperFlow() {
     else {
       setActiveStep((prevActiveStep) => {
         let nextActiveStep = prevActiveStep + 1;
-        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < 6)) {
+        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < eventsPerStep.length)) {
           nextActiveStep = nextActiveStep + 1;
         }
         return nextActiveStep;
