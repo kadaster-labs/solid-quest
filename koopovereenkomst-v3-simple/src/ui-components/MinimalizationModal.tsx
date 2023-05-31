@@ -25,20 +25,47 @@ export default function MinimalizationModal({ data, open, onClose }: Props) {
         <DialogTitle>Dataminimalisatie</DialogTitle>
         <DialogContent>
           <Typography gutterBottom>
-            Bij VCs kan dataminimalisatie worden toegepast door alleen noodzakelijke informatie op te nemen en
-            Zero-knowledge Proofs te gebruiken om eigenschappen te bewijzen zonder gevoelige gegevens te onthullen.
-            Zodoende wordt alleen de relevante informatie opgenomen in het VC en niet meer dan dat.
+            Bij VCs is het mogelijk om dataminimalisatie toe te passen. Hiermee hoeft niet alle persoonsinformatie
+            gedeeld te worden, maar slechts de relevante informatie. Zo kun je bewijzen dat jij het echt bent, zonder al
+            je paspoortgegevens te hoeven delen. Hiermee wordt de privacy van de betrokkenen beter gewaarborgd.
           </Typography>
+          <hr />
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Typography variant="h6">Voor</Typography>
-              <Typography variant="body1" component="pre" sx={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+              <Typography variant="h6">Vóór minimalisatie</Typography>
+              <Typography variant="body1">
+                ➡ Alleen zichtbaar voor jezelf
+              </Typography>
+              <Typography
+                variant="body1"
+                component="pre"
+                sx={{
+                  wordWrap: "break-word",
+                  whiteSpace: "pre-wrap",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  borderRadius: "10px",
+                  padding: "20px",
+                }}
+              >
                 {JSON.stringify(data.before, null, 2)}
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="h6">Na</Typography>
-              <Typography variant="body1" component="pre" sx={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+              <Typography variant="h6">Na minimalisatie</Typography>
+              <Typography variant="body1">
+                ➡ Zichtbaar voor jezelf én de koper
+              </Typography>
+              <Typography
+                variant="body1"
+                component="pre"
+                sx={{
+                  wordWrap: "break-word",
+                  whiteSpace: "pre-wrap",
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  borderRadius: "10px",
+                  padding: "20px",
+                }}
+              >
                 {JSON.stringify(data.after, null, 2)}
               </Typography>
             </Grid>

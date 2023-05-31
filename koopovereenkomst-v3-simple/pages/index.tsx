@@ -84,14 +84,12 @@ export default function Home() {
         }}>
           <Link href="/verkoper" sx={cardStyle}>
             <h2>Verkoper &rarr;</h2>
-            <p>
-              Verkoper
-            </p>
+            <p><em>Ik wil een woning verkopen</em></p>
           </Link>
 
           <Link href="/koper" sx={cardStyle}>
             <h2>Koper &rarr;</h2>
-            <p>Koper start pagina.</p>
+            <p><em>Ik wil een woning kopen</em></p>
           </Link>
         </Container>
       </Box>

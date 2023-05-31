@@ -114,9 +114,6 @@ export default function Step1({ stepNr = 1, handleNext, loadKoekRepo, setVerkope
 
   return (
     <Box sx={{ flex: 1 }}>
-      <Typography variant="h1" color="text.primary" align="center">
-        Start een nieuwe koopovereenkomst
-      </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Koppelen van je Personal Online Datastore (POD)
       </Typography>

@@ -34,9 +34,6 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
 
   return (
     <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
-      <Typography variant="h1" color="text.primary" align="center">
-        Ik wil een huis kopen
-      </Typography>
       <Typography variant="h2" color="text.primary" align="center">
         {stepNr}. Deelnemen koopovereenkomst
       </Typography>
