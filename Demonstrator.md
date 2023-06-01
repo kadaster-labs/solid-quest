@@ -2,8 +2,6 @@
 
 Deze repo bevat (een eerste opzet voor) de **Demonstrator Koopovereenkomst Solid App**. Deze is bedoeld om kennis op te doen van hoe Solid PODs werken en hoe deze te gebruiken. In deze demonstator wordt een vereenvoudigde koopovereenkomst gesloten tussen Verkoper Vera en Koper Koos. In een eerste iteratie hadden wij bedacht dat Makelaar Mike het proces faciliteert en de verantwoordelijkheid heeft om het proces te initiëren, info toe te voegen die telefonisch of mondeling tussen verkoper en koper tot stand komt. Al werkende zijn we gekomen tot het punt dat een Solid POD vooral alle eigen data zou moeten vasthouden ... en dus _niet_ in een externe POD. Aangezien Verkoper Vera haar huis verkoopt, is zij ook initiator en 'eigenaar' van de koopovereenkomst. De eerste en meeste data komt dan ook in haar POD terecht. Uiteraard zou de data van Koper Koos vooral in zijn POD terecht moeten komen en een links naar elkaars PODs behoort tot beider data.
 
-[Live Demo](https://kadaster-labs.github.io/solid-quest/)
-
 ## Architectuur
 
 ![SoftwareArchitectuur](images/Architectuurschets_v3.jpg)
@@ -31,7 +29,7 @@ Bovenstaande is in detail uitgewerkt in een [Sequence Diagram](https://raw.githu
 
 ## Development
 
-Clone this repo which includes the [Mock Overheid Server](https://github.com/kadaster-labs/solid-quest-mock-overheid-server) and [VC API](https://github.com/kadaster-labs/solid-quest-vc-api) repos as [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+Clone this repo which includes the [Mock Overheid Server](https://github.com/kadaster-labs/solid-quest-mock-overheid-server) repo as [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 
 ```bash
 git clone --recurse-submodules https://github.com/kadaster-labs/solid-quest.git
@@ -40,17 +38,18 @@ git clone --recurse-submodules https://github.com/kadaster-labs/solid-quest.git
 To start a 'verkoper' and 'koper' POD based on [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer) use `docker-compose`:
 
 ```bash
-docker compose up solid-pod-provider
+docker compose up --build
 ```
 
 - Verkoper POD: [localhost:3001/verkoper-vera/](http://localhost:3001/verkoper-vera/)
 - Koper POD: [localhost:3001/koper-koos/](http://localhost:3001/koper-koos/)
 
-To start the 'Koopovereenkomst App' switch to the `koopovereenkomst-v3-simple` folder and run `yarn dev`:
-
-```bash
-cd koopovereenkomst-v3-simple
-yarn dev
-```
-
 Open the app at [localhost:3000](http://localhost:3000)
+
+### Voorbeeldaccounts
+Er kan ingelogd worden met de voorbeeldaccounts van Vera en Koos. Deze zijn alvast klaargezet waarmee je direct aan de slag kunt. Deze accounts zijn volledig fictief.
+
+| Rol           | E-mail           | Wachtwoord |
+| ------------- | ---------------- | ---------- |
+| Verkoper Vera | `vera@world.com` | `123456`   |
+| Koper Koos    | `koos@world.com` | `123456`   |
