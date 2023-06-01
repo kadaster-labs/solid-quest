@@ -72,7 +72,7 @@ export default function Step5({ stepNr = 5, handleNext, handleBack = () => { }, 
       </Typography>
 
       <Box sx={{ textAlign: "center", backgroundColor: "rgba(255,255,255,0.1)", m: "1rem 0" }}>
-        <Typography variant="body1">Leveringsdatum ({datum ? datum.format('DD-MM-YYYY') : ""})</Typography>
+        <Typography variant="body1">Datum van levering ({datum ? datum.format('DD-MM-YYYY') : ""})</Typography>
         <LocalizationProvider adapterLocale="nl-NL" dateAdapter={AdapterDayjs}>
           <DateCalendar value={datum} onChange={(newDate) => setDatum(newDate)} />
         </LocalizationProvider>

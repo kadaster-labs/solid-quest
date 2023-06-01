@@ -102,7 +102,7 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
         {finished && <Button variant="contained" onClick={() => setShowModal(true)}>Inschrijven Openbaar Register</Button>}
-        {!finished && <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>}
+        {isGetekendDoorKoper && !finished && <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>}
         <Button variant="contained" onClick={navigateToMyKoeks}>Terug naar begin</Button>
         {!isGetekendDoorKoper && <Button variant="contained" onClick={handleAkkoord}>Ondertekenen</Button>}
       </Stack>

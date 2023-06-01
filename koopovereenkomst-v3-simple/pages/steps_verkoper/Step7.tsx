@@ -66,7 +66,7 @@ export default function Step7({ stepNr = 7, finished = false, handleNext, handle
       <Events koek={koek} />
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" onClick={handleBack}>Terug</Button>
-        {!finished && <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>}
+        {isGetekendDoorVerkoper && !finished && <Button variant="contained" onClick={reloadKoek}>Herladen koopovereenkomst</Button>}
         <Button variant="contained" onClick={navigateToMyKoeks}>Mijn Koopovereenkomsten</Button>
         {!isGetekendDoorVerkoper && <Button variant="contained" onClick={handleAkkoord}>Ondertekenen</Button>}
       </Stack>

@@ -118,14 +118,14 @@ export default function Step2({ stepNr = 2, handleNext, handleBack, selectKoek, 
           Voor het aanmaken van de koopovereenkomst, kun je kiezen uit <Link href="" color="text.secondary">verschillende standaard koopovereenkomsten</Link>. Kies hieronder welke voor jou van toepassing is.
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-          <Box sx={{ minWidth: 120, my: '2rem' }}>
+          <Box sx={{ minWidth: 120, my: '2rem', marginRight: '2rem' }}>
             <Select value={selectedOption} onChange={handleOptionChange}>
               <MenuItem value={1}>Standaard koopovereenkomst</MenuItem>
               <MenuItem value={2}>Default koopovereenkomst</MenuItem>
               <MenuItem value={3}>Die ene koopovereenkomst</MenuItem>
             </Select>
           </Box>
-          {isLoading ? <CircularProgress /> : <Button variant="contained" onClick={handleConfirm}>Create</Button>}
+          {isLoading ? <CircularProgress /> : <Button variant="contained" onClick={handleConfirm}>Aanmaken</Button>}
         </Box>
         {/* Onderste helft */}
         {tableRows.length > 0 && (
