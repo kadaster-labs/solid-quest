@@ -47,7 +47,7 @@ export default function Step7({ stepNr = 7, finished = false, handleNext, handle
     else if (!isGetekendDoorVerkoper) {
       setIsGetekendDoorVerkoper(koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend" && e.actor === "verkoper-vera").length > 0);
     }
-  }, [finished]) // add the var dependencies or not
+  }, [finished, isGetekendDoorVerkoper, koek]);
 
   return (
     <Box sx={{ flex: 1 }}>

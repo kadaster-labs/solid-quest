@@ -1,6 +1,6 @@
 import { useSession } from "@inrupt/solid-ui-react";
 import Head from "next/head";
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
@@ -43,7 +43,7 @@ const eventsPerStep: StepEvents[] = [
 export default function KoperFlow() {
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
-  let koekRepo = new KoekRepository();
+  let koekRepo = useMemo(() => new KoekRepository(), []);
 
   const { session } = useSession();
   let isLoggedIn = session.info.isLoggedIn;
@@ -97,9 +97,9 @@ export default function KoperFlow() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const selectKoek = async (id) => {
+  const selectKoek = useCallback(async (id) => {
     setActiveKoek(await koekRepo.load(id, getWebId()));
-  }
+  }, [koekRepo]);
 
   const reloadKoek = async () => {
     await selectKoek(koek.id);

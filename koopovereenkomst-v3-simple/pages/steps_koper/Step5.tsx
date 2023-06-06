@@ -62,7 +62,7 @@ export default function Step5({ stepNr = 5, finished = false, handleNext, handle
     else if (!isGetekendDoorKoper) {
       setIsGetekendDoorKoper(koek?.getEvents().filter((e) => e.type === "conceptKoopovereenkomstGetekend" && e.actor === "koper-koos").length > 0);
     }
-  }, [finished]) // add the var dependencies or not
+  }, [finished, isGetekendDoorKoper, koek]);
 
   return (
     <Box sx={{ flex: 1 }}>

@@ -61,43 +61,7 @@ export default function VerkoperFlow() {
 
   const [verkoper, setVerkoper] = useState(null as Verkoper);
 
-  const handleNext = () => {
-    if (isKoekCompleted) {
-      setActiveStep(6);
-    }
-    else {
-      setActiveStep((prevActiveStep) => {
-        let nextActiveStep = prevActiveStep + 1;
-        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < eventsPerStep.length)) {
-          nextActiveStep = nextActiveStep + 1;
-        }
-        return nextActiveStep;
-      });
-    }
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const loadKoekRepo = useCallback(() => {
-    let repo = new KoekRepository();
-    setKoekRepo(repo);
-  }, []);
-
-  const selectKoek = useCallback(async (id) => {
-    setActiveKoek(await koekRepo.load(id, getWebId()));
-  }, [koekRepo, setKoekRepo, loadKoekRepo]);
-
-  const reloadKoek = useCallback(async () => {
-    await selectKoek(koek.id);
-  }, [selectKoek, koek]);
-
-  const navigateToMyKoeks = useCallback(() => {
-    setActiveStep(1);
-  }, []);
-
-  const isStepCompleted = (index) => {
+  const isStepCompleted = useCallback((index) => {
     if (!isLoggedIn) {
       return false;
     }
@@ -115,7 +79,43 @@ export default function VerkoperFlow() {
       }
       return result;
     }
-  }
+  }, [isLoggedIn, koek]);
+
+  const handleNext = useCallback(() => {
+    if (isKoekCompleted) {
+      setActiveStep(6);
+    }
+    else {
+      setActiveStep((prevActiveStep) => {
+        let nextActiveStep = prevActiveStep + 1;
+        while ((koek) && (isStepCompleted(nextActiveStep) && nextActiveStep < eventsPerStep.length)) {
+          nextActiveStep = nextActiveStep + 1;
+        }
+        return nextActiveStep;
+      });
+    }
+  }, [isKoekCompleted, isStepCompleted, koek]);
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const loadKoekRepo = useCallback(() => {
+    let repo = new KoekRepository();
+    setKoekRepo(repo);
+  }, []);
+
+  const selectKoek = useCallback(async (id) => {
+    setActiveKoek(await koekRepo.load(id, getWebId()));
+  }, [koekRepo]);
+
+  const reloadKoek = useCallback(async () => {
+    await selectKoek(koek.id);
+  }, [selectKoek, koek]);
+
+  const navigateToMyKoeks = useCallback(() => {
+    setActiveStep(1);
+  }, []);
 
   function ActiveStep(props) {
     switch (props.value) {
