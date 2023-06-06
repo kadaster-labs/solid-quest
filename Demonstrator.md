@@ -27,7 +27,7 @@ Bovenstaande is in detail uitgewerkt in een [Sequence Diagram](https://raw.githu
 - **v2**: Een tweede versie ... dit GitHub niet eens gehaald heeft
 - [**v3**](koopovereenkomst-v3-simple/): Een Next.js versie :tada:
 
-## Development
+## Running the demo
 
 Clone this repo which includes the [Mock Overheid Server](https://github.com/kadaster-labs/solid-quest-mock-overheid-server) repo as [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 
@@ -35,21 +35,47 @@ Clone this repo which includes the [Mock Overheid Server](https://github.com/kad
 git clone --recurse-submodules https://github.com/kadaster-labs/solid-quest.git
 ```
 
-To start a 'verkoper' and 'koper' POD based on [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer) use `docker-compose`:
+To start the complete demonstrator, including 'verkoper' and 'koper' PODs based on [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer), use `docker-compose`:
 
 ```bash
 docker compose up --build
 ```
 
+The following endpoints are now available:
+- The koopovereenkomst app is running at [localhost:3000](http://localhost:3000)
 - Verkoper POD: [localhost:3001/verkoper-vera/](http://localhost:3001/verkoper-vera/)
 - Koper POD: [localhost:3001/koper-koos/](http://localhost:3001/koper-koos/)
 
-Open the app at [localhost:3000](http://localhost:3000)
+### Example PODs
+You can log in using the sample accounts of Vera and Koos. These have already been set up for you to start using the demonstrator right away. These accounts are completely fictional.
 
-### Voorbeeldaccounts
-Er kan ingelogd worden met de voorbeeldaccounts van Vera en Koos. Deze zijn alvast klaargezet waarmee je direct aan de slag kunt. Deze accounts zijn volledig fictief.
-
-| Rol           | E-mail           | Wachtwoord |
+| Role          | E-mail for login | Password   |
 | ------------- | ---------------- | ---------- |
 | Verkoper Vera | `vera@world.com` | `123456`   |
 | Koper Koos    | `koos@world.com` | `123456`   |
+
+## Development
+
+To start the backend services, execute the following command:
+
+```
+start-backing-services.sh
+```
+
+These services consist of:
+- Solid Pod Provider, which is an instance of the previously mentioned Community Solid Server.
+- Mock Overheid Server, which is a mock government and cadaster providing Verifiable Credentials to logged-in users.
+
+To run the frontend app, navigate to the `koopovereenkomst-v3-simple/` folder using the command:
+
+```
+cd koopovereenkomst-v3-simple/
+```
+
+Finally, start the frontend app by running:
+
+```
+yarn dev
+```
+
+This will start the development server for the frontend application.
