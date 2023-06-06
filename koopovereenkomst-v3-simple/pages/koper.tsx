@@ -9,6 +9,7 @@ import Stepper from "@mui/material/Stepper";
 
 import { default as solidQuery } from "@solid/query-ldflex/lib/exports/rdflib";
 import Layout from "../src/Layout";
+import * as solid from "../src/Solid";
 import { SOLID_ZVG_CONTEXT } from "../src/koek/Context";
 import KoekAggregate from '../src/koek/KoekAggregate';
 import KoekRepository from "../src/koek/KoekRepository";
@@ -43,10 +44,14 @@ const eventsPerStep: StepEvents[] = [
 export default function KoperFlow() {
   solidQuery.context.extend(SOLID_ZVG_CONTEXT);
 
-  let koekRepo = useMemo(() => new KoekRepository(), []);
-
   const { session } = useSession();
   let isLoggedIn = session.info.isLoggedIn;
+
+  let koekRepo = useMemo(() => {
+    if (isLoggedIn) {
+      return new KoekRepository(solid.getRootContainerURL());
+    }
+  }, [isLoggedIn]);
 
   const [activeStep, setActiveStep] = useState(0);
 
