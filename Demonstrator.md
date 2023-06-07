@@ -4,7 +4,7 @@ Deze repo bevat (een eerste opzet voor) de **Demonstrator Koopovereenkomst Solid
 
 ## Architectuur
 
-![SoftwareArchitectuur](images/Architectuurschets_v3.jpg)
+![SoftwareArchitectuur](images/Architectuurschets_v4.jpg)
 
 Voor de demonstrator is alleen een WebApp / UserInterface benodigd en geen backends of iets dergelijks. Uiteraard wel de drie Solid PODs ... maar deze kunnen overal gestart worden. De demonstrator bevat scripts om de verschillende Solid PODs lokaal op te starten, testdata om daarin te laden en/of te gebruiken voor demonstraties én de daadwerkelijke Koopovereenkomst (Web)App.
 
