@@ -14,6 +14,7 @@ Dit bestand is een verzameling van de kennis en terminologie die we hebben verga
   - [Wat houdt EDI in?](#wat-houdt-edi-in)
   - [Welke stappen gaan er in 2023 genomen worden?](#welke-stappen-gaan-er-in-2023-genomen-worden)
   - [Wat betekent dit voor het Kadaster?](#wat-betekent-dit-voor-het-kadaster)
+- [Ethische vraagstukken rondom persoonlijke datakluizen](#ethische-vraagstukken-rondom-persoonlijke-datakluizen)
 
 ## Data PODs vs data spaces
 
@@ -138,3 +139,22 @@ Bovenstaande geldt dus ook voor het Kadaster. Het begrijpen van de technologie i
 -	Hoe kan Kadaster in de rol van Issuer gegevens verstrekken? (Zie: [Issue: VC issuer Kadaster eigendomsrecht van perceel](https://github.com/kadaster-labs/solid-quest/issues/34))
 -	Hoe kan Kadaster in de rol van Verifier gegevens valideren? (Zie: [Issue: VC verifier Kadaster van ingeschreven koopovereenkomst](https://github.com/kadaster-labs/solid-quest/issues/36))
 
+## Ethische vraagstukken rondom persoonlijke datakluizen
+
+De ontwikkeling van datakluizen binnen de Solid Quest is zowel technisch onderzocht als de mogelijke impact ervan. Hoewel het nog in ontwikkeling is, is de technische kant al aardig gevorderd en lijkt haalbaar. Er blijven echter nog openstaande vragen over de impact waarop we binnen het onderzoek nog geen antwoord hebben kunnen formuleren. Deze punten moeten eerst grondig worden onderzocht voordat een implementatie in de praktijk aanbevolen kan worden.
+
+Hieronder volgt een greep uit de vragen die bij ons opkomen met betrekking tot persoonlijke datakluizen. Deze lijst dient slechts als startpunt voor het onderzoek naar de impact. Er kunnen meerdere (ethische) vragen worden gesteld en het beantwoorden van een vraag kan weer leiden tot nieuwe vragen.
+
+- Hoe zorg je er voor dat minder digitaal vaardige mensen ook mee kunnen komen?
+
+- Wat als je de inloggegevens van je POD verliest? Of je wachtwoordmanager wordt gehackt?
+
+- Hoe voorkom je overvraging, waarbij partijen om meer permissies vragen dan ze nodig hebben? Worden dit soort oplossingen niet (te makkelijk) misbruikt?
+
+- Wat zijn de mogelijke gevolgen van het centraliseren van persoonlijke data in een datakluis?
+
+- Hoe kun je ervoor zorgen dat persoonlijke datakluizen niet leiden tot nieuwe vormen van uitsluiting of ongelijkheid?
+
+- Wie is verantwoordelijk voor het beheer en onderhoud van persoonlijke datakluizen? En als je dat zelf bent, is dat voor iedereen haalbaar?
+
+- ...
