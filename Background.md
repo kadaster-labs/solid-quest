@@ -141,20 +141,47 @@ Bovenstaande geldt dus ook voor het Kadaster. Het begrijpen van de technologie i
 
 ## Ethische vraagstukken rondom persoonlijke datakluizen
 
-De ontwikkeling van datakluizen binnen de Solid Quest is zowel technisch onderzocht als de mogelijke impact ervan. Hoewel het nog in ontwikkeling is, is de technische kant al aardig gevorderd en lijkt haalbaar. Er blijven echter nog openstaande vragen over de impact waarop we binnen het onderzoek nog geen antwoord hebben kunnen formuleren. Deze punten moeten eerst grondig worden onderzocht voordat een implementatie in de praktijk aanbevolen kan worden.
+In de Solid Quest hebben we vooral de techniek willen onderzoeken en beproeven.
+Daarbij zijn bij ons ook ethische vraagstukken en overwegingen naar boven gekomen.
+Onder andere deze punten moeten eerst grondig worden onderzocht voordat een implementatie in de praktijk aanbevolen kan worden.
 
-Hieronder volgt een greep uit de vragen die bij ons opkomen met betrekking tot persoonlijke datakluizen. Deze lijst dient slechts als startpunt voor het onderzoek naar de impact. Er kunnen meerdere (ethische) vragen worden gesteld en het beantwoorden van een vraag kan weer leiden tot nieuwe vragen.
+- _Hoe zorg je er voor dat minder digitaal vaardige mensen ook mee kunnen komen?_
+  
+  Het begrijpen van een persoonlijke datakluis is al moeilijk. Het wijkt af van de huidige stand van de techniek en veelgebruikte services.
+  Wat is een POD? Laat staan de (on)mogelijkheden daarvan.
 
-- Hoe zorg je er voor dat minder digitaal vaardige mensen ook mee kunnen komen?
+- _Hoe voorkom je overvraging, waarbij partijen om meer permissies vragen dan ze nodig hebben? Worden dit soort oplossingen niet (te makkelijk) misbruikt?_
+  
+  De user interface is nogal technisch.
+  Begrijpen gebruikers wel wat er wordt gevraagd?
+  Of wordt het de nieuwe cookiemelding die gebruikers blind accepteren?
+  (of doordat ze het niet begrijpen óf doordat gebruikers moe zijn geworden om dat bij elke site weer goed te lezen en in te stellen?)
+  Aan de andere kant zijn er oplossingen die er heel fancy uitzien ook weer moeilijk te begrijpen omdat ze het concept goed verbergen.
 
-- Wat als je de inloggegevens van je POD verliest? Of je wachtwoordmanager wordt gehackt?
+- _Wat zijn de mogelijke gevolgen van het centraliseren van persoonlijke data in een datakluis?_
+  
+  Als al mijn data in mijn persoonlijk datakluis staat, ben ik zeer afhankelijk geworden van die ene verzameling data.
+  Daarnaast kan deze data gebruikt worden om inzichten te verkrijgen (bijv. mbv AI). Wat betekent dat? Willen we dat? 
+  Welke risico's zitten hier aan vast?
 
-- Hoe voorkom je overvraging, waarbij partijen om meer permissies vragen dan ze nodig hebben? Worden dit soort oplossingen niet (te makkelijk) misbruikt?
+- _Hoe kun je ervoor zorgen dat persoonlijke datakluizen niet leiden tot nieuwe vormen van uitsluiting of ongelijkheid?_
+  
+  Zou dit een gevolg kunnen zijn van de profilering die mogelijk wordt? (zie bovenstaande vraag)
+  
+  Wanneer wordt het verplicht om een datakluis te hebben? En wat zijn de opties als je dat niet wil? Of kan?
 
-- Wat zijn de mogelijke gevolgen van het centraliseren van persoonlijke data in een datakluis?
+- _Wie is verantwoordelijk voor het beheer en onderhoud van persoonlijke datakluizen? En als je dat zelf bent, is dat voor iedereen haalbaar? Wat als je de inloggegevens van je POD verliest? Of je wachtwoordmanager wordt gehackt?_
+  
+  Hier liggen ook brede vraagstukken achter over invoering en beheersing hiervan in de maatschappij. 
+  In hoeverre gaat een overheid hier regulatie en/of ondersteuning in bieden? 
+  Kijkend naar de Vlaamse overheid is daar een eerste voorbeeld te zien, het 
+  [Vlaamse Datanutsbedrijf 'athumi'](https://www.vlaanderen.be/digitaal-vlaanderen/athumi-het-vlaams-datanutsbedrijf), 
+  dat datakluizen gaan aanbieden aan alle burgers. Het (nog) onduidelijk of dat de meest gewenste invulling is.
+  
+  Een centrale voorziening zou een nieuw platform en afhankelijkheid en dus risico kunnen scheppen.
+  Het idee van Solid PODs is juist dat je decentraal en zelf kan kiezen ... maar is dat wel haalbaar?
 
-- Hoe kun je ervoor zorgen dat persoonlijke datakluizen niet leiden tot nieuwe vormen van uitsluiting of ongelijkheid?
-
-- Wie is verantwoordelijk voor het beheer en onderhoud van persoonlijke datakluizen? En als je dat zelf bent, is dat voor iedereen haalbaar?
-
-- ...
+- _Hoe behoud je zekerheid bij datakluizen? [Verifiable Credentials](#verifiable-data-registry) bieden wel mogelijkheden ... maar zijn die voldoende? Of volwassen genoeg?_
+  
+  Zonder ecosysteem van bijvoorbeeld een gedegen Verifiable Data Registry is afkomst, controle van VCs, integriteit van informatie moeilijk af te dwingen.
+  Sterker nog, het kan de schijn van zekerheid geven, terwijl het in werkelijkheid juist _minder_ zekerheid biedt.
