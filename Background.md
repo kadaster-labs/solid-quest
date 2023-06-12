@@ -14,6 +14,7 @@ Dit bestand is een verzameling van de kennis en terminologie die we hebben verga
   - [Wat houdt EDI in?](#wat-houdt-edi-in)
   - [Welke stappen gaan er in 2023 genomen worden?](#welke-stappen-gaan-er-in-2023-genomen-worden)
   - [Wat betekent dit voor het Kadaster?](#wat-betekent-dit-voor-het-kadaster)
+- [Ethische vraagstukken rondom persoonlijke datakluizen](#ethische-vraagstukken-rondom-persoonlijke-datakluizen)
 
 ## Data PODs vs data spaces
 
@@ -138,3 +139,49 @@ Bovenstaande geldt dus ook voor het Kadaster. Het begrijpen van de technologie i
 -	Hoe kan Kadaster in de rol van Issuer gegevens verstrekken? (Zie: [Issue: VC issuer Kadaster eigendomsrecht van perceel](https://github.com/kadaster-labs/solid-quest/issues/34))
 -	Hoe kan Kadaster in de rol van Verifier gegevens valideren? (Zie: [Issue: VC verifier Kadaster van ingeschreven koopovereenkomst](https://github.com/kadaster-labs/solid-quest/issues/36))
 
+## Ethische vraagstukken rondom persoonlijke datakluizen
+
+In de Solid Quest hebben we vooral de techniek willen onderzoeken en beproeven.
+Daarbij zijn bij ons ook ethische vraagstukken en overwegingen naar boven gekomen.
+Onder andere deze punten moeten eerst grondig worden onderzocht voordat een implementatie in de praktijk aanbevolen kan worden.
+
+- _Hoe zorg je er voor dat minder digitaal vaardige mensen ook mee kunnen komen?_
+  
+  Het begrijpen van een persoonlijke datakluis is al moeilijk. Het wijkt af van de huidige stand van de techniek en veelgebruikte services.
+  Wat is een POD? Laat staan de (on)mogelijkheden daarvan.
+
+- _Hoe voorkom je overvraging, waarbij partijen om meer permissies vragen dan ze nodig hebben? Worden dit soort oplossingen niet (te makkelijk) misbruikt?_
+  
+  De user interface is nogal technisch.
+  Begrijpen gebruikers wel wat er wordt gevraagd?
+  Of wordt het de nieuwe cookiemelding die gebruikers blind accepteren?
+  (of doordat ze het niet begrijpen óf doordat gebruikers moe zijn geworden om dat bij elke site weer goed te lezen en in te stellen?)
+  Aan de andere kant zijn er oplossingen die er heel fancy uitzien ook weer moeilijk te begrijpen omdat ze het concept goed verbergen.
+
+- _Wat zijn de mogelijke gevolgen van het centraliseren van persoonlijke data in een datakluis?_
+  
+  Als al mijn data in mijn persoonlijk datakluis staat, ben ik zeer afhankelijk geworden van die ene verzameling data.
+  Daarnaast kan deze data gebruikt worden om inzichten te verkrijgen (bijv. mbv AI). Wat betekent dat? Willen we dat? 
+  Welke risico's zitten hier aan vast?
+
+- _Hoe kun je ervoor zorgen dat persoonlijke datakluizen niet leiden tot nieuwe vormen van uitsluiting of ongelijkheid?_
+  
+  Zou dit een gevolg kunnen zijn van de profilering die mogelijk wordt? (zie bovenstaande vraag)
+  
+  Wanneer wordt het verplicht om een datakluis te hebben? En wat zijn de opties als je dat niet wil? Of kan?
+
+- _Wie is verantwoordelijk voor het beheer en onderhoud van persoonlijke datakluizen? En als je dat zelf bent, is dat voor iedereen haalbaar? Wat als je de inloggegevens van je POD verliest? Of je wachtwoordmanager wordt gehackt?_
+  
+  Hier liggen ook brede vraagstukken achter over invoering en beheersing hiervan in de maatschappij. 
+  In hoeverre gaat een overheid hier regulatie en/of ondersteuning in bieden? 
+  Kijkend naar de Vlaamse overheid is daar een eerste voorbeeld te zien, het 
+  [Vlaamse Datanutsbedrijf 'athumi'](https://www.vlaanderen.be/digitaal-vlaanderen/athumi-het-vlaams-datanutsbedrijf), 
+  dat datakluizen gaan aanbieden aan alle burgers. Het (nog) onduidelijk of dat de meest gewenste invulling is.
+  
+  Een centrale voorziening zou een nieuw platform en afhankelijkheid en dus risico kunnen scheppen.
+  Het idee van Solid PODs is juist dat je decentraal en zelf kan kiezen ... maar is dat wel haalbaar?
+
+- _Hoe behoud je zekerheid bij datakluizen? [Verifiable Credentials](#verifiable-data-registry) bieden wel mogelijkheden ... maar zijn die voldoende? Of volwassen genoeg?_
+  
+  Zonder ecosysteem van bijvoorbeeld een gedegen Verifiable Data Registry is afkomst, controle van VCs, integriteit van informatie moeilijk af te dwingen.
+  Sterker nog, het kan de schijn van zekerheid geven, terwijl het in werkelijkheid juist _minder_ zekerheid biedt.

@@ -21,6 +21,7 @@ Het is een (emerging) technologie waar we nog geen of nauwelijks ervaring mee he
   - [Verifiable Credentials](Background.md#verifiable-credentials-vcs)
   - [Europese Digitale Identiteit](Background.md#europese-digitale-identiteit-edi)
 - [Demonstrator](Demonstrator.md) - informatie rondom de demonstrator (architectuur, techniek etc.)
+- [Ethische vraagstukken](Background.md#ethische-vraagstukken-rondom-persoonlijke-datakluizen)
 
 
 ## Work in Progress
