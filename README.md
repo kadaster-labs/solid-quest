@@ -9,6 +9,12 @@ Het is een (emerging) technologie waar we nog geen of nauwelijks ervaring mee he
 -	Blockchain 
 -	Data Spaces 
 
+Kijk hier [onze webinar](https://youtu.be/poD0qvUgPoM) waarin wij jullie meenemen in onze Solid Quest en onze demonstrator demonstreren!
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=poD0qvUgPoM" target="_blank">
+ <img src="http://img.youtube.com/vi/poD0qvUgPoM/maxresdefault.jpg" alt="Watch the video" width="480" border="10" />
+</a>
+
 **#DataMinimalisatie #RegieOpGegevens #PrivacyEnhancingTechnologies #SOLID #VerifiableCredentials #EmergingTech #Cloud #Security #LinkedData**
 
 
